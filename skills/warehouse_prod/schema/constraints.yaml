@@ -1,0 +1,1772 @@
+constraints:
+- table_name: customer_campaigns
+  constraint_name: 16920_17045_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customer_campaigns
+  constraint_name: 16920_17045_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customer_campaigns
+  constraint_name: 16920_17045_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customer_campaigns
+  constraint_name: customer_campaigns_campaign_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: campaign_id
+  foreign_table_name: marketing_campaigns
+  foreign_column_name: id
+- table_name: customer_campaigns
+  constraint_name: customer_campaigns_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: customer_campaigns
+  constraint_name: customer_campaigns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: customer_id
+  foreign_table_name: customer_campaigns
+  foreign_column_name: customer_id
+- table_name: customer_campaigns
+  constraint_name: customer_campaigns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: customer_id
+  foreign_table_name: customer_campaigns
+  foreign_column_name: campaign_id
+- table_name: customer_campaigns
+  constraint_name: customer_campaigns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: campaign_id
+  foreign_table_name: customer_campaigns
+  foreign_column_name: campaign_id
+- table_name: customer_campaigns
+  constraint_name: customer_campaigns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: campaign_id
+  foreign_table_name: customer_campaigns
+  foreign_column_name: customer_id
+- table_name: customers
+  constraint_name: 16920_16921_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customers
+  constraint_name: 16920_16921_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customers
+  constraint_name: 16920_16921_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customers
+  constraint_name: 16920_16921_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customers
+  constraint_name: 16920_16921_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customers
+  constraint_name: customers_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: daily_fx_rates
+  constraint_name: 16920_17118_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: daily_fx_rates
+  constraint_name: 16920_17118_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: daily_fx_rates
+  constraint_name: 16920_17118_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: daily_fx_rates
+  constraint_name: daily_fx_rates_pkey
+  constraint_type: PRIMARY KEY
+  column_name: rate_date
+  foreign_table_name: daily_fx_rates
+  foreign_column_name: rate_date
+- table_name: daily_fx_rates
+  constraint_name: daily_fx_rates_pkey
+  constraint_type: PRIMARY KEY
+  column_name: rate_date
+  foreign_table_name: daily_fx_rates
+  foreign_column_name: currency
+- table_name: daily_fx_rates
+  constraint_name: daily_fx_rates_pkey
+  constraint_type: PRIMARY KEY
+  column_name: currency
+  foreign_table_name: daily_fx_rates
+  foreign_column_name: rate_date
+- table_name: daily_fx_rates
+  constraint_name: daily_fx_rates_pkey
+  constraint_type: PRIMARY KEY
+  column_name: currency
+  foreign_table_name: daily_fx_rates
+  foreign_column_name: currency
+- table_name: employees
+  constraint_name: 16920_17060_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: employees
+  constraint_name: 16920_17060_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: employees
+  constraint_name: 16920_17060_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: employees
+  constraint_name: 16920_17060_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: employees
+  constraint_name: employees_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: employees
+  foreign_column_name: id
+- table_name: employees
+  constraint_name: employees_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: expenses
+  constraint_name: 16920_17106_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: expenses
+  constraint_name: 16920_17106_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: expenses
+  constraint_name: 16920_17106_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: expenses
+  constraint_name: 16920_17106_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: expenses
+  constraint_name: 16920_17106_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: expenses
+  constraint_name: expenses_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: expenses
+  foreign_column_name: id
+- table_name: expenses
+  constraint_name: expenses_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: inventory_snapshots
+  constraint_name: 16920_17094_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: inventory_snapshots
+  constraint_name: 16920_17094_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: inventory_snapshots
+  constraint_name: 16920_17094_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: inventory_snapshots
+  constraint_name: 16920_17094_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: inventory_snapshots
+  constraint_name: 16920_17094_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: inventory_snapshots
+  constraint_name: 16920_17094_6_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: inventory_snapshots
+  constraint_name: inventory_snapshots_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: inventory_snapshots
+  foreign_column_name: id
+- table_name: inventory_snapshots
+  constraint_name: inventory_snapshots_product_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: product_id
+  foreign_table_name: products
+  foreign_column_name: id
+- table_name: marketing_campaigns
+  constraint_name: 16920_17038_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: marketing_campaigns
+  constraint_name: 16920_17038_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: marketing_campaigns
+  constraint_name: 16920_17038_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: marketing_campaigns
+  constraint_name: 16920_17038_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: marketing_campaigns
+  constraint_name: 16920_17038_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: marketing_campaigns
+  constraint_name: marketing_campaigns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: marketing_campaigns
+  foreign_column_name: id
+- table_name: order_items
+  constraint_name: 16920_17001_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_items
+  constraint_name: 16920_17001_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_items
+  constraint_name: 16920_17001_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_items
+  constraint_name: 16920_17001_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_items
+  constraint_name: 16920_17001_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_items
+  constraint_name: 16920_17001_6_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_items
+  constraint_name: order_items_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: order_items
+  foreign_column_name: id
+- table_name: order_items
+  constraint_name: order_items_product_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: product_id
+  foreign_table_name: products
+  foreign_column_name: id
+- table_name: order_items
+  constraint_name: order_items_quantity_check
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: order_items
+  foreign_column_name: quantity
+- table_name: order_payments
+  constraint_name: 16920_17012_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_payments
+  constraint_name: 16920_17012_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_payments
+  constraint_name: 16920_17012_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_payments
+  constraint_name: 16920_17012_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_payments
+  constraint_name: 16920_17012_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_payments
+  constraint_name: 16920_17012_6_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: order_payments
+  constraint_name: order_payments_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: order_payments
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: 16920_16943_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders
+  constraint_name: 16920_16943_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders
+  constraint_name: 16920_16943_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders
+  constraint_name: 16920_16943_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders
+  constraint_name: 16920_16943_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders
+  constraint_name: 16920_16943_6_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders
+  constraint_name: 16920_16943_7_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: orders
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: orders
+  foreign_column_name: order_date
+- table_name: orders
+  constraint_name: orders_pkey
+  constraint_type: PRIMARY KEY
+  column_name: order_date
+  foreign_table_name: orders
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_pkey
+  constraint_type: PRIMARY KEY
+  column_name: order_date
+  foreign_table_name: orders
+  foreign_column_name: order_date
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: 16920_16959_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2024
+  constraint_name: 16920_16959_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2024
+  constraint_name: 16920_16959_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2024
+  constraint_name: 16920_16959_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2024
+  constraint_name: 16920_16959_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2024
+  constraint_name: 16920_16959_6_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2024
+  constraint_name: 16920_16959_7_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2024
+  constraint_name: orders_2024_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: orders_2024
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_2024_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: orders_2024
+  foreign_column_name: order_date
+- table_name: orders_2024
+  constraint_name: orders_2024_pkey
+  constraint_type: PRIMARY KEY
+  column_name: order_date
+  foreign_table_name: orders_2024
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_2024_pkey
+  constraint_type: PRIMARY KEY
+  column_name: order_date
+  foreign_table_name: orders_2024
+  foreign_column_name: order_date
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2024
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: 16920_16973_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2025
+  constraint_name: 16920_16973_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2025
+  constraint_name: 16920_16973_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2025
+  constraint_name: 16920_16973_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2025
+  constraint_name: 16920_16973_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2025
+  constraint_name: 16920_16973_6_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2025
+  constraint_name: 16920_16973_7_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2025
+  constraint_name: orders_2025_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: orders_2025
+  foreign_column_name: order_date
+- table_name: orders_2025
+  constraint_name: orders_2025_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: orders_2025
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_2025_pkey
+  constraint_type: PRIMARY KEY
+  column_name: order_date
+  foreign_table_name: orders_2025
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_2025_pkey
+  constraint_type: PRIMARY KEY
+  column_name: order_date
+  foreign_table_name: orders_2025
+  foreign_column_name: order_date
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2025
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: 16920_16987_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2026
+  constraint_name: 16920_16987_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2026
+  constraint_name: 16920_16987_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2026
+  constraint_name: 16920_16987_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2026
+  constraint_name: 16920_16987_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2026
+  constraint_name: 16920_16987_6_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2026
+  constraint_name: 16920_16987_7_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: orders_2026
+  constraint_name: orders_2026_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: orders_2026
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_2026_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: orders_2026
+  foreign_column_name: order_date
+- table_name: orders_2026
+  constraint_name: orders_2026_pkey
+  constraint_type: PRIMARY KEY
+  column_name: order_date
+  foreign_table_name: orders_2026
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_2026_pkey
+  constraint_type: PRIMARY KEY
+  column_name: order_date
+  foreign_table_name: orders_2026
+  foreign_column_name: order_date
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_customer_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: customer_id
+  foreign_table_name: customers
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: orders_2026
+  constraint_name: orders_store_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: store_id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: product_suppliers
+  constraint_name: 16920_17079_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: product_suppliers
+  constraint_name: 16920_17079_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: product_suppliers
+  constraint_name: 16920_17079_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: product_suppliers
+  constraint_name: product_suppliers_pkey
+  constraint_type: PRIMARY KEY
+  column_name: product_id
+  foreign_table_name: product_suppliers
+  foreign_column_name: supplier_id
+- table_name: product_suppliers
+  constraint_name: product_suppliers_pkey
+  constraint_type: PRIMARY KEY
+  column_name: product_id
+  foreign_table_name: product_suppliers
+  foreign_column_name: product_id
+- table_name: product_suppliers
+  constraint_name: product_suppliers_pkey
+  constraint_type: PRIMARY KEY
+  column_name: supplier_id
+  foreign_table_name: product_suppliers
+  foreign_column_name: product_id
+- table_name: product_suppliers
+  constraint_name: product_suppliers_pkey
+  constraint_type: PRIMARY KEY
+  column_name: supplier_id
+  foreign_table_name: product_suppliers
+  foreign_column_name: supplier_id
+- table_name: product_suppliers
+  constraint_name: product_suppliers_product_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: product_id
+  foreign_table_name: products
+  foreign_column_name: id
+- table_name: product_suppliers
+  constraint_name: product_suppliers_supplier_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: supplier_id
+  foreign_table_name: suppliers
+  foreign_column_name: id
+- table_name: products
+  constraint_name: 16920_16929_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: products
+  constraint_name: 16920_16929_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: products
+  constraint_name: 16920_16929_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: products
+  constraint_name: 16920_16929_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: products
+  constraint_name: 16920_16929_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: products
+  constraint_name: products_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: products
+  foreign_column_name: id
+- table_name: returns
+  constraint_name: 16920_17026_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: returns
+  constraint_name: 16920_17026_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: returns
+  constraint_name: 16920_17026_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: returns
+  constraint_name: 16920_17026_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: returns
+  constraint_name: 16920_17026_5_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: returns
+  constraint_name: 16920_17026_6_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: returns
+  constraint_name: returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: returns
+  foreign_column_name: id
+- table_name: returns
+  constraint_name: returns_product_id_fkey
+  constraint_type: FOREIGN KEY
+  column_name: product_id
+  foreign_table_name: products
+  foreign_column_name: id
+- table_name: shipments
+  constraint_name: 16920_17019_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: shipments
+  constraint_name: 16920_17019_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: shipments
+  constraint_name: 16920_17019_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: shipments
+  constraint_name: 16920_17019_6_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: shipments
+  constraint_name: 16920_17019_7_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: shipments
+  constraint_name: shipments_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: shipments
+  foreign_column_name: id
+- table_name: stores
+  constraint_name: 16920_16936_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: stores
+  constraint_name: 16920_16936_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: stores
+  constraint_name: 16920_16936_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: stores
+  constraint_name: 16920_16936_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: stores
+  constraint_name: stores_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: stores
+  foreign_column_name: id
+- table_name: suppliers
+  constraint_name: 16920_17072_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: suppliers
+  constraint_name: 16920_17072_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: suppliers
+  constraint_name: 16920_17072_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: suppliers
+  constraint_name: suppliers_pkey
+  constraint_type: PRIMARY KEY
+  column_name: id
+  foreign_table_name: suppliers
+  foreign_column_name: id
+indexes:
+- table_name: customer_campaigns
+  index_name: customer_campaigns_pkey
+  indexdef: CREATE UNIQUE INDEX customer_campaigns_pkey ON public.customer_campaigns
+    USING btree (customer_id, campaign_id)
+- table_name: customers
+  index_name: customers_pkey
+  indexdef: CREATE UNIQUE INDEX customers_pkey ON public.customers USING btree (id)
+- table_name: daily_fx_rates
+  index_name: daily_fx_rates_pkey
+  indexdef: CREATE UNIQUE INDEX daily_fx_rates_pkey ON public.daily_fx_rates USING
+    btree (rate_date, currency)
+- table_name: employees
+  index_name: employees_pkey
+  indexdef: CREATE UNIQUE INDEX employees_pkey ON public.employees USING btree (id)
+- table_name: expenses
+  index_name: expenses_pkey
+  indexdef: CREATE UNIQUE INDEX expenses_pkey ON public.expenses USING btree (id)
+- table_name: inventory_snapshots
+  index_name: inventory_product_date_idx
+  indexdef: CREATE INDEX inventory_product_date_idx ON public.inventory_snapshots
+    USING btree (product_id, snapshot_date)
+- table_name: inventory_snapshots
+  index_name: inventory_snapshots_pkey
+  indexdef: CREATE UNIQUE INDEX inventory_snapshots_pkey ON public.inventory_snapshots
+    USING btree (id)
+- table_name: marketing_campaigns
+  index_name: marketing_campaigns_pkey
+  indexdef: CREATE UNIQUE INDEX marketing_campaigns_pkey ON public.marketing_campaigns
+    USING btree (id)
+- table_name: order_items
+  index_name: order_items_order_idx
+  indexdef: CREATE INDEX order_items_order_idx ON public.order_items USING btree (order_id,
+    order_date)
+- table_name: order_items
+  index_name: order_items_pkey
+  indexdef: CREATE UNIQUE INDEX order_items_pkey ON public.order_items USING btree
+    (id)
+- table_name: order_items
+  index_name: order_items_product_idx
+  indexdef: CREATE INDEX order_items_product_idx ON public.order_items USING btree
+    (product_id)
+- table_name: order_payments
+  index_name: order_payments_order_idx
+  indexdef: CREATE INDEX order_payments_order_idx ON public.order_payments USING btree
+    (order_id, order_date)
+- table_name: order_payments
+  index_name: order_payments_pkey
+  indexdef: CREATE UNIQUE INDEX order_payments_pkey ON public.order_payments USING
+    btree (id)
+- table_name: orders
+  index_name: orders_customer_date_idx
+  indexdef: CREATE INDEX orders_customer_date_idx ON ONLY public.orders USING btree
+    (customer_id, order_date)
+- table_name: orders
+  index_name: orders_pkey
+  indexdef: CREATE UNIQUE INDEX orders_pkey ON ONLY public.orders USING btree (id,
+    order_date)
+- table_name: orders
+  index_name: orders_status_date_idx
+  indexdef: CREATE INDEX orders_status_date_idx ON ONLY public.orders USING btree
+    (status, order_date)
+- table_name: orders_2024
+  index_name: orders_2024_customer_id_order_date_idx
+  indexdef: CREATE INDEX orders_2024_customer_id_order_date_idx ON public.orders_2024
+    USING btree (customer_id, order_date)
+- table_name: orders_2024
+  index_name: orders_2024_pkey
+  indexdef: CREATE UNIQUE INDEX orders_2024_pkey ON public.orders_2024 USING btree
+    (id, order_date)
+- table_name: orders_2024
+  index_name: orders_2024_status_order_date_idx
+  indexdef: CREATE INDEX orders_2024_status_order_date_idx ON public.orders_2024 USING
+    btree (status, order_date)
+- table_name: orders_2025
+  index_name: orders_2025_customer_id_order_date_idx
+  indexdef: CREATE INDEX orders_2025_customer_id_order_date_idx ON public.orders_2025
+    USING btree (customer_id, order_date)
+- table_name: orders_2025
+  index_name: orders_2025_pkey
+  indexdef: CREATE UNIQUE INDEX orders_2025_pkey ON public.orders_2025 USING btree
+    (id, order_date)
+- table_name: orders_2025
+  index_name: orders_2025_status_order_date_idx
+  indexdef: CREATE INDEX orders_2025_status_order_date_idx ON public.orders_2025 USING
+    btree (status, order_date)
+- table_name: orders_2026
+  index_name: orders_2026_customer_id_order_date_idx
+  indexdef: CREATE INDEX orders_2026_customer_id_order_date_idx ON public.orders_2026
+    USING btree (customer_id, order_date)
+- table_name: orders_2026
+  index_name: orders_2026_pkey
+  indexdef: CREATE UNIQUE INDEX orders_2026_pkey ON public.orders_2026 USING btree
+    (id, order_date)
+- table_name: orders_2026
+  index_name: orders_2026_status_order_date_idx
+  indexdef: CREATE INDEX orders_2026_status_order_date_idx ON public.orders_2026 USING
+    btree (status, order_date)
+- table_name: product_suppliers
+  index_name: product_suppliers_pkey
+  indexdef: CREATE UNIQUE INDEX product_suppliers_pkey ON public.product_suppliers
+    USING btree (product_id, supplier_id)
+- table_name: products
+  index_name: products_pkey
+  indexdef: CREATE UNIQUE INDEX products_pkey ON public.products USING btree (id)
+- table_name: returns
+  index_name: returns_pkey
+  indexdef: CREATE UNIQUE INDEX returns_pkey ON public.returns USING btree (id)
+- table_name: shipments
+  index_name: shipments_order_idx
+  indexdef: CREATE INDEX shipments_order_idx ON public.shipments USING btree (order_id,
+    order_date)
+- table_name: shipments
+  index_name: shipments_pkey
+  indexdef: CREATE UNIQUE INDEX shipments_pkey ON public.shipments USING btree (id)
+- table_name: stores
+  index_name: stores_pkey
+  indexdef: CREATE UNIQUE INDEX stores_pkey ON public.stores USING btree (id)
+- table_name: suppliers
+  index_name: suppliers_pkey
+  indexdef: CREATE UNIQUE INDEX suppliers_pkey ON public.suppliers USING btree (id)

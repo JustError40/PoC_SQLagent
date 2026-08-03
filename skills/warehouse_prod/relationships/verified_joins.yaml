@@ -1,0 +1,21 @@
+joins:
+- left: orders.customer_id
+  right: customers.id
+  cardinality: many_to_one
+  verified: true
+- left: orders.store_id
+  right: stores.id
+  cardinality: many_to_one
+  verified: true
+- left: order_items.product_id
+  right: products.id
+  cardinality: many_to_one
+  verified: true
+- left: shipments.order_id
+  right: orders.id
+  cardinality: one_to_one_expected
+  verified: true
+- left: customers.id
+  right: customer_campaigns.customer_id
+  cardinality: one_to_many
+  verified: true

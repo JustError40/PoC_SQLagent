@@ -1,0 +1,363 @@
+tables:
+- name: customer_campaigns
+  description: Many-to-many customer acquisition attribution.
+  columns:
+  - column_name: customer_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: campaign_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: acquired_at
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 3
+- name: customers
+  description: Customer master with segment, region, signup date and soft deletion.
+  columns:
+  - column_name: id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: signup_date
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: segment
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: region
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 4
+  - column_name: is_deleted
+    data_type: boolean
+    is_nullable: 'NO'
+    ordinal_position: 5
+- name: daily_fx_rates
+  description: Daily currency exchange rates.
+  columns:
+  - column_name: rate_date
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: currency
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: rate
+    data_type: numeric
+    is_nullable: 'NO'
+    ordinal_position: 3
+- name: employees
+  description: Employees assigned to stores.
+  columns:
+  - column_name: id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: store_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: role
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: hired_on
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 4
+- name: expenses
+  description: Store operating expenses by day and category.
+  columns:
+  - column_name: id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: store_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: expense_date
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: category
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 4
+  - column_name: amount
+    data_type: numeric
+    is_nullable: 'NO'
+    ordinal_position: 5
+- name: inventory_snapshots
+  description: Periodic product stock snapshots by warehouse.
+  columns:
+  - column_name: id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: product_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: snapshot_date
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: warehouse
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 4
+  - column_name: on_hand
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 5
+  - column_name: reorder_point
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 6
+- name: marketing_campaigns
+  description: Campaign calendar and acquisition channel.
+  columns:
+  - column_name: id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: name
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: channel
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: starts_on
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 4
+  - column_name: ends_on
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 5
+- name: order_items
+  description: Line-item facts; joining them to orders changes the grain to item level.
+  columns:
+  - column_name: id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: order_id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: order_date
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: product_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 4
+  - column_name: quantity
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 5
+  - column_name: unit_price
+    data_type: numeric
+    is_nullable: 'NO'
+    ordinal_position: 6
+- name: order_payments
+  description: Payment events; multiple rows can belong to one order and cause fanout.
+  columns:
+  - column_name: id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: order_id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: order_date
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: paid_at
+    data_type: timestamp with time zone
+    is_nullable: 'NO'
+    ordinal_position: 4
+  - column_name: amount
+    data_type: numeric
+    is_nullable: 'NO'
+    ordinal_position: 5
+  - column_name: status
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 6
+- name: orders
+  description: Order-level sales facts partitioned by order date; total_amount is
+    already order grain.
+  columns:
+  - column_name: id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: customer_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: store_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: order_date
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 4
+  - column_name: status
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 5
+  - column_name: total_amount
+    data_type: numeric
+    is_nullable: 'NO'
+    ordinal_position: 6
+  - column_name: is_deleted
+    data_type: boolean
+    is_nullable: 'NO'
+    ordinal_position: 7
+- name: product_suppliers
+  description: Product-to-supplier relationship with lead time.
+  columns:
+  - column_name: product_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: supplier_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: lead_days
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 3
+- name: products
+  description: Sellable product catalog with category, price and cost.
+  columns:
+  - column_name: id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: name
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: category
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: price
+    data_type: numeric
+    is_nullable: 'NO'
+    ordinal_position: 4
+  - column_name: cost
+    data_type: numeric
+    is_nullable: 'NO'
+    ordinal_position: 5
+- name: returns
+  description: Returned order items and return reasons.
+  columns:
+  - column_name: id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: order_id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: order_date
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: product_id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 4
+  - column_name: quantity
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 5
+  - column_name: reason
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 6
+- name: shipments
+  description: Shipment status and delivery timestamps, normally at most one row per
+    order.
+  columns:
+  - column_name: id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: order_id
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: order_date
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: shipped_at
+    data_type: timestamp with time zone
+    is_nullable: 'YES'
+    ordinal_position: 4
+  - column_name: delivered_at
+    data_type: timestamp with time zone
+    is_nullable: 'YES'
+    ordinal_position: 5
+  - column_name: carrier
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 6
+  - column_name: status
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 7
+- name: stores
+  description: Retail store master and region.
+  columns:
+  - column_name: id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: name
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: region
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 3
+  - column_name: opened_on
+    data_type: date
+    is_nullable: 'NO'
+    ordinal_position: 4
+- name: suppliers
+  description: Supplier master.
+  columns:
+  - column_name: id
+    data_type: integer
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: name
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 2
+  - column_name: country
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 3

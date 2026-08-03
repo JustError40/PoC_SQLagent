@@ -1,0 +1,9 @@
+httpx<1,>=0.27
+langgraph<1,>=0.2
+psycopg[binary]<4,>=3.2
+pydantic<3,>=2.8
+pyyaml<7,>=6.0
+sqlparse<1,>=0.5
+faker<40,>=26
+fastapi<1,>=0.115
+uvicorn[standard]<1,>=0.30

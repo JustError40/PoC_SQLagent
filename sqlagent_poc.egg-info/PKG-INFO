@@ -1,0 +1,14 @@
+Metadata-Version: 2.4
+Name: sqlagent-poc
+Version: 0.1.0
+Summary: Self-evolving database-skill environment for a SQL agent
+Requires-Python: <3.13,>=3.10
+Requires-Dist: httpx<1,>=0.27
+Requires-Dist: langgraph<1,>=0.2
+Requires-Dist: psycopg[binary]<4,>=3.2
+Requires-Dist: pydantic<3,>=2.8
+Requires-Dist: pyyaml<7,>=6.0
+Requires-Dist: sqlparse<1,>=0.5
+Requires-Dist: faker<40,>=26
+Requires-Dist: fastapi<1,>=0.115
+Requires-Dist: uvicorn[standard]<1,>=0.30

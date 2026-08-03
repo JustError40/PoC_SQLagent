@@ -1,0 +1,13 @@
+rules:
+- rule: aggregate order_payments before joining order-grain measures
+  source: trajectory
+  confidence: 1.0
+- rule: aggregate order_payments before joining order-grain measures
+  source: trajectory
+  confidence: 1.0
+- rule: aggregate order_payments before joining order-grain measures
+  source: trajectory
+  confidence: 1.0
+- rule: aggregate order_payments before joining order-grain measures
+  source: trajectory
+  confidence: 1.0

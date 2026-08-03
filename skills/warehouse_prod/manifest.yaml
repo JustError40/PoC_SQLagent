@@ -1,0 +1,52 @@
+version: 1
+workspace: warehouse_prod
+generated_by: surveyor
+tables:
+- customer_campaigns
+- customers
+- daily_fx_rates
+- employees
+- expenses
+- inventory_snapshots
+- marketing_campaigns
+- order_items
+- order_payments
+- orders
+- product_suppliers
+- products
+- returns
+- shipments
+- stores
+- suppliers
+domains:
+  sales:
+  - orders
+  - order_items
+  - order_payments
+  - shipments
+  - returns
+  - stores
+  customers:
+  - customers
+  - customer_campaigns
+  - marketing_campaigns
+  logistics:
+  - shipments
+  - stores
+  - employees
+  finance:
+  - order_payments
+  - expenses
+  - daily_fx_rates
+  inventory:
+  - products
+  - inventory_snapshots
+  - suppliers
+  - product_suppliers
+artifacts:
+  schema: schema/tables.yaml
+  relationships: relationships/verified_joins.yaml
+  dangerous_joins: relationships/dangerous_joins.yaml
+  policies: policies/forbidden_operations.yaml
+  invariants: evals/invariants.yaml
+  templates: templates/

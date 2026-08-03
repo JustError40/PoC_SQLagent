@@ -1,0 +1,24 @@
+sales:
+- orders
+- order_items
+- order_payments
+- shipments
+- returns
+- stores
+customers:
+- customers
+- customer_campaigns
+- marketing_campaigns
+logistics:
+- shipments
+- stores
+- employees
+finance:
+- order_payments
+- expenses
+- daily_fx_rates
+inventory:
+- products
+- inventory_snapshots
+- suppliers
+- product_suppliers

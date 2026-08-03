@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: sqlagent-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-warehouse}
+      POSTGRES_USER: ${POSTGRES_USER:-warehouse}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: sqlagent-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    environment:
+      OLLAMA_HOST: 0.0.0.0:11434
+      OLLAMA_NUM_PARALLEL: 1
+      OLLAMA_MAX_LOADED_MODELS: 1
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sqlagent-api
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-warehouse}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-warehouse}
+      LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+      # The API runs inside Compose; localhost would point back to sqlagent-api.
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-nemotron-3-nano:4b}
+      OPENCODE_GO_BASE_URL: ${OPENCODE_GO_BASE_URL:-https://opencode.ai/zen/go/v1}
+      OPENCODE_GO_API_KEY: ${OPENCODE_GO_API_KEY:-}
+      OPENCODE_GO_MODEL: ${OPENCODE_GO_MODEL:-deepseek-v4-flash}
+      WORKSPACE_PATH: /app/skills/warehouse_prod
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./skills/warehouse_prod:/app/skills/warehouse_prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+volumes:
+  postgres_data:
+  ollama_models:

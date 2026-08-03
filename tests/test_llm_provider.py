@@ -1,0 +1,110 @@
+from pathlib import Path
+
+import httpx
+
+from sqlagent.config import Settings
+from sqlagent.llm import OpenCodeGoClient, build_llm
+
+
+def test_build_llm_selects_opencode_go(tmp_path: Path) -> None:
+    settings = Settings(
+        llm_provider="opencode_go",
+        opencode_go_base_url="https://opencode.ai/zen/go/v1",
+        opencode_go_api_key="secret",
+        opencode_go_model="deepseek-v4-flash",
+    )
+
+    client = build_llm(
+        provider=settings.llm_provider,
+        ollama_base_url=settings.ollama_base_url,
+        ollama_model=settings.ollama_model,
+        opencode_go_base_url=settings.opencode_go_base_url,
+        opencode_go_api_key=settings.opencode_go_api_key,
+        opencode_go_model=settings.opencode_go_model,
+        cache_dir=tmp_path,
+    )
+
+    assert isinstance(client, OpenCodeGoClient)
+    assert client.model == "deepseek-v4-flash"
+    assert client.base_url.endswith("/v1")
+
+
+def test_opencode_go_chat_json_uses_bearer_and_openai_shape(monkeypatch, tmp_path: Path) -> None:
+    captured: dict[str, object] = {}
+
+    class FakeResponse:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict[str, object]:
+            return {"choices": [{"message": {"content": '{"sql":"SELECT 1"}'}}]}
+
+    def fake_post(url: str, **kwargs: object) -> FakeResponse:
+        captured.update(url=url, **kwargs)
+        return FakeResponse()
+
+    monkeypatch.setattr(httpx, "post", fake_post)
+    client = OpenCodeGoClient(
+        "https://opencode.ai/zen/go/v1",
+        "secret-key",
+        "deepseek-v4-flash",
+        cache_dir=tmp_path,
+    )
+
+    result = client.chat_json("Return SQL", "question", retries=0)
+
+    assert result == {"sql": "SELECT 1"}
+    assert captured["url"] == "https://opencode.ai/zen/go/v1/chat/completions"
+    assert captured["headers"] == {
+        "Authorization": "Bearer secret-key",
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+    }
+    payload = captured["json"]
+    assert isinstance(payload, dict)
+    assert payload["model"] == "deepseek-v4-flash"
+    assert payload["response_format"] == {"type": "json_object"}
+
+
+def test_opencode_go_without_key_fails_before_network(tmp_path: Path) -> None:
+    client = OpenCodeGoClient("https://opencode.ai/zen/go/v1", "", "deepseek-v4-flash", tmp_path)
+
+    try:
+        client.chat_text("system", "user")
+    except Exception as exc:
+        assert "OPENCODE_GO_API_KEY" in str(exc)
+    else:
+        raise AssertionError("missing OpenCode Go key must fail explicitly")
+
+
+def test_invalid_cache_is_discarded_and_request_continues(monkeypatch, tmp_path: Path) -> None:
+    class FakeResponse:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict[str, object]:
+            return {"choices": [{"message": {"content": '{"sql":"SELECT 1"}'}}]}
+
+    def fake_post(url: str, **kwargs: object) -> FakeResponse:
+        return FakeResponse()
+
+    monkeypatch.setattr(httpx, "post", fake_post)
+    client = OpenCodeGoClient(
+        "https://opencode.ai/zen/go/v1", "secret-key", "deepseek-v4-flash", cache_dir=tmp_path
+    )
+    payload = {
+        "model": "deepseek-v4-flash",
+        "messages": [{"role": "system", "content": "Return SQL"}, {"role": "user", "content": "question"}],
+        "stream": False,
+        "response_format": {"type": "json_object"},
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "max_tokens": 4096,
+    }
+    cache_path = client._cache_path(payload)
+    assert cache_path is not None
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.write_text("{broken", encoding="utf-8")
+
+    assert client.chat_json("Return SQL", "question", retries=0) == {"sql": "SELECT 1"}
+    assert cache_path.read_text(encoding="utf-8").strip() == '{\n  "sql": "SELECT 1"\n}'

@@ -1,0 +1,8 @@
+domain: sales
+tables:
+- orders
+- order_items
+- order_payments
+- shipments
+- returns
+- stores
