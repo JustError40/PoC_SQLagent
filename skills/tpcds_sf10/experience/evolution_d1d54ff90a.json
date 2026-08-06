@@ -1,0 +1,9 @@
+{
+  "surface": "experience",
+  "reason": "failed trajectory needs a reusable correction",
+  "changed_files": [
+    "templates/web_sales_by_state_revenue.sql",
+    "relationships/web_sales_ship_addr_to_customer.json",
+    "manifest.yaml"
+  ]
+}

@@ -1,0 +1,32 @@
+callcenter:
+- call_center
+store:
+- store
+- store_returns
+- store_sales
+customer:
+- customer
+- customer_address
+- customer_demographics
+- household_demographics
+- income_band
+catalog:
+- catalog_page
+- catalog_sales
+- inventory
+- item
+- promotion
+- web_sales
+web:
+- web_page
+- web_returns
+dimensions:
+- date_dim
+- dbgen_version
+- time_dim
+other:
+- catalog_returns
+- reason
+- ship_mode
+- warehouse
+- web_site

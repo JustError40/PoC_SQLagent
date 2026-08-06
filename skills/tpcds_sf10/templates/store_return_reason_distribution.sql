@@ -1,0 +1,1 @@
+SELECT sr.sr_reason_sk, r.r_reason_desc, SUM(sr.sr_return_quantity) AS total_qty FROM store_returns sr JOIN reason r ON sr.sr_reason_sk = r.r_reason_sk GROUP BY sr.sr_reason_sk, r.r_reason_desc ORDER BY total_qty DESC;

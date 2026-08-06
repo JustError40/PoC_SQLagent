@@ -1,0 +1,4 @@
+domain: web
+tables:
+- web_page
+- web_returns

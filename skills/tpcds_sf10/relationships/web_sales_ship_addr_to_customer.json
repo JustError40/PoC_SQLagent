@@ -1,0 +1,1 @@
+{"left": "web_sales", "right": "customer_address", "condition": "CAST(ca.ca_zip AS INTEGER) = ws.ws_ship_addr_sk"}

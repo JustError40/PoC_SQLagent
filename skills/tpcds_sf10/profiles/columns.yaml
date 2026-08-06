@@ -1,0 +1,3333 @@
+call_center:
+  cc_call_center_sk:
+    total: 24
+    nulls: 0
+    distinct: 24
+    min: '1'
+    max: '24'
+  cc_call_center_id:
+    total: 24
+    nulls: 0
+    distinct: 12
+    min: AAAAAAAAABAAAAAA
+    max: AAAAAAAAOAAAAAAA
+  cc_rec_start_date:
+    total: 24
+    nulls: 0
+    distinct: 4
+    min: '1998-01-01'
+    max: '2002-01-01'
+  cc_rec_end_date:
+    total: 24
+    nulls: 12
+    distinct: 3
+    min: '2000-01-01'
+    max: '2001-12-31'
+  cc_closed_date_sk:
+    total: 24
+    nulls: 24
+    distinct: 0
+    min: null
+    max: null
+  cc_open_date_sk:
+    total: 24
+    nulls: 0
+    distinct: 12
+    min: '2450806'
+    max: '2451146'
+  cc_name:
+    total: 24
+    nulls: 0
+    distinct: 12
+    min: California
+    max: Pacific Northwest_1
+    top_values:
+    - value: Hawaii/Alaska
+      count: 3
+    - value: Hawaii/Alaska_1
+      count: 3
+    - value: North Midwest
+      count: 3
+    - value: North Midwest_1
+      count: 3
+    - value: California
+      count: 2
+    - value: California_1
+      count: 2
+    - value: Mid Atlantic
+      count: 2
+    - value: Mid Atlantic_1
+      count: 2
+    - value: NY Metro
+      count: 1
+    - value: NY Metro_1
+      count: 1
+    - value: Pacific Northwest
+      count: 1
+    - value: Pacific Northwest_1
+      count: 1
+  cc_class:
+    total: 24
+    nulls: 0
+    distinct: 3
+    min: large
+    max: small
+    top_values:
+    - value: medium
+      count: 12
+    - value: small
+      count: 8
+    - value: large
+      count: 4
+  cc_employees:
+    total: 24
+    nulls: 0
+    distinct: 19
+    min: '6'
+    max: '680'
+  cc_sq_ft:
+    total: 24
+    nulls: 0
+    distinct: 18
+    min: '2724'
+    max: '292056'
+  cc_hours:
+    total: 24
+    nulls: 0
+    distinct: 3
+    min: 8AM-12AM
+    max: 8AM-8AM
+  cc_manager:
+    total: 24
+    nulls: 0
+    distinct: 16
+    min: Alden Snyder
+    max: Wayne Ray
+    top_values:
+    - value: Larry Mccray
+      count: 3
+    - value: Travis Wilson
+      count: 3
+    - value: Gregory Altman
+      count: 2
+    - value: Jason Brito
+      count: 2
+    - value: Miguel Bird
+      count: 2
+    - value: Wayne Ray
+      count: 2
+    - value: Alden Snyder
+      count: 1
+    - value: Bob Belcher
+      count: 1
+    - value: Charles Hinkle
+      count: 1
+    - value: Clyde Scott
+      count: 1
+    - value: Felipe Perkins
+      count: 1
+    - value: Jack Little
+      count: 1
+    - value: Mark Hightower
+      count: 1
+    - value: Roderick Walls
+      count: 1
+    - value: Ronnie Trinidad
+      count: 1
+    - value: Timothy Bourgeois
+      count: 1
+  cc_mkt_id:
+    total: 24
+    nulls: 0
+    distinct: 5
+    min: '2'
+    max: '6'
+  cc_mkt_class:
+    total: 24
+    nulls: 0
+    distinct: 20
+    min: A bit narrow forms matter animals. Consist
+    max: Wrong troops shall work sometimes in a opti
+  cc_mkt_desc:
+    total: 24
+    nulls: 0
+    distinct: 17
+    min: 'As existing eyebrows miss as the matters. Realistic stories may not face
+      almost by a '
+    max: Young tests could buy comfortable, local users; o
+    top_values:
+    - value: Certain chairs can stand. Principles must catch absolutely. Also full
+        studies could
+      count: 3
+    - value: 'As existing eyebrows miss as the matters. Realistic stories may not
+        face almost by a '
+      count: 2
+    - value: Blue, due beds come. Politicians would not make far thoughts. Specifically
+        new horses partic
+      count: 2
+    - value: Eyes would not arise; terms shall not visit in the cells. Less ethnic
+        cities commi
+      count: 2
+    - value: Furthermore various areas shall not gr
+      count: 2
+    - value: Largely blank years put substantially deaf, new others. Question
+      count: 2
+    - value: Common, free creditors should exper
+      count: 1
+    - value: Common sons occur enough. Sometimes scottish preferences may let usually
+        other details
+      count: 1
+    - value: Completely electrical names will s
+      count: 1
+    - value: Pretty new degrees could open perhaps personal final poles; marine, annual
+        minutes imply reco
+      count: 1
+    - value: Reduced, subsequent bases could not lik
+      count: 1
+    - value: References give dull lives. Immed
+      count: 1
+    - value: Remarkable, long years gauge so systems. Others come priv
+      count: 1
+    - value: Rich groups catch longer other fears; future,
+      count: 1
+    - value: Shared others could not count fully dollars. New members ca
+      count: 1
+    - value: Too good moves can go just frequently new bodies; minor representatives
+        g
+      count: 1
+    - value: Young tests could buy comfortable, local users; o
+      count: 1
+  cc_market_manager:
+    total: 24
+    nulls: 0
+    distinct: 19
+    min: Charles Corbett
+    max: Ronald Somerville
+    top_values:
+    - value: Earl Wolf
+      count: 2
+    - value: Gary Colburn
+      count: 2
+    - value: James Mcdonald
+      count: 2
+    - value: Julius Durham
+      count: 2
+    - value: Peter Hernandez
+      count: 2
+    - value: Charles Corbett
+      count: 1
+    - value: Daniel Weller
+      count: 1
+    - value: Evan Saldana
+      count: 1
+    - value: Frank Schwartz
+      count: 1
+    - value: Frederick Weaver
+      count: 1
+    - value: Julius Tran
+      count: 1
+    - value: Kevin Damico
+      count: 1
+    - value: Kim Wilson
+      count: 1
+    - value: Mark Camp
+      count: 1
+    - value: Mark Jimenez
+      count: 1
+    - value: Matthew Clifton
+      count: 1
+    - value: Nicolas Smith
+      count: 1
+    - value: Paul Mccarty
+      count: 1
+    - value: Ronald Somerville
+      count: 1
+  cc_division:
+    total: 24
+    nulls: 0
+    distinct: 6
+    min: '1'
+    max: '6'
+  cc_division_name:
+    total: 24
+    nulls: 0
+    distinct: 6
+    min: able
+    max: pri
+    top_values:
+    - value: anti
+      count: 5
+    - value: cally
+      count: 5
+    - value: pri
+      count: 5
+    - value: able
+      count: 3
+    - value: ese
+      count: 3
+    - value: ought
+      count: 3
+  cc_company:
+    total: 24
+    nulls: 0
+    distinct: 6
+    min: '1'
+    max: '6'
+  cc_company_name:
+    total: 24
+    nulls: 0
+    distinct: 6
+    min: able
+    max: pri
+  cc_street_number:
+    total: 24
+    nulls: 0
+    distinct: 12
+    min: '406'
+    max: '984'
+  cc_street_name:
+    total: 24
+    nulls: 0
+    distinct: 12
+    min: '1st '
+    max: 'View '
+    top_values:
+    - value: '1st '
+      count: 3
+    - value: 'Center '
+      count: 3
+    - value: Pine Ridge
+      count: 3
+    - value: 'View '
+      count: 3
+    - value: Cedar Elm
+      count: 2
+    - value: Center Hill
+      count: 2
+    - value: 'Main '
+      count: 2
+    - value: 'Sycamore '
+      count: 2
+    - value: Ash Hill
+      count: 1
+    - value: 'First '
+      count: 1
+    - value: First Hill
+      count: 1
+    - value: Jefferson Tenth
+      count: 1
+  cc_street_type:
+    total: 24
+    nulls: 0
+    distinct: 9
+    min: Avenue
+    max: Way
+  cc_suite_number:
+    total: 24
+    nulls: 0
+    distinct: 12
+    min: Suite 0
+    max: Suite W
+  cc_city:
+    total: 24
+    nulls: 0
+    distinct: 6
+    min: Fairview
+    max: Riverside
+    top_values:
+    - value: Pleasant Hill
+      count: 8
+    - value: Fairview
+      count: 5
+    - value: Oak Grove
+      count: 4
+    - value: Midway
+      count: 3
+    - value: Five Points
+      count: 2
+    - value: Riverside
+      count: 2
+  cc_county:
+    total: 24
+    nulls: 0
+    distinct: 3
+    min: Walker County
+    max: Ziebach County
+    top_values:
+    - value: Ziebach County
+      count: 9
+    - value: Walker County
+      count: 8
+    - value: Williamson County
+      count: 7
+  cc_state:
+    total: 24
+    nulls: 0
+    distinct: 3
+    min: AL
+    max: TN
+  cc_zip:
+    total: 24
+    nulls: 0
+    distinct: 8
+    min: '31904'
+    max: '59231'
+  cc_country:
+    total: 24
+    nulls: 0
+    distinct: 1
+    min: United States
+    max: United States
+    top_values:
+    - value: United States
+      count: 24
+  cc_gmt_offset:
+    total: 24
+    nulls: 0
+    distinct: 2
+    min: '-6.00'
+    max: '-5.00'
+  cc_tax_percentage:
+    total: 24
+    nulls: 0
+    distinct: 10
+    min: '0.00'
+    max: '0.12'
+catalog_page:
+  cp_catalog_page_sk:
+    total: 12000
+    nulls: 0
+    distinct: 12000
+    min: '1'
+    max: '12000'
+  cp_catalog_page_id:
+    total: 12000
+    nulls: 0
+    distinct: 12000
+    min: AAAAAAAAAAABAAAA
+    max: AAAAAAAAPPPBAAAA
+  cp_start_date_sk:
+    total: 12000
+    nulls: 107
+    distinct: 91
+    min: '2450815'
+    max: '2453005'
+  cp_end_date_sk:
+    total: 12000
+    nulls: 118
+    distinct: 97
+    min: '2450844'
+    max: '2453186'
+  cp_department:
+    total: 12000
+    nulls: 128
+    distinct: 1
+    min: DEPARTMENT
+    max: DEPARTMENT
+    top_values:
+    - value: DEPARTMENT
+      count: 11872
+  cp_catalog_number:
+    total: 12000
+    nulls: 111
+    distinct: 109
+    min: '1'
+    max: '109'
+  cp_catalog_page_number:
+    total: 12000
+    nulls: 124
+    distinct: 111
+    min: '1'
+    max: '111'
+  cp_description:
+    total: 12000
+    nulls: 116
+    distinct: 11884
+    min: Aback hostile numbers ought to feel particularly great, slow members. Fine
+      supporters
+    max: Young years should deal later plus a emotions. Things fetch only, plain events.
+      At leas
+  cp_type:
+    total: 12000
+    nulls: 115
+    distinct: 3
+    min: bi-annual
+    max: quarterly
+    top_values:
+    - value: monthly
+      count: 7919
+    - value: quarterly
+      count: 2644
+    - value: bi-annual
+      count: 1322
+catalog_returns:
+  cr_returned_date_sk:
+    total: 1439749
+    nulls: 0
+    distinct: 2092
+    min: '2450821'
+    max: '2452922'
+  cr_returned_time_sk:
+    total: 1439749
+    nulls: 0
+    distinct: 86274
+    min: '0'
+    max: '86399'
+  cr_item_sk:
+    total: 1439749
+    nulls: 0
+    distinct: 101946
+    min: '1'
+    max: '102000'
+  cr_refunded_customer_sk:
+    total: 1439749
+    nulls: 28572
+    distinct: 422473
+    min: '1'
+    max: '500000'
+  cr_refunded_cdemo_sk:
+    total: 1439749
+    nulls: 28615
+    distinct: 738124
+    min: '2'
+    max: '1920797'
+  cr_refunded_hdemo_sk:
+    total: 1439749
+    nulls: 28608
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  cr_refunded_addr_sk:
+    total: 1439749
+    nulls: 28689
+    distinct: 244083
+    min: '1'
+    max: '250000'
+  cr_returning_customer_sk:
+    total: 1439749
+    nulls: 28752
+    distinct: 469839
+    min: '1'
+    max: '500000'
+  cr_returning_cdemo_sk:
+    total: 1439749
+    nulls: 28753
+    distinct: 996821
+    min: '1'
+    max: '1920796'
+  cr_returning_hdemo_sk:
+    total: 1439749
+    nulls: 28663
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  cr_returning_addr_sk:
+    total: 1439749
+    nulls: 28711
+    distinct: 249122
+    min: '1'
+    max: '250000'
+  cr_call_center_sk:
+    total: 1439749
+    nulls: 28871
+    distinct: 24
+    min: '1'
+    max: '24'
+  cr_catalog_page_sk:
+    total: 1439749
+    nulls: 28735
+    distinct: 6771
+    min: '1'
+    max: '10101'
+  cr_ship_mode_sk:
+    total: 1439749
+    nulls: 28848
+    distinct: 20
+    min: '1'
+    max: '20'
+  cr_warehouse_sk:
+    total: 1439749
+    nulls: 28883
+    distinct: 10
+    min: '1'
+    max: '10'
+  cr_reason_sk:
+    total: 1439749
+    nulls: 28574
+    distinct: 45
+    min: '1'
+    max: '45'
+  cr_order_number:
+    total: 1439749
+    nulls: 0
+    distinct: 944515
+    min: '2'
+    max: '1599998'
+  cr_return_quantity:
+    total: 1439749
+    nulls: 28727
+    distinct: 100
+    min: '1'
+    max: '100'
+  cr_return_amount:
+    total: 1439749
+    nulls: 28706
+    distinct: 291989
+    min: '0.00'
+    max: '25937.42'
+  cr_return_tax:
+    total: 1439749
+    nulls: 28817
+    distinct: 61281
+    min: '0.00'
+    max: '2208.59'
+  cr_return_amt_inc_tax:
+    total: 1439749
+    nulls: 28671
+    distinct: 392969
+    min: '0.00'
+    max: '27487.05'
+  cr_fee:
+    total: 1439749
+    nulls: 28688
+    distinct: 9951
+    min: '0.50'
+    max: '100.00'
+  cr_return_ship_cost:
+    total: 1439749
+    nulls: 28409
+    distinct: 192245
+    min: '0.00'
+    max: '13077.70'
+  cr_refunded_cash:
+    total: 1439749
+    nulls: 28547
+    distinct: 269395
+    min: '0.00'
+    max: '22110.68'
+  cr_reversed_charge:
+    total: 1439749
+    nulls: 28649
+    distinct: 187810
+    min: '0.00'
+    max: '20390.94'
+  cr_store_credit:
+    total: 1439749
+    nulls: 28587
+    distinct: 185993
+    min: '0.00'
+    max: '19492.01'
+  cr_net_loss:
+    total: 1439749
+    nulls: 28861
+    distinct: 290512
+    min: '0.54'
+    max: '13502.75'
+catalog_sales:
+  cs_sold_date_sk:
+    total: 14401261
+    nulls: 71973
+    distinct: 1835
+    min: '2450815'
+    max: '2452653'
+  cs_sold_time_sk:
+    total: 14401261
+    nulls: 71949
+    distinct: 86316
+    min: '0'
+    max: '86399'
+  cs_ship_date_sk:
+    total: 14401261
+    nulls: 71757
+    distinct: 1927
+    min: '2450817'
+    max: '2452743'
+  cs_bill_customer_sk:
+    total: 14401261
+    nulls: 71734
+    distinct: 479463
+    min: '1'
+    max: '500000'
+  cs_bill_cdemo_sk:
+    total: 14401261
+    nulls: 72045
+    distinct: 1085080
+    min: '2'
+    max: '1920800'
+  cs_bill_hdemo_sk:
+    total: 14401261
+    nulls: 71910
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  cs_bill_addr_sk:
+    total: 14401261
+    nulls: 71463
+    distinct: 249616
+    min: '1'
+    max: '250000'
+  cs_ship_customer_sk:
+    total: 14401261
+    nulls: 72051
+    distinct: 479577
+    min: '1'
+    max: '500000'
+  cs_ship_cdemo_sk:
+    total: 14401261
+    nulls: 71595
+    distinct: 1084999
+    min: '2'
+    max: '1920800'
+  cs_ship_hdemo_sk:
+    total: 14401261
+    nulls: 71803
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  cs_ship_addr_sk:
+    total: 14401261
+    nulls: 71737
+    distinct: 249568
+    min: '1'
+    max: '250000'
+  cs_call_center_sk:
+    total: 14401261
+    nulls: 72069
+    distinct: 24
+    min: '1'
+    max: '24'
+  cs_catalog_page_sk:
+    total: 14401261
+    nulls: 71584
+    distinct: 6771
+    min: '1'
+    max: '10101'
+  cs_ship_mode_sk:
+    total: 14401261
+    nulls: 71814
+    distinct: 20
+    min: '1'
+    max: '20'
+  cs_warehouse_sk:
+    total: 14401261
+    nulls: 71779
+    distinct: 10
+    min: '1'
+    max: '10'
+  cs_item_sk:
+    total: 14401261
+    nulls: 0
+    distinct: 102000
+    min: '1'
+    max: '102000'
+  cs_promo_sk:
+    total: 14401261
+    nulls: 72285
+    distinct: 500
+    min: '1'
+    max: '500'
+  cs_order_number:
+    total: 14401261
+    nulls: 0
+    distinct: 1600000
+    min: '1'
+    max: '1600000'
+  cs_quantity:
+    total: 14401261
+    nulls: 71679
+    distinct: 100
+    min: '1'
+    max: '100'
+  cs_wholesale_cost:
+    total: 14401261
+    nulls: 72109
+    distinct: 9901
+    min: '1.00'
+    max: '100.00'
+  cs_list_price:
+    total: 14401261
+    nulls: 72135
+    distinct: 29774
+    min: '1.00'
+    max: '300.00'
+  cs_sales_price:
+    total: 14401261
+    nulls: 71285
+    distinct: 28720
+    min: '0.00'
+    max: '299.67'
+  cs_ext_discount_amt:
+    total: 14401261
+    nulls: 72212
+    distinct: 772505
+    min: '0.00'
+    max: '29504.00'
+  cs_ext_sales_price:
+    total: 14401261
+    nulls: 71494
+    distinct: 771920
+    min: '0.00'
+    max: '29394.00'
+  cs_ext_wholesale_cost:
+    total: 14401261
+    nulls: 71928
+    distinct: 393169
+    min: '1.00'
+    max: '10000.00'
+  cs_ext_list_price:
+    total: 14401261
+    nulls: 71628
+    distinct: 1028727
+    min: '1.00'
+    max: '29976.00'
+  cs_ext_tax:
+    total: 14401261
+    nulls: 71762
+    distinct: 141325
+    min: '0.00'
+    max: '2517.29'
+  cs_coupon_amt:
+    total: 14401261
+    nulls: 71851
+    distinct: 531244
+    min: '0.00'
+    max: '26538.00'
+  cs_ext_ship_cost:
+    total: 14401261
+    nulls: 71688
+    distinct: 437127
+    min: '0.00'
+    max: '14667.84'
+  cs_net_paid:
+    total: 14401261
+    nulls: 71745
+    distinct: 937181
+    min: '0.00'
+    max: '29394.00'
+  cs_net_paid_inc_tax:
+    total: 14401261
+    nulls: 71653
+    distinct: 1289068
+    min: '0.00'
+    max: '31745.52'
+  cs_net_paid_inc_ship:
+    total: 14401261
+    nulls: 0
+    distinct: 1261566
+    min: '0.00'
+    max: '43051.00'
+  cs_net_paid_inc_ship_tax:
+    total: 14401261
+    nulls: 0
+    distinct: 1702213
+    min: '0.00'
+    max: '45402.52'
+  cs_net_profit:
+    total: 14401261
+    nulls: 0
+    distinct: 1145675
+    min: '-9997.00'
+    max: '19404.00'
+customer:
+  c_customer_sk:
+    total: 500000
+    nulls: 0
+    distinct: 500000
+    min: '1'
+    max: '500000'
+  c_customer_id:
+    total: 500000
+    nulls: 0
+    distinct: 500000
+    min: AAAAAAAAAAAABAAA
+    max: AAAAAAAAPPPPGAAA
+  c_current_cdemo_sk:
+    total: 500000
+    nulls: 17303
+    distinct: 426807
+    min: '4'
+    max: '1920791'
+  c_current_hdemo_sk:
+    total: 500000
+    nulls: 17429
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  c_current_addr_sk:
+    total: 500000
+    nulls: 0
+    distinct: 216323
+    min: '1'
+    max: '250000'
+  c_first_shipto_date_sk:
+    total: 500000
+    nulls: 17610
+    distinct: 3651
+    min: '2449028'
+    max: '2452678'
+  c_first_sales_date_sk:
+    total: 500000
+    nulls: 17544
+    distinct: 3651
+    min: '2448998'
+    max: '2452648'
+  c_salutation:
+    total: 500000
+    nulls: 17372
+    distinct: 6
+    min: Dr.
+    max: Sir
+  c_first_name:
+    total: 500000
+    nulls: 17470
+    distinct: 5097
+    min: Aaron
+    max: Zulma
+  c_last_name:
+    total: 500000
+    nulls: 17517
+    distinct: 5000
+    min: Aaron
+    max: Zuniga
+  c_preferred_cust_flag:
+    total: 500000
+    nulls: 17299
+    distinct: 2
+    min: N
+    max: Y
+  c_birth_day:
+    total: 500000
+    nulls: 17773
+    distinct: 31
+    min: '1'
+    max: '31'
+  c_birth_month:
+    total: 500000
+    nulls: 17386
+    distinct: 12
+    min: '1'
+    max: '12'
+  c_birth_year:
+    total: 500000
+    nulls: 17464
+    distinct: 69
+    min: '1924'
+    max: '1992'
+  c_birth_country:
+    total: 500000
+    nulls: 17506
+    distinct: 211
+    min: AFGHANISTAN
+    max: ZIMBABWE
+  c_login:
+    total: 500000
+    nulls: 500000
+    distinct: 0
+    min: null
+    max: null
+  c_email_address:
+    total: 500000
+    nulls: 17537
+    distinct: 482454
+    min: Aaron.Abbott@P3l0gB.edu
+    max: Zulma.Wright@AqokXsju9f2yj.org
+  c_last_review_date_sk:
+    total: 500000
+    nulls: 17665
+    distinct: 366
+    min: '2452283'
+    max: '2452648'
+customer_address:
+  ca_address_sk:
+    total: 250000
+    nulls: 0
+    distinct: 250000
+    min: '1'
+    max: '250000'
+  ca_address_id:
+    total: 250000
+    nulls: 0
+    distinct: 250000
+    min: AAAAAAAAAAAABAAA
+    max: AAAAAAAAPPPPCAAA
+  ca_street_number:
+    total: 250000
+    nulls: 7563
+    distinct: 1000
+    min: '1'
+    max: '999'
+  ca_street_name:
+    total: 250000
+    nulls: 7542
+    distinct: 7985
+    min: '10th '
+    max: Woodland Woodland
+  ca_street_type:
+    total: 250000
+    nulls: 7510
+    distinct: 20
+    min: Ave
+    max: Wy
+  ca_suite_number:
+    total: 250000
+    nulls: 7639
+    distinct: 75
+    min: Suite 0
+    max: Suite Y
+  ca_city:
+    total: 250000
+    nulls: 7507
+    distinct: 969
+    min: Aberdeen
+    max: Zion
+  ca_county:
+    total: 250000
+    nulls: 7502
+    distinct: 1846
+    min: Abbeville County
+    max: Ziebach County
+  ca_state:
+    total: 250000
+    nulls: 7554
+    distinct: 51
+    min: AK
+    max: WY
+  ca_zip:
+    total: 250000
+    nulls: 7599
+    distinct: 5438
+    min: '00601'
+    max: '99981'
+  ca_country:
+    total: 250000
+    nulls: 7649
+    distinct: 1
+    min: United States
+    max: United States
+    top_values:
+    - value: United States
+      count: 242351
+  ca_gmt_offset:
+    total: 250000
+    nulls: 7504
+    distinct: 6
+    min: '-10.00'
+    max: '-5.00'
+  ca_location_type:
+    total: 250000
+    nulls: 7539
+    distinct: 3
+    min: apartment
+    max: single family
+customer_demographics:
+  cd_demo_sk:
+    total: 1920800
+    nulls: 0
+    distinct: 1920800
+    min: '1'
+    max: '1920800'
+  cd_gender:
+    total: 1920800
+    nulls: 0
+    distinct: 2
+    min: F
+    max: M
+  cd_marital_status:
+    total: 1920800
+    nulls: 0
+    distinct: 5
+    min: D
+    max: W
+  cd_education_status:
+    total: 1920800
+    nulls: 0
+    distinct: 7
+    min: 2 yr Degree
+    max: Unknown
+  cd_purchase_estimate:
+    total: 1920800
+    nulls: 0
+    distinct: 20
+    min: '500'
+    max: '10000'
+  cd_credit_rating:
+    total: 1920800
+    nulls: 0
+    distinct: 4
+    min: Good
+    max: Unknown
+  cd_dep_count:
+    total: 1920800
+    nulls: 0
+    distinct: 7
+    min: '0'
+    max: '6'
+  cd_dep_employed_count:
+    total: 1920800
+    nulls: 0
+    distinct: 7
+    min: '0'
+    max: '6'
+  cd_dep_college_count:
+    total: 1920800
+    nulls: 0
+    distinct: 7
+    min: '0'
+    max: '6'
+date_dim:
+  d_date_sk:
+    total: 73049
+    nulls: 0
+    distinct: 73049
+    min: '2415022'
+    max: '2488070'
+  d_date_id:
+    total: 73049
+    nulls: 0
+    distinct: 73049
+    min: AAAAAAAAAAAAFCAA
+    max: AAAAAAAAPPPPECAA
+  d_date:
+    total: 73049
+    nulls: 0
+    distinct: 73049
+    min: '1900-01-02'
+    max: '2100-01-01'
+  d_month_seq:
+    total: 73049
+    nulls: 0
+    distinct: 2401
+    min: '0'
+    max: '2400'
+  d_week_seq:
+    total: 73049
+    nulls: 0
+    distinct: 10436
+    min: '1'
+    max: '10436'
+  d_quarter_seq:
+    total: 73049
+    nulls: 0
+    distinct: 801
+    min: '1'
+    max: '801'
+  d_year:
+    total: 73049
+    nulls: 0
+    distinct: 201
+    min: '1900'
+    max: '2100'
+  d_dow:
+    total: 73049
+    nulls: 0
+    distinct: 7
+    min: '0'
+    max: '6'
+  d_moy:
+    total: 73049
+    nulls: 0
+    distinct: 12
+    min: '1'
+    max: '12'
+  d_dom:
+    total: 73049
+    nulls: 0
+    distinct: 31
+    min: '1'
+    max: '31'
+  d_qoy:
+    total: 73049
+    nulls: 0
+    distinct: 4
+    min: '1'
+    max: '4'
+  d_fy_year:
+    total: 73049
+    nulls: 0
+    distinct: 201
+    min: '1900'
+    max: '2100'
+  d_fy_quarter_seq:
+    total: 73049
+    nulls: 0
+    distinct: 801
+    min: '1'
+    max: '801'
+  d_fy_week_seq:
+    total: 73049
+    nulls: 0
+    distinct: 10436
+    min: '1'
+    max: '10436'
+  d_day_name:
+    total: 73049
+    nulls: 0
+    distinct: 7
+    min: Friday
+    max: Wednesday
+  d_quarter_name:
+    total: 73049
+    nulls: 0
+    distinct: 801
+    min: 1900Q1
+    max: 2100Q1
+  d_holiday:
+    total: 73049
+    nulls: 0
+    distinct: 2
+    min: N
+    max: Y
+  d_weekend:
+    total: 73049
+    nulls: 0
+    distinct: 2
+    min: N
+    max: Y
+  d_following_holiday:
+    total: 73049
+    nulls: 0
+    distinct: 2
+    min: N
+    max: Y
+  d_first_dom:
+    total: 73049
+    nulls: 0
+    distinct: 2401
+    min: '2415021'
+    max: '2488070'
+  d_last_dom:
+    total: 73049
+    nulls: 0
+    distinct: 2401
+    min: '2415020'
+    max: '2488372'
+  d_same_day_ly:
+    total: 73049
+    nulls: 0
+    distinct: 73000
+    min: '2414657'
+    max: '2487705'
+  d_same_day_lq:
+    total: 73049
+    nulls: 0
+    distinct: 72698
+    min: '2414930'
+    max: '2487978'
+  d_current_day:
+    total: 73049
+    nulls: 0
+    distinct: 1
+    min: N
+    max: N
+  d_current_week:
+    total: 73049
+    nulls: 0
+    distinct: 1
+    min: N
+    max: N
+  d_current_month:
+    total: 73049
+    nulls: 0
+    distinct: 2
+    min: N
+    max: Y
+  d_current_quarter:
+    total: 73049
+    nulls: 0
+    distinct: 2
+    min: N
+    max: Y
+  d_current_year:
+    total: 73049
+    nulls: 0
+    distinct: 2
+    min: N
+    max: Y
+dbgen_version:
+  dv_version:
+    total: 1
+    nulls: 0
+    distinct: 1
+    min: 2.10.0
+    max: 2.10.0
+    top_values:
+    - value: 2.10.0
+      count: 1
+  dv_create_date:
+    total: 1
+    nulls: 0
+    distinct: 1
+    min: '2026-08-03'
+    max: '2026-08-03'
+  dv_create_time:
+    total: 1
+    nulls: 0
+    distinct: 1
+    min: '23:59:50'
+    max: '23:59:50'
+  dv_cmdline_args:
+    total: 1
+    nulls: 0
+    distinct: 1
+    min: '-SCALE 10 -DIR /home/f9d9e/PoC_SQLagent/.data/tpcds/sf10 -FORCE Y -VERBOSE
+      N -TERMINATE N '
+    max: '-SCALE 10 -DIR /home/f9d9e/PoC_SQLagent/.data/tpcds/sf10 -FORCE Y -VERBOSE
+      N -TERMINATE N '
+    top_values:
+    - value: '-SCALE 10 -DIR /home/f9d9e/PoC_SQLagent/.data/tpcds/sf10 -FORCE Y -VERBOSE
+        N -TERMINATE N '
+      count: 1
+household_demographics:
+  hd_demo_sk:
+    total: 7200
+    nulls: 0
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  hd_income_band_sk:
+    total: 7200
+    nulls: 0
+    distinct: 20
+    min: '1'
+    max: '20'
+  hd_buy_potential:
+    total: 7200
+    nulls: 0
+    distinct: 6
+    min: 0-500
+    max: Unknown
+  hd_dep_count:
+    total: 7200
+    nulls: 0
+    distinct: 10
+    min: '0'
+    max: '9'
+  hd_vehicle_count:
+    total: 7200
+    nulls: 0
+    distinct: 6
+    min: '-1'
+    max: '4'
+income_band:
+  ib_income_band_sk:
+    total: 20
+    nulls: 0
+    distinct: 20
+    min: '1'
+    max: '20'
+  ib_lower_bound:
+    total: 20
+    nulls: 0
+    distinct: 20
+    min: '0'
+    max: '190001'
+  ib_upper_bound:
+    total: 20
+    nulls: 0
+    distinct: 20
+    min: '10000'
+    max: '200000'
+inventory:
+  inv_date_sk:
+    total: 133110000
+    nulls: 0
+    distinct: 261
+    min: '2450815'
+    max: '2452635'
+  inv_item_sk:
+    total: 133110000
+    nulls: 0
+    distinct: 102000
+    min: '1'
+    max: '102000'
+  inv_warehouse_sk:
+    total: 133110000
+    nulls: 0
+    distinct: 10
+    min: '1'
+    max: '10'
+  inv_quantity_on_hand:
+    total: 133110000
+    nulls: 6653852
+    distinct: 1001
+    min: '0'
+    max: '1000'
+item:
+  i_item_sk:
+    total: 102000
+    nulls: 0
+    distinct: 102000
+    min: '1'
+    max: '102000'
+  i_item_id:
+    total: 102000
+    nulls: 0
+    distinct: 51000
+    min: AAAAAAAAAAAABAAA
+    max: AAAAAAAAPPPNAAAA
+  i_rec_start_date:
+    total: 102000
+    nulls: 243
+    distinct: 4
+    min: '1997-10-27'
+    max: '2001-10-27'
+  i_rec_end_date:
+    total: 102000
+    nulls: 51000
+    distinct: 3
+    min: '1999-10-27'
+    max: '2001-10-26'
+  i_item_desc:
+    total: 102000
+    nulls: 255
+    distinct: 75309
+    min: A
+    max: Young, young stars would come unfortunately proper, ill troops. Curiou
+  i_current_price:
+    total: 102000
+    nulls: 269
+    distinct: 7177
+    min: '0.09'
+    max: '99.99'
+  i_wholesale_cost:
+    total: 102000
+    nulls: 249
+    distinct: 5098
+    min: '0.02'
+    max: '88.66'
+  i_brand_id:
+    total: 102000
+    nulls: 249
+    distinct: 952
+    min: '1001001'
+    max: '10016017'
+  i_brand:
+    total: 102000
+    nulls: 235
+    distinct: 712
+    min: 'amalgamalg #1'
+    max: 'univunivamalg #9'
+  i_class_id:
+    total: 102000
+    nulls: 242
+    distinct: 16
+    min: '1'
+    max: '16'
+  i_class:
+    total: 102000
+    nulls: 241
+    distinct: 99
+    min: accent
+    max: womens watch
+  i_category_id:
+    total: 102000
+    nulls: 243
+    distinct: 10
+    min: '1'
+    max: '10'
+  i_category:
+    total: 102000
+    nulls: 232
+    distinct: 10
+    min: Books
+    max: Women
+  i_manufact_id:
+    total: 102000
+    nulls: 247
+    distinct: 1000
+    min: '1'
+    max: '1000'
+  i_manufact:
+    total: 102000
+    nulls: 268
+    distinct: 1000
+    min: able
+    max: pripripri
+  i_size:
+    total: 102000
+    nulls: 250
+    distinct: 7
+    min: economy
+    max: small
+  i_formulation:
+    total: 102000
+    nulls: 252
+    distinct: 76380
+    min: 00000822816917sky894
+    max: yellow98911509228741
+  i_color:
+    total: 102000
+    nulls: 255
+    distinct: 92
+    min: almond
+    max: yellow
+  i_units:
+    total: 102000
+    nulls: 251
+    distinct: 21
+    min: Box
+    max: Unknown
+  i_container:
+    total: 102000
+    nulls: 240
+    distinct: 1
+    min: Unknown
+    max: Unknown
+  i_manager_id:
+    total: 102000
+    nulls: 236
+    distinct: 100
+    min: '1'
+    max: '100'
+  i_product_name:
+    total: 102000
+    nulls: 249
+    distinct: 101751
+    min: able
+    max: pripripripripri
+promotion:
+  p_promo_sk:
+    total: 500
+    nulls: 0
+    distinct: 500
+    min: '1'
+    max: '500'
+  p_promo_id:
+    total: 500
+    nulls: 0
+    distinct: 500
+    min: AAAAAAAAAABAAAAA
+    max: AAAAAAAAPPAAAAAA
+  p_start_date_sk:
+    total: 500
+    nulls: 7
+    distinct: 373
+    min: '2450100'
+    max: '2450913'
+  p_end_date_sk:
+    total: 500
+    nulls: 7
+    distinct: 365
+    min: '2450132'
+    max: '2450962'
+  p_item_sk:
+    total: 500
+    nulls: 9
+    distinct: 487
+    min: '7'
+    max: '101990'
+  p_cost:
+    total: 500
+    nulls: 8
+    distinct: 1
+    min: '1000.00'
+    max: '1000.00'
+  p_response_target:
+    total: 500
+    nulls: 10
+    distinct: 1
+    min: '1'
+    max: '1'
+  p_promo_name:
+    total: 500
+    nulls: 10
+    distinct: 10
+    min: able
+    max: pri
+  p_channel_dmail:
+    total: 500
+    nulls: 7
+    distinct: 2
+    min: N
+    max: Y
+  p_channel_email:
+    total: 500
+    nulls: 6
+    distinct: 1
+    min: N
+    max: N
+  p_channel_catalog:
+    total: 500
+    nulls: 5
+    distinct: 1
+    min: N
+    max: N
+  p_channel_tv:
+    total: 500
+    nulls: 8
+    distinct: 1
+    min: N
+    max: N
+  p_channel_radio:
+    total: 500
+    nulls: 8
+    distinct: 1
+    min: N
+    max: N
+  p_channel_press:
+    total: 500
+    nulls: 9
+    distinct: 1
+    min: N
+    max: N
+  p_channel_event:
+    total: 500
+    nulls: 7
+    distinct: 1
+    min: N
+    max: N
+  p_channel_demo:
+    total: 500
+    nulls: 6
+    distinct: 1
+    min: N
+    max: N
+  p_channel_details:
+    total: 500
+    nulls: 3
+    distinct: 497
+    min: Able ambitions set anyway principles. Extra forests ju
+    max: Young, valuable companies watch walls. Payments can flour
+  p_purpose:
+    total: 500
+    nulls: 6
+    distinct: 1
+    min: Unknown
+    max: Unknown
+  p_discount_active:
+    total: 500
+    nulls: 10
+    distinct: 1
+    min: N
+    max: N
+reason:
+  r_reason_sk:
+    total: 45
+    nulls: 0
+    distinct: 45
+    min: '1'
+    max: '45'
+  r_reason_id:
+    total: 45
+    nulls: 0
+    distinct: 45
+    min: AAAAAAAAABAAAAAA
+    max: AAAAAAAAPBAAAAAA
+  r_reason_desc:
+    total: 45
+    nulls: 0
+    distinct: 44
+    min: Did not fit
+    max: Wrong size
+ship_mode:
+  sm_ship_mode_sk:
+    total: 20
+    nulls: 0
+    distinct: 20
+    min: '1'
+    max: '20'
+  sm_ship_mode_id:
+    total: 20
+    nulls: 0
+    distinct: 20
+    min: AAAAAAAAABAAAAAA
+    max: AAAAAAAAPAAAAAAA
+  sm_type:
+    total: 20
+    nulls: 0
+    distinct: 6
+    min: EXPRESS
+    max: TWO DAY
+  sm_code:
+    total: 20
+    nulls: 0
+    distinct: 4
+    min: AIR
+    max: SURFACE
+  sm_carrier:
+    total: 20
+    nulls: 0
+    distinct: 20
+    min: AIRBORNE
+    max: ZOUROS
+  sm_contract:
+    total: 20
+    nulls: 0
+    distinct: 20
+    min: 2mM8l
+    max: YvxVaJI10
+store:
+  s_store_sk:
+    total: 102
+    nulls: 0
+    distinct: 102
+    min: '1'
+    max: '102'
+  s_store_id:
+    total: 102
+    nulls: 0
+    distinct: 51
+    min: AAAAAAAAABAAAAAA
+    max: AAAAAAAAPEAAAAAA
+  s_rec_start_date:
+    total: 102
+    nulls: 1
+    distinct: 4
+    min: '1997-03-13'
+    max: '2001-03-13'
+  s_rec_end_date:
+    total: 102
+    nulls: 51
+    distinct: 3
+    min: '1999-03-13'
+    max: '2001-03-12'
+  s_closed_date_sk:
+    total: 102
+    nulls: 72
+    distinct: 21
+    min: '2450833'
+    max: '2451288'
+  s_store_name:
+    total: 102
+    nulls: 0
+    distinct: 10
+    min: able
+    max: pri
+    top_values:
+    - value: cally
+      count: 14
+    - value: ese
+      count: 14
+    - value: able
+      count: 13
+    - value: bar
+      count: 12
+    - value: eing
+      count: 11
+    - value: n st
+      count: 10
+    - value: ought
+      count: 9
+    - value: anti
+      count: 7
+    - value: ation
+      count: 6
+    - value: pri
+      count: 6
+  s_number_employees:
+    total: 102
+    nulls: 1
+    distinct: 51
+    min: '200'
+    max: '299'
+  s_floor_space:
+    total: 102
+    nulls: 1
+    distinct: 85
+    min: '5093780'
+    max: '9810608'
+  s_hours:
+    total: 102
+    nulls: 0
+    distinct: 3
+    min: 8AM-12AM
+    max: 8AM-8AM
+  s_manager:
+    total: 102
+    nulls: 1
+    distinct: 76
+    min: Albert Sousa
+    max: William Ward
+  s_market_id:
+    total: 102
+    nulls: 0
+    distinct: 10
+    min: '1'
+    max: '10'
+  s_geography_class:
+    total: 102
+    nulls: 1
+    distinct: 1
+    min: Unknown
+    max: Unknown
+    top_values:
+    - value: Unknown
+      count: 101
+  s_market_desc:
+    total: 102
+    nulls: 1
+    distinct: 82
+    min: Actually new powers sound great guidelines. Already general months find well
+      visit
+    max: Vertical pictures shall read still industrial degrees; windows slide ove
+  s_market_manager:
+    total: 102
+    nulls: 1
+    distinct: 73
+    min: Alden Hansen
+    max: Zachery Milton
+  s_division_id:
+    total: 102
+    nulls: 0
+    distinct: 1
+    min: '1'
+    max: '1'
+  s_division_name:
+    total: 102
+    nulls: 1
+    distinct: 1
+    min: Unknown
+    max: Unknown
+    top_values:
+    - value: Unknown
+      count: 101
+  s_company_id:
+    total: 102
+    nulls: 1
+    distinct: 1
+    min: '1'
+    max: '1'
+  s_company_name:
+    total: 102
+    nulls: 0
+    distinct: 1
+    min: Unknown
+    max: Unknown
+    top_values:
+    - value: Unknown
+      count: 102
+  s_street_number:
+    total: 102
+    nulls: 0
+    distinct: 75
+    min: '100'
+    max: '903'
+  s_street_name:
+    total: 102
+    nulls: 1
+    distinct: 85
+    min: 10th Pine
+    max: 'Willow '
+  s_street_type:
+    total: 102
+    nulls: 0
+    distinct: 20
+    min: Ave
+    max: Wy
+  s_suite_number:
+    total: 102
+    nulls: 0
+    distinct: 55
+    min: Suite 100
+    max: Suite Y
+  s_city:
+    total: 102
+    nulls: 1
+    distinct: 6
+    min: Fairview
+    max: Riverside
+    top_values:
+    - value: Pleasant Hill
+      count: 28
+    - value: Five Points
+      count: 17
+    - value: Fairview
+      count: 15
+    - value: Oak Grove
+      count: 15
+    - value: Midway
+      count: 14
+    - value: Riverside
+      count: 12
+  s_county:
+    total: 102
+    nulls: 1
+    distinct: 3
+    min: Walker County
+    max: Ziebach County
+    top_values:
+    - value: Walker County
+      count: 35
+    - value: Ziebach County
+      count: 35
+    - value: Williamson County
+      count: 31
+  s_state:
+    total: 102
+    nulls: 0
+    distinct: 3
+    min: AL
+    max: TN
+  s_zip:
+    total: 102
+    nulls: 1
+    distinct: 12
+    min: '31904'
+    max: '59231'
+  s_country:
+    total: 102
+    nulls: 0
+    distinct: 1
+    min: United States
+    max: United States
+    top_values:
+    - value: United States
+      count: 102
+  s_gmt_offset:
+    total: 102
+    nulls: 1
+    distinct: 2
+    min: '-6.00'
+    max: '-5.00'
+  s_tax_precentage:
+    total: 102
+    nulls: 1
+    distinct: 12
+    min: '0.00'
+    max: '0.11'
+store_returns:
+  sr_returned_date_sk:
+    total: 2875432
+    nulls: 100274
+    distinct: 2003
+    min: '2450820'
+    max: '2452822'
+  sr_return_time_sk:
+    total: 2875432
+    nulls: 100458
+    distinct: 32401
+    min: '28799'
+    max: '61199'
+  sr_item_sk:
+    total: 2875432
+    nulls: 0
+    distinct: 102000
+    min: '1'
+    max: '102000'
+  sr_customer_sk:
+    total: 2875432
+    nulls: 100559
+    distinct: 491487
+    min: '1'
+    max: '500000'
+  sr_cdemo_sk:
+    total: 2875432
+    nulls: 100194
+    distinct: 1468353
+    min: '1'
+    max: '1920800'
+  sr_hdemo_sk:
+    total: 2875432
+    nulls: 100825
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  sr_addr_sk:
+    total: 2875432
+    nulls: 100325
+    distinct: 249994
+    min: '1'
+    max: '250000'
+  sr_store_sk:
+    total: 2875432
+    nulls: 100406
+    distinct: 51
+    min: '1'
+    max: '100'
+  sr_reason_sk:
+    total: 2875432
+    nulls: 100288
+    distinct: 45
+    min: '1'
+    max: '45'
+  sr_ticket_number:
+    total: 2875432
+    nulls: 0
+    distinct: 1696264
+    min: '1'
+    max: '2400000'
+  sr_return_quantity:
+    total: 2875432
+    nulls: 100604
+    distinct: 100
+    min: '1'
+    max: '100'
+  sr_return_amt:
+    total: 2875432
+    nulls: 100872
+    distinct: 311472
+    min: '0.00'
+    max: '18011.34'
+  sr_return_tax:
+    total: 2875432
+    nulls: 101120
+    distinct: 58162
+    min: '0.00'
+    max: '1576.83'
+  sr_return_amt_inc_tax:
+    total: 2875432
+    nulls: 100312
+    distinct: 445370
+    min: '0.00'
+    max: '19097.27'
+  sr_fee:
+    total: 2875432
+    nulls: 100488
+    distinct: 9951
+    min: '0.50'
+    max: '100.00'
+  sr_return_ship_cost:
+    total: 2875432
+    nulls: 100205
+    distinct: 191978
+    min: '0.00'
+    max: '8885.25'
+  sr_refunded_cash:
+    total: 2875432
+    nulls: 100645
+    distinct: 301687
+    min: '0.00'
+    max: '17556.95'
+  sr_reversed_charge:
+    total: 2875432
+    nulls: 100762
+    distinct: 209499
+    min: '0.00'
+    max: '14221.17'
+  sr_store_credit:
+    total: 2875432
+    nulls: 100537
+    distinct: 207203
+    min: '0.00'
+    max: '13098.29'
+  sr_net_loss:
+    total: 2875432
+    nulls: 100549
+    distinct: 307945
+    min: '0.50'
+    max: '9892.39'
+store_sales:
+  ss_sold_date_sk:
+    total: 28800991
+    nulls: 1296177
+    distinct: 1823
+    min: '2450816'
+    max: '2452642'
+  ss_sold_time_sk:
+    total: 28800991
+    nulls: 1296223
+    distinct: 46800
+    min: '28800'
+    max: '75599'
+  ss_item_sk:
+    total: 28800991
+    nulls: 0
+    distinct: 102000
+    min: '1'
+    max: '102000'
+  ss_customer_sk:
+    total: 28800991
+    nulls: 1296253
+    distinct: 495848
+    min: '1'
+    max: '500000'
+  ss_cdemo_sk:
+    total: 28800991
+    nulls: 1295703
+    distinct: 1371118
+    min: '1'
+    max: '1920800'
+  ss_hdemo_sk:
+    total: 28800991
+    nulls: 1296158
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  ss_addr_sk:
+    total: 28800991
+    nulls: 1296543
+    distinct: 249978
+    min: '1'
+    max: '250000'
+  ss_store_sk:
+    total: 28800991
+    nulls: 1296138
+    distinct: 51
+    min: '1'
+    max: '100'
+  ss_promo_sk:
+    total: 28800991
+    nulls: 1296060
+    distinct: 500
+    min: '1'
+    max: '500'
+  ss_ticket_number:
+    total: 28800991
+    nulls: 0
+    distinct: 2400000
+    min: '1'
+    max: '2400000'
+  ss_quantity:
+    total: 28800991
+    nulls: 1295544
+    distinct: 100
+    min: '1'
+    max: '100'
+  ss_wholesale_cost:
+    total: 28800991
+    nulls: 1296641
+    distinct: 9901
+    min: '1.00'
+    max: '100.00'
+  ss_list_price:
+    total: 28800991
+    nulls: 1296624
+    distinct: 19736
+    min: '1.00'
+    max: '200.00'
+  ss_sales_price:
+    total: 28800991
+    nulls: 1296371
+    distinct: 19605
+    min: '0.00'
+    max: '200.00'
+  ss_ext_discount_amt:
+    total: 28800991
+    nulls: 1297252
+    distinct: 556409
+    min: '0.00'
+    max: '18092.44'
+  ss_ext_sales_price:
+    total: 28800991
+    nulls: 1295923
+    distinct: 626800
+    min: '0.00'
+    max: '19562.40'
+  ss_ext_wholesale_cost:
+    total: 28800991
+    nulls: 1296851
+    distinct: 393169
+    min: '1.00'
+    max: '10000.00'
+  ss_ext_list_price:
+    total: 28800991
+    nulls: 1296145
+    distinct: 751167
+    min: '1.04'
+    max: '19998.00'
+  ss_ext_tax:
+    total: 28800991
+    nulls: 1296544
+    distinct: 114279
+    min: '0.00'
+    max: '1749.87'
+  ss_coupon_amt:
+    total: 28800991
+    nulls: 1297252
+    distinct: 556409
+    min: '0.00'
+    max: '18092.44'
+  ss_net_paid:
+    total: 28800991
+    nulls: 1296723
+    distinct: 827107
+    min: '0.00'
+    max: '19562.40'
+  ss_net_paid_inc_tax:
+    total: 28800991
+    nulls: 1297425
+    distinct: 1154534
+    min: '0.00'
+    max: '21192.87'
+  ss_net_profit:
+    total: 28800991
+    nulls: 1297463
+    distinct: 1056252
+    min: '-9993.00'
+    max: '9776.48'
+time_dim:
+  t_time_sk:
+    total: 86400
+    nulls: 0
+    distinct: 86400
+    min: '0'
+    max: '86399'
+  t_time_id:
+    total: 86400
+    nulls: 0
+    distinct: 86400
+    min: AAAAAAAAAAAABAAA
+    max: AAAAAAAAPPPPAAAA
+  t_time:
+    total: 86400
+    nulls: 0
+    distinct: 86400
+    min: '0'
+    max: '86399'
+  t_hour:
+    total: 86400
+    nulls: 0
+    distinct: 24
+    min: '0'
+    max: '23'
+  t_minute:
+    total: 86400
+    nulls: 0
+    distinct: 60
+    min: '0'
+    max: '59'
+  t_second:
+    total: 86400
+    nulls: 0
+    distinct: 60
+    min: '0'
+    max: '59'
+  t_am_pm:
+    total: 86400
+    nulls: 0
+    distinct: 2
+    min: AM
+    max: PM
+  t_shift:
+    total: 86400
+    nulls: 0
+    distinct: 3
+    min: first
+    max: third
+  t_sub_shift:
+    total: 86400
+    nulls: 0
+    distinct: 4
+    min: afternoon
+    max: night
+  t_meal_time:
+    total: 86400
+    nulls: 50400
+    distinct: 3
+    min: breakfast
+    max: lunch
+warehouse:
+  w_warehouse_sk:
+    total: 10
+    nulls: 0
+    distinct: 10
+    min: '1'
+    max: '10'
+  w_warehouse_id:
+    total: 10
+    nulls: 0
+    distinct: 10
+    min: AAAAAAAABAAAAAAA
+    max: AAAAAAAAKAAAAAAA
+  w_warehouse_name:
+    total: 10
+    nulls: 1
+    distinct: 9
+    min: Bad cards must make.
+    max: 'Rooms cook '
+    top_values:
+    - value: Bad cards must make.
+      count: 1
+    - value: Conventional childr
+      count: 1
+    - value: Doors canno
+      count: 1
+    - value: Important issues liv
+      count: 1
+    - value: Local, mass universi
+      count: 1
+    - value: National, comple
+      count: 1
+    - value: Plain, reluctant
+      count: 1
+    - value: Quite effectiv
+      count: 1
+    - value: 'Rooms cook '
+      count: 1
+  w_warehouse_sq_ft:
+    total: 10
+    nulls: 1
+    distinct: 9
+    min: '73065'
+    max: '977787'
+  w_street_number:
+    total: 10
+    nulls: 1
+    distinct: 9
+    min: '269'
+    max: '957'
+  w_street_name:
+    total: 10
+    nulls: 1
+    distinct: 9
+    min: '3rd '
+    max: Wilson Elm
+    top_values:
+    - value: '3rd '
+      count: 1
+    - value: '6th '
+      count: 1
+    - value: 7th Sunset
+      count: 1
+    - value: Ash Laurel
+      count: 1
+    - value: Elm Madison
+      count: 1
+    - value: Lincoln Adams
+      count: 1
+    - value: 'Spring '
+      count: 1
+    - value: View First
+      count: 1
+    - value: Wilson Elm
+      count: 1
+  w_street_type:
+    total: 10
+    nulls: 1
+    distinct: 8
+    min: Avenue
+    max: Wy
+  w_suite_number:
+    total: 10
+    nulls: 1
+    distinct: 9
+    min: Suite 0
+    max: Suite X
+  w_city:
+    total: 10
+    nulls: 0
+    distinct: 4
+    min: Fairview
+    max: Riverside
+    top_values:
+    - value: Riverside
+      count: 5
+    - value: Fairview
+      count: 2
+    - value: Pleasant Hill
+      count: 2
+    - value: Oak Grove
+      count: 1
+  w_county:
+    total: 10
+    nulls: 0
+    distinct: 2
+    min: Walker County
+    max: Ziebach County
+    top_values:
+    - value: Ziebach County
+      count: 8
+    - value: Walker County
+      count: 2
+  w_state:
+    total: 10
+    nulls: 0
+    distinct: 2
+    min: AL
+    max: SD
+  w_zip:
+    total: 10
+    nulls: 0
+    distinct: 6
+    min: '35709'
+    max: '59231'
+  w_country:
+    total: 10
+    nulls: 0
+    distinct: 1
+    min: United States
+    max: United States
+    top_values:
+    - value: United States
+      count: 10
+  w_gmt_offset:
+    total: 10
+    nulls: 1
+    distinct: 1
+    min: '-6.00'
+    max: '-6.00'
+web_page:
+  wp_web_page_sk:
+    total: 200
+    nulls: 0
+    distinct: 200
+    min: '1'
+    max: '200'
+  wp_web_page_id:
+    total: 200
+    nulls: 0
+    distinct: 101
+    min: AAAAAAAAABAAAAAA
+    max: AAAAAAAAPKAAAAAA
+  wp_rec_start_date:
+    total: 200
+    nulls: 0
+    distinct: 4
+    min: '1997-09-03'
+    max: '2001-09-03'
+  wp_rec_end_date:
+    total: 200
+    nulls: 100
+    distinct: 3
+    min: '1999-09-03'
+    max: '2001-09-02'
+  wp_creation_date_sk:
+    total: 200
+    nulls: 1
+    distinct: 18
+    min: '2450798'
+    max: '2450815'
+  wp_access_date_sk:
+    total: 200
+    nulls: 0
+    distinct: 81
+    min: '2452548'
+    max: '2452648'
+  wp_autogen_flag:
+    total: 200
+    nulls: 1
+    distinct: 2
+    min: N
+    max: Y
+  wp_customer_sk:
+    total: 200
+    nulls: 147
+    distinct: 44
+    min: '15150'
+    max: '492078'
+  wp_url:
+    total: 200
+    nulls: 0
+    distinct: 1
+    min: http://www.foo.com
+    max: http://www.foo.com
+    top_values:
+    - value: http://www.foo.com
+      count: 200
+  wp_type:
+    total: 200
+    nulls: 1
+    distinct: 7
+    min: ad
+    max: welcome
+  wp_char_count:
+    total: 200
+    nulls: 2
+    distinct: 152
+    min: '508'
+    max: '7046'
+  wp_link_count:
+    total: 200
+    nulls: 2
+    distinct: 24
+    min: '2'
+    max: '25'
+  wp_image_count:
+    total: 200
+    nulls: 1
+    distinct: 7
+    min: '1'
+    max: '7'
+  wp_max_ad_count:
+    total: 200
+    nulls: 2
+    distinct: 5
+    min: '0'
+    max: '4'
+web_returns:
+  wr_returned_date_sk:
+    total: 719217
+    nulls: 32552
+    distinct: 2165
+    min: '2450828'
+    max: '2452997'
+  wr_returned_time_sk:
+    total: 719217
+    nulls: 32348
+    distinct: 84995
+    min: '0'
+    max: '86399'
+  wr_item_sk:
+    total: 719217
+    nulls: 0
+    distinct: 100858
+    min: '1'
+    max: '102000'
+  wr_refunded_customer_sk:
+    total: 719217
+    nulls: 32538
+    distinct: 373235
+    min: '1'
+    max: '500000'
+  wr_refunded_cdemo_sk:
+    total: 719217
+    nulls: 32631
+    distinct: 576183
+    min: '4'
+    max: '1920799'
+  wr_refunded_hdemo_sk:
+    total: 719217
+    nulls: 32394
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  wr_refunded_addr_sk:
+    total: 719217
+    nulls: 32424
+    distinct: 233868
+    min: '1'
+    max: '250000'
+  wr_returning_customer_sk:
+    total: 719217
+    nulls: 32512
+    distinct: 373225
+    min: '1'
+    max: '500000'
+  wr_returning_cdemo_sk:
+    total: 719217
+    nulls: 32459
+    distinct: 576254
+    min: '4'
+    max: '1920799'
+  wr_returning_hdemo_sk:
+    total: 719217
+    nulls: 32531
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  wr_returning_addr_sk:
+    total: 719217
+    nulls: 32526
+    distinct: 233881
+    min: '1'
+    max: '250000'
+  wr_web_page_sk:
+    total: 719217
+    nulls: 32655
+    distinct: 200
+    min: '1'
+    max: '200'
+  wr_reason_sk:
+    total: 719217
+    nulls: 32653
+    distinct: 45
+    min: '1'
+    max: '45'
+  wr_order_number:
+    total: 719217
+    nulls: 0
+    distinct: 423639
+    min: '1'
+    max: '600000'
+  wr_return_quantity:
+    total: 719217
+    nulls: 32343
+    distinct: 100
+    min: '1'
+    max: '100'
+  wr_return_amt:
+    total: 719217
+    nulls: 32546
+    distinct: 209364
+    min: '0.00'
+    max: '25649.40'
+  wr_return_tax:
+    total: 719217
+    nulls: 32542
+    distinct: 48667
+    min: '0.00'
+    max: '2090.05'
+  wr_return_amt_inc_tax:
+    total: 719217
+    nulls: 32614
+    distinct: 270193
+    min: '0.00'
+    max: '27079.21'
+  wr_fee:
+    total: 719217
+    nulls: 32757
+    distinct: 9951
+    min: '0.50'
+    max: '100.00'
+  wr_return_ship_cost:
+    total: 719217
+    nulls: 32670
+    distinct: 144753
+    min: '0.00'
+    max: '12260.19'
+  wr_refunded_cash:
+    total: 719217
+    nulls: 32589
+    distinct: 189369
+    min: '0.00'
+    max: '24003.81'
+  wr_reversed_charge:
+    total: 719217
+    nulls: 32430
+    distinct: 133533
+    min: '0.00'
+    max: '17837.60'
+  wr_account_credit:
+    total: 719217
+    nulls: 32526
+    distinct: 132060
+    min: '0.00'
+    max: '22037.26'
+  wr_net_loss:
+    total: 719217
+    nulls: 32470
+    distinct: 212524
+    min: '0.54'
+    max: '13871.85'
+web_sales:
+  ws_sold_date_sk:
+    total: 7197566
+    nulls: 1788
+    distinct: 1823
+    min: '2450816'
+    max: '2452642'
+  ws_sold_time_sk:
+    total: 7197566
+    nulls: 1772
+    distinct: 84505
+    min: '0'
+    max: '86398'
+  ws_ship_date_sk:
+    total: 7197566
+    nulls: 1748
+    distinct: 1946
+    min: '2450817'
+    max: '2452762'
+  ws_item_sk:
+    total: 7197566
+    nulls: 0
+    distinct: 102000
+    min: '1'
+    max: '102000'
+  ws_bill_customer_sk:
+    total: 7197566
+    nulls: 1748
+    distinct: 349865
+    min: '2'
+    max: '499998'
+  ws_bill_cdemo_sk:
+    total: 7197566
+    nulls: 1761
+    distinct: 515689
+    min: '3'
+    max: '1920800'
+  ws_bill_hdemo_sk:
+    total: 7197566
+    nulls: 1772
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  ws_bill_addr_sk:
+    total: 7197566
+    nulls: 1743
+    distinct: 227218
+    min: '1'
+    max: '250000'
+  ws_ship_customer_sk:
+    total: 7197566
+    nulls: 1777
+    distinct: 349680
+    min: '4'
+    max: '500000'
+  ws_ship_cdemo_sk:
+    total: 7197566
+    nulls: 1791
+    distinct: 515413
+    min: '3'
+    max: '1920799'
+  ws_ship_hdemo_sk:
+    total: 7197566
+    nulls: 1774
+    distinct: 7200
+    min: '1'
+    max: '7200'
+  ws_ship_addr_sk:
+    total: 7197566
+    nulls: 1792
+    distinct: 227206
+    min: '1'
+    max: '250000'
+  ws_web_page_sk:
+    total: 7197566
+    nulls: 1773
+    distinct: 200
+    min: '1'
+    max: '200'
+  ws_web_site_sk:
+    total: 7197566
+    nulls: 1822
+    distinct: 42
+    min: '1'
+    max: '42'
+  ws_ship_mode_sk:
+    total: 7197566
+    nulls: 1757
+    distinct: 20
+    min: '1'
+    max: '20'
+  ws_warehouse_sk:
+    total: 7197566
+    nulls: 1742
+    distinct: 10
+    min: '1'
+    max: '10'
+  ws_promo_sk:
+    total: 7197566
+    nulls: 1762
+    distinct: 500
+    min: '1'
+    max: '500'
+  ws_order_number:
+    total: 7197566
+    nulls: 0
+    distinct: 600000
+    min: '1'
+    max: '600000'
+  ws_quantity:
+    total: 7197566
+    nulls: 1801
+    distinct: 100
+    min: '1'
+    max: '100'
+  ws_wholesale_cost:
+    total: 7197566
+    nulls: 1725
+    distinct: 9901
+    min: '1.00'
+    max: '100.00'
+  ws_list_price:
+    total: 7197566
+    nulls: 1747
+    distinct: 29764
+    min: '1.00'
+    max: '300.00'
+  ws_sales_price:
+    total: 7197566
+    nulls: 1749
+    distinct: 28182
+    min: '0.00'
+    max: '299.94'
+  ws_ext_discount_amt:
+    total: 7197566
+    nulls: 1797
+    distinct: 667481
+    min: '0.00'
+    max: '29317.00'
+  ws_ext_sales_price:
+    total: 7197566
+    nulls: 1769
+    distinct: 667179
+    min: '0.00'
+    max: '28727.00'
+  ws_ext_wholesale_cost:
+    total: 7197566
+    nulls: 1818
+    distinct: 393029
+    min: '1.00'
+    max: '10000.00'
+  ws_ext_list_price:
+    total: 7197566
+    nulls: 1786
+    distinct: 930597
+    min: '1.08'
+    max: '29970.00'
+  ws_ext_tax:
+    total: 7197566
+    nulls: 1752
+    distinct: 124687
+    min: '0.00'
+    max: '2527.94'
+  ws_coupon_amt:
+    total: 7197566
+    nulls: 1830
+    distinct: 392091
+    min: '0.00'
+    max: '27160.50'
+  ws_ext_ship_cost:
+    total: 7197566
+    nulls: 1829
+    distinct: 391035
+    min: '0.00'
+    max: '14570.00'
+  ws_net_paid:
+    total: 7197566
+    nulls: 1787
+    distinct: 776728
+    min: '0.00'
+    max: '28727.00'
+  ws_net_paid_inc_tax:
+    total: 7197566
+    nulls: 1813
+    distinct: 1051284
+    min: '0.00'
+    max: '30821.43'
+  ws_net_paid_inc_ship:
+    total: 7197566
+    nulls: 0
+    distinct: 1033856
+    min: '0.00'
+    max: '41734.00'
+  ws_net_paid_inc_ship_tax:
+    total: 7197566
+    nulls: 0
+    distinct: 1386861
+    min: '0.00'
+    max: '43505.15'
+  ws_net_profit:
+    total: 7197566
+    nulls: 0
+    distinct: 942406
+    min: '-9981.00'
+    max: '18890.00'
+web_site:
+  web_site_sk:
+    total: 42
+    nulls: 0
+    distinct: 42
+    min: '1'
+    max: '42'
+  web_site_id:
+    total: 42
+    nulls: 0
+    distinct: 21
+    min: AAAAAAAAABAAAAAA
+    max: AAAAAAAAPBAAAAAA
+  web_rec_start_date:
+    total: 42
+    nulls: 0
+    distinct: 4
+    min: '1997-08-16'
+    max: '2001-08-16'
+  web_rec_end_date:
+    total: 42
+    nulls: 21
+    distinct: 3
+    min: '1999-08-16'
+    max: '2001-08-15'
+  web_name:
+    total: 42
+    nulls: 0
+    distinct: 7
+    min: site_0
+    max: site_6
+    top_values:
+    - value: site_0
+      count: 6
+    - value: site_1
+      count: 6
+    - value: site_2
+      count: 6
+    - value: site_3
+      count: 6
+    - value: site_4
+      count: 6
+    - value: site_5
+      count: 6
+    - value: site_6
+      count: 6
+  web_open_date_sk:
+    total: 42
+    nulls: 0
+    distinct: 21
+    min: '2450475'
+    max: '2450807'
+  web_close_date_sk:
+    total: 42
+    nulls: 7
+    distinct: 14
+    min: '2445017'
+    max: '2448043'
+  web_class:
+    total: 42
+    nulls: 0
+    distinct: 1
+    min: Unknown
+    max: Unknown
+    top_values:
+    - value: Unknown
+      count: 42
+  web_manager:
+    total: 42
+    nulls: 0
+    distinct: 30
+    min: Adam Stonge
+    max: William Carter
+    top_values:
+    - value: Harold Wilson
+      count: 3
+    - value: Luke Johnson
+      count: 3
+    - value: Mark Casteel
+      count: 3
+    - value: Raymond Oneill
+      count: 3
+    - value: Charles Castillo
+      count: 2
+    - value: Dwight Aaron
+      count: 2
+    - value: Tommy Jones
+      count: 2
+    - value: William Carter
+      count: 2
+    - value: Adam Stonge
+      count: 1
+    - value: Charles Parker
+      count: 1
+    - value: Daniel Johnson
+      count: 1
+    - value: Danny Gates
+      count: 1
+    - value: Herbert Hawes
+      count: 1
+    - value: James Austin
+      count: 1
+    - value: Jason Silva
+      count: 1
+    - value: Jay Duffy
+      count: 1
+    - value: Jimmy Pope
+      count: 1
+    - value: John Thomas
+      count: 1
+    - value: John Ward
+      count: 1
+    - value: Julio Davis
+      count: 1
+    - value: Lewis Wolf
+      count: 1
+    - value: Marshall Conner
+      count: 1
+    - value: Moses Hicks
+      count: 1
+    - value: Peter Cassidy
+      count: 1
+    - value: Richard Fuchs
+      count: 1
+    - value: Robert Arnold
+      count: 1
+    - value: Robert Bailey
+      count: 1
+    - value: Ronald Shaffer
+      count: 1
+    - value: Ronnie Morris
+      count: 1
+    - value: Ruben Doyle
+      count: 1
+  web_mkt_id:
+    total: 42
+    nulls: 0
+    distinct: 6
+    min: '1'
+    max: '6'
+  web_mkt_class:
+    total: 42
+    nulls: 0
+    distinct: 31
+    min: About rural reasons shall no
+    max: Written, political plans show to the models. T
+    top_values:
+    - value: Severe, useful funds lift; just
+      count: 3
+    - value: Also difficult women relax. Raw solutions exclude
+      count: 2
+    - value: Completely excellent things ought to pro
+      count: 2
+    - value: Components allay lovely privileges. Hard,
+      count: 2
+    - value: 'More ordinary questions '
+      count: 2
+    - value: Necessary, intermediat
+      count: 2
+    - value: Onwards significant ways benefit ahead long op
+      count: 2
+    - value: Right efforts must no
+      count: 2
+    - value: Well-known, patient proposals m
+      count: 2
+    - value: Wide, final representat
+      count: 2
+    - value: About rural reasons shall no
+      count: 1
+    - value: 'Acids represent; now recent personnel '
+      count: 1
+    - value: As private emotions carry yet services. Wor
+      count: 1
+    - value: As strong notes deal questions. Proud visito
+      count: 1
+    - value: Broad, new groups show car
+      count: 1
+    - value: Continuous, social schools shou
+      count: 1
+    - value: 'Direct children become '
+      count: 1
+    - value: Final children would go strong
+      count: 1
+    - value: Grey lines ought to result indeed centres. Tod
+      count: 1
+    - value: Hands look again nice years. Alre
+      count: 1
+    - value: Hard new suggestions might contain nat
+      count: 1
+    - value: 'Just popular words shall '
+      count: 1
+    - value: Labour cars withdraw big, full issues
+      count: 1
+    - value: Leaders make as yet particular, desperate machi
+      count: 1
+    - value: New, different roads know standa
+      count: 1
+    - value: New homes comment great. Possibilities re
+      count: 1
+    - value: New, important system
+      count: 1
+    - value: 'Only, temporary services '
+      count: 1
+    - value: Places could name positive, english teachers
+      count: 1
+    - value: Previous, wide men may paint more r
+      count: 1
+    - value: Written, political plans show to the models. T
+      count: 1
+  web_mkt_desc:
+    total: 42
+    nulls: 0
+    distinct: 30
+    min: Acres see else children. Mutual too
+    max: Well similar decisions used to keep hardly democratic, personal priorities.
+    top_values:
+    - value: Basic others will not appreciate so late, potential chil
+      count: 3
+    - value: Individual negotiations might join badly children. Brown features travel
+        fiercely dramatic k
+      count: 3
+    - value: Skills can want as common agencies. Appropriate issues can use. Over
+        national lives may lear
+      count: 3
+    - value: Associations may kill sole parents. Red, pink results rise nearly
+      count: 2
+    - value: Companies grow cells. Apart true eyes u
+      count: 2
+    - value: Deeply small books cannot extend all similar, clear historians. Free,
+        new camp
+      count: 2
+    - value: Formerly long minds deal aside parties. Lef
+      count: 2
+    - value: Often well-known police can hand acres. Healthy, sensible problems make
+        more silent recordings
+      count: 2
+    - value: Physical witnesses might not agree really already existing prayers. Loyal,
+        possible m
+      count: 2
+    - value: Acres see else children. Mutual too
+      count: 1
+    - value: Arms concentrate with a consultants. Exactly diplomatic mechanism
+      count: 1
+    - value: Changes find with a ways. Electric
+      count: 1
+    - value: Common, typical customers make also as huge times; yet soviet lights
+        preven
+      count: 1
+    - value: Concerned, royal weeks should announce.
+      count: 1
+    - value: Constant interests used to stand. Cars unde
+      count: 1
+    - value: Enough small animals emerge at a holidays. Managers expect only.
+      count: 1
+    - value: Forces begin still. Signs raise here yester
+      count: 1
+    - value: 'Global children account schools; important methods '
+      count: 1
+    - value: Home new thoughts must get however thoughts; technical, oth
+      count: 1
+    - value: 'Ill, official pounds fall drawings. Companies step here free payments;
+        due, other pupils kill '
+      count: 1
+    - value: Losses cover flames. Cars might not find very stand
+      count: 1
+    - value: Lucky passengers know. Red details will not hang alive, international
+        s
+      count: 1
+    - value: 'Particular, common seasons shall not indicate fully more single decisions; '
+      count: 1
+    - value: Political affairs ought to
+      count: 1
+    - value: Public, current operations cou
+      count: 1
+    - value: 'Public firms lead away things. Total, political years '
+      count: 1
+    - value: 'Social, young answers will not provide quite wide, common interests;
+        real signs matter '
+      count: 1
+    - value: Still personal inches v
+      count: 1
+    - value: Thin roles should run quickly. Patient parts include even in the ladies;
+        only united trouser
+      count: 1
+    - value: Well similar decisions used to keep hardly democratic, personal priorities.
+      count: 1
+  web_market_manager:
+    total: 42
+    nulls: 0
+    distinct: 35
+    min: Albert Leung
+    max: Zachery Oneil
+    top_values:
+    - value: Jeffrey Campbell
+      count: 3
+    - value: Kenneth Holland
+      count: 3
+    - value: Casey Banks
+      count: 2
+    - value: David Myers
+      count: 2
+    - value: Keith Frazier
+      count: 2
+    - value: Albert Leung
+      count: 1
+    - value: Alfred Reeves
+      count: 1
+    - value: Derek Rivers
+      count: 1
+    - value: Donald Mckinney
+      count: 1
+    - value: Duncan Johnson
+      count: 1
+    - value: Edward George
+      count: 1
+    - value: Edward Hernandez
+      count: 1
+    - value: Eldon Snow
+      count: 1
+    - value: Frank Cooper
+      count: 1
+    - value: Gerald Craft
+      count: 1
+    - value: Gilbert Chapman
+      count: 1
+    - value: James Bernard
+      count: 1
+    - value: James Brewer
+      count: 1
+    - value: James Harris
+      count: 1
+    - value: Jarvis Allen
+      count: 1
+    - value: Jeffrey Martin
+      count: 1
+    - value: Joe George
+      count: 1
+    - value: John Isaacs
+      count: 1
+    - value: John Sheppard
+      count: 1
+    - value: John Williams
+      count: 1
+    - value: Keith Williams
+      count: 1
+    - value: Kelvin Lynch
+      count: 1
+    - value: Paul Robinson
+      count: 1
+    - value: Philip Sampson
+      count: 1
+    - value: Ricardo Gallo
+      count: 1
+    - value: Rubin Freeman
+      count: 1
+    - value: Salvatore Griffin
+      count: 1
+    - value: Scott Bryant
+      count: 1
+    - value: William Reyes
+      count: 1
+    - value: Zachery Oneil
+      count: 1
+  web_company_id:
+    total: 42
+    nulls: 0
+    distinct: 6
+    min: '1'
+    max: '6'
+  web_company_name:
+    total: 42
+    nulls: 0
+    distinct: 6
+    min: able
+    max: pri
+  web_street_number:
+    total: 42
+    nulls: 0
+    distinct: 25
+    min: '184'
+    max: '973'
+  web_street_name:
+    total: 42
+    nulls: 0
+    distinct: 42
+    min: '11th '
+    max: Wilson Ridge
+    top_values:
+    - value: '11th '
+      count: 1
+    - value: 1st Maple
+      count: 1
+    - value: '2nd '
+      count: 1
+    - value: 2nd 3rd
+      count: 1
+    - value: 2nd View
+      count: 1
+    - value: 3rd Park
+      count: 1
+    - value: '7th '
+      count: 1
+    - value: 9th Ridge
+      count: 1
+    - value: Broadway South
+      count: 1
+    - value: 'Cedar '
+      count: 1
+    - value: Cedar North
+      count: 1
+    - value: 'Central '
+      count: 1
+    - value: Central 14th
+      count: 1
+    - value: Cherry Main
+      count: 1
+    - value: 'Dogwood '
+      count: 1
+    - value: Dogwood Sunset
+      count: 1
+    - value: 'Elevnth '
+      count: 1
+    - value: Elevnth Third
+      count: 1
+    - value: 'Franklin '
+      count: 1
+    - value: Hickory 3rd
+      count: 1
+    - value: Hickory Meadow
+      count: 1
+    - value: Hill 5th
+      count: 1
+    - value: Hill Hill
+      count: 1
+    - value: 'Lake '
+      count: 1
+    - value: 'Lakeview '
+      count: 1
+    - value: 'Lincoln '
+      count: 1
+    - value: Mill Miller
+      count: 1
+    - value: 'Park '
+      count: 1
+    - value: 'Railroad '
+      count: 1
+    - value: Ridge Wilson
+      count: 1
+    - value: 'River '
+      count: 1
+    - value: Second Madison
+      count: 1
+    - value: Seventh Willow
+      count: 1
+    - value: South Third
+      count: 1
+    - value: 'Spruce '
+      count: 1
+    - value: 'Sycamore '
+      count: 1
+    - value: Third Lake
+      count: 1
+    - value: View Washington
+      count: 1
+    - value: 'Washington '
+      count: 1
+    - value: West Cedar
+      count: 1
+    - value: 'Willow '
+      count: 1
+    - value: Wilson Ridge
+      count: 1
+  web_street_type:
+    total: 42
+    nulls: 0
+    distinct: 19
+    min: Ave
+    max: Wy
+  web_suite_number:
+    total: 42
+    nulls: 0
+    distinct: 32
+    min: Suite 100
+    max: Suite X
+  web_city:
+    total: 42
+    nulls: 0
+    distinct: 5
+    min: Fairview
+    max: Pleasant Hill
+    top_values:
+    - value: Fairview
+      count: 13
+    - value: Pleasant Hill
+      count: 10
+    - value: Midway
+      count: 8
+    - value: Oak Grove
+      count: 6
+    - value: Five Points
+      count: 5
+  web_county:
+    total: 42
+    nulls: 0
+    distinct: 3
+    min: Walker County
+    max: Ziebach County
+    top_values:
+    - value: Walker County
+      count: 18
+    - value: Williamson County
+      count: 14
+    - value: Ziebach County
+      count: 10
+  web_state:
+    total: 42
+    nulls: 0
+    distinct: 3
+    min: AL
+    max: TN
+  web_zip:
+    total: 42
+    nulls: 0
+    distinct: 10
+    min: '31904'
+    max: '58370'
+  web_country:
+    total: 42
+    nulls: 0
+    distinct: 1
+    min: United States
+    max: United States
+    top_values:
+    - value: United States
+      count: 42
+  web_gmt_offset:
+    total: 42
+    nulls: 0
+    distinct: 2
+    min: '-6.00'
+    max: '-5.00'
+  web_tax_percentage:
+    total: 42
+    nulls: 0
+    distinct: 12
+    min: '0.00'
+    max: '0.12'

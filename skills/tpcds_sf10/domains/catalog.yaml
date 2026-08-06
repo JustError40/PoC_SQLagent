@@ -1,0 +1,8 @@
+domain: catalog
+tables:
+- catalog_page
+- catalog_sales
+- inventory
+- item
+- promotion
+- web_sales

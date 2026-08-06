@@ -1,0 +1,1 @@
+SELECT "store"."s_state" AS state, SUM("store_sales"."ss_net_profit") AS total_income FROM "store_sales" JOIN "store" ON "store_sales"."ss_store_sk" = "store"."s_store_sk" GROUP BY state ORDER BY total_income DESC;

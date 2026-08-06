@@ -1,0 +1,5 @@
+domain: store
+tables:
+- store
+- store_returns
+- store_sales

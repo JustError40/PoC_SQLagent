@@ -1,0 +1,7 @@
+{
+  "surface": "experience",
+  "reason": "failed trajectory needs a reusable correction",
+  "changed_files": [
+    "templates/avg_revenue_by_year.sql"
+  ]
+}

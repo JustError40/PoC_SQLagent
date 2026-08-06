@@ -1,0 +1,11 @@
+joins:
+- left: catalog_sales.cs_ship_date_sk
+  right: date_dim.d_date_sk
+  cardinality: unknown
+  verified: true
+  verified_by: explorer
+- left: web_returns.wr_web_page_sk
+  right: web_page.wp_web_page_sk
+  cardinality: unknown
+  verified: true
+  verified_by: explorer

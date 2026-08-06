@@ -1,0 +1,7 @@
+domain: other
+tables:
+- catalog_returns
+- reason
+- ship_mode
+- warehouse
+- web_site

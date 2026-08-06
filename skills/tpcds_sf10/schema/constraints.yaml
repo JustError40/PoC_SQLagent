@@ -1,0 +1,663 @@
+constraints:
+- table_name: call_center
+  constraint_name: 2200_16447_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: call_center
+  constraint_name: 2200_16447_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: call_center
+  constraint_name: call_center_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cc_call_center_sk
+  foreign_table_name: call_center
+  foreign_column_name: cc_call_center_sk
+- table_name: catalog_page
+  constraint_name: 2200_16486_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: catalog_page
+  constraint_name: 2200_16486_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: catalog_page
+  constraint_name: catalog_page_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cp_catalog_page_sk
+  foreign_table_name: catalog_page
+  foreign_column_name: cp_catalog_page_sk
+- table_name: catalog_returns
+  constraint_name: 2200_16496_17_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: catalog_returns
+  constraint_name: 2200_16496_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: catalog_returns
+  constraint_name: catalog_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cr_item_sk
+  foreign_table_name: catalog_returns
+  foreign_column_name: cr_item_sk
+- table_name: catalog_returns
+  constraint_name: catalog_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cr_item_sk
+  foreign_table_name: catalog_returns
+  foreign_column_name: cr_order_number
+- table_name: catalog_returns
+  constraint_name: catalog_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cr_order_number
+  foreign_table_name: catalog_returns
+  foreign_column_name: cr_order_number
+- table_name: catalog_returns
+  constraint_name: catalog_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cr_order_number
+  foreign_table_name: catalog_returns
+  foreign_column_name: cr_item_sk
+- table_name: catalog_sales
+  constraint_name: 2200_16511_16_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: catalog_sales
+  constraint_name: 2200_16511_18_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: catalog_sales
+  constraint_name: catalog_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cs_item_sk
+  foreign_table_name: catalog_sales
+  foreign_column_name: cs_item_sk
+- table_name: catalog_sales
+  constraint_name: catalog_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cs_item_sk
+  foreign_table_name: catalog_sales
+  foreign_column_name: cs_order_number
+- table_name: catalog_sales
+  constraint_name: catalog_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cs_order_number
+  foreign_table_name: catalog_sales
+  foreign_column_name: cs_order_number
+- table_name: catalog_sales
+  constraint_name: catalog_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cs_order_number
+  foreign_table_name: catalog_sales
+  foreign_column_name: cs_item_sk
+- table_name: customer
+  constraint_name: 2200_16454_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customer
+  constraint_name: 2200_16454_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customer
+  constraint_name: customer_pkey
+  constraint_type: PRIMARY KEY
+  column_name: c_customer_sk
+  foreign_table_name: customer
+  foreign_column_name: c_customer_sk
+- table_name: customer_address
+  constraint_name: 2200_16393_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customer_address
+  constraint_name: 2200_16393_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customer_address
+  constraint_name: customer_address_pkey
+  constraint_type: PRIMARY KEY
+  column_name: ca_address_sk
+  foreign_table_name: customer_address
+  foreign_column_name: ca_address_sk
+- table_name: customer_demographics
+  constraint_name: 2200_16398_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: customer_demographics
+  constraint_name: customer_demographics_pkey
+  constraint_type: PRIMARY KEY
+  column_name: cd_demo_sk
+  foreign_table_name: customer_demographics
+  foreign_column_name: cd_demo_sk
+- table_name: date_dim
+  constraint_name: 2200_16403_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: date_dim
+  constraint_name: 2200_16403_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: date_dim
+  constraint_name: date_dim_pkey
+  constraint_type: PRIMARY KEY
+  column_name: d_date_sk
+  foreign_table_name: date_dim
+  foreign_column_name: d_date_sk
+- table_name: household_demographics
+  constraint_name: 2200_16471_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: household_demographics
+  constraint_name: household_demographics_pkey
+  constraint_type: PRIMARY KEY
+  column_name: hd_demo_sk
+  foreign_table_name: household_demographics
+  foreign_column_name: hd_demo_sk
+- table_name: income_band
+  constraint_name: 2200_16428_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: income_band
+  constraint_name: income_band_pkey
+  constraint_type: PRIMARY KEY
+  column_name: ib_income_band_sk
+  foreign_table_name: income_band
+  foreign_column_name: ib_income_band_sk
+- table_name: inventory
+  constraint_name: 2200_16491_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: inventory
+  constraint_name: 2200_16491_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: inventory
+  constraint_name: 2200_16491_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: inventory
+  constraint_name: inventory_pkey
+  constraint_type: PRIMARY KEY
+  column_name: inv_date_sk
+  foreign_table_name: inventory
+  foreign_column_name: inv_item_sk
+- table_name: inventory
+  constraint_name: inventory_pkey
+  constraint_type: PRIMARY KEY
+  column_name: inv_date_sk
+  foreign_table_name: inventory
+  foreign_column_name: inv_warehouse_sk
+- table_name: inventory
+  constraint_name: inventory_pkey
+  constraint_type: PRIMARY KEY
+  column_name: inv_date_sk
+  foreign_table_name: inventory
+  foreign_column_name: inv_date_sk
+- table_name: inventory
+  constraint_name: inventory_pkey
+  constraint_type: PRIMARY KEY
+  column_name: inv_item_sk
+  foreign_table_name: inventory
+  foreign_column_name: inv_warehouse_sk
+- table_name: inventory
+  constraint_name: inventory_pkey
+  constraint_type: PRIMARY KEY
+  column_name: inv_item_sk
+  foreign_table_name: inventory
+  foreign_column_name: inv_item_sk
+- table_name: inventory
+  constraint_name: inventory_pkey
+  constraint_type: PRIMARY KEY
+  column_name: inv_item_sk
+  foreign_table_name: inventory
+  foreign_column_name: inv_date_sk
+- table_name: inventory
+  constraint_name: inventory_pkey
+  constraint_type: PRIMARY KEY
+  column_name: inv_warehouse_sk
+  foreign_table_name: inventory
+  foreign_column_name: inv_date_sk
+- table_name: inventory
+  constraint_name: inventory_pkey
+  constraint_type: PRIMARY KEY
+  column_name: inv_warehouse_sk
+  foreign_table_name: inventory
+  foreign_column_name: inv_warehouse_sk
+- table_name: inventory
+  constraint_name: inventory_pkey
+  constraint_type: PRIMARY KEY
+  column_name: inv_warehouse_sk
+  foreign_table_name: inventory
+  foreign_column_name: inv_item_sk
+- table_name: item
+  constraint_name: 2200_16433_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: item
+  constraint_name: 2200_16433_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: item
+  constraint_name: item_pkey
+  constraint_type: PRIMARY KEY
+  column_name: i_item_sk
+  foreign_table_name: item
+  foreign_column_name: i_item_sk
+- table_name: promotion
+  constraint_name: 2200_16481_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: promotion
+  constraint_name: 2200_16481_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: promotion
+  constraint_name: promotion_pkey
+  constraint_type: PRIMARY KEY
+  column_name: p_promo_sk
+  foreign_table_name: promotion
+  foreign_column_name: p_promo_sk
+- table_name: reason
+  constraint_name: 2200_16423_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: reason
+  constraint_name: 2200_16423_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: reason
+  constraint_name: reason_pkey
+  constraint_type: PRIMARY KEY
+  column_name: r_reason_sk
+  foreign_table_name: reason
+  foreign_column_name: r_reason_sk
+- table_name: ship_mode
+  constraint_name: 2200_16413_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: ship_mode
+  constraint_name: 2200_16413_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: ship_mode
+  constraint_name: ship_mode_pkey
+  constraint_type: PRIMARY KEY
+  column_name: sm_ship_mode_sk
+  foreign_table_name: ship_mode
+  foreign_column_name: sm_ship_mode_sk
+- table_name: store
+  constraint_name: 2200_16440_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: store
+  constraint_name: 2200_16440_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: store
+  constraint_name: store_pkey
+  constraint_type: PRIMARY KEY
+  column_name: s_store_sk
+  foreign_table_name: store
+  foreign_column_name: s_store_sk
+- table_name: store_returns
+  constraint_name: 2200_16466_10_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: store_returns
+  constraint_name: 2200_16466_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: store_returns
+  constraint_name: store_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: sr_item_sk
+  foreign_table_name: store_returns
+  foreign_column_name: sr_ticket_number
+- table_name: store_returns
+  constraint_name: store_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: sr_item_sk
+  foreign_table_name: store_returns
+  foreign_column_name: sr_item_sk
+- table_name: store_returns
+  constraint_name: store_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: sr_ticket_number
+  foreign_table_name: store_returns
+  foreign_column_name: sr_item_sk
+- table_name: store_returns
+  constraint_name: store_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: sr_ticket_number
+  foreign_table_name: store_returns
+  foreign_column_name: sr_ticket_number
+- table_name: store_sales
+  constraint_name: 2200_16516_10_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: store_sales
+  constraint_name: 2200_16516_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: store_sales
+  constraint_name: store_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: ss_item_sk
+  foreign_table_name: store_sales
+  foreign_column_name: ss_item_sk
+- table_name: store_sales
+  constraint_name: store_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: ss_item_sk
+  foreign_table_name: store_sales
+  foreign_column_name: ss_ticket_number
+- table_name: store_sales
+  constraint_name: store_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: ss_ticket_number
+  foreign_table_name: store_sales
+  foreign_column_name: ss_item_sk
+- table_name: store_sales
+  constraint_name: store_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: ss_ticket_number
+  foreign_table_name: store_sales
+  foreign_column_name: ss_ticket_number
+- table_name: time_dim
+  constraint_name: 2200_16418_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: time_dim
+  constraint_name: 2200_16418_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: time_dim
+  constraint_name: time_dim_pkey
+  constraint_type: PRIMARY KEY
+  column_name: t_time_sk
+  foreign_table_name: time_dim
+  foreign_column_name: t_time_sk
+- table_name: warehouse
+  constraint_name: 2200_16408_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: warehouse
+  constraint_name: 2200_16408_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: warehouse
+  constraint_name: warehouse_pkey
+  constraint_type: PRIMARY KEY
+  column_name: w_warehouse_sk
+  foreign_table_name: warehouse
+  foreign_column_name: w_warehouse_sk
+- table_name: web_page
+  constraint_name: 2200_16476_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: web_page
+  constraint_name: 2200_16476_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: web_page
+  constraint_name: web_page_pkey
+  constraint_type: PRIMARY KEY
+  column_name: wp_web_page_sk
+  foreign_table_name: web_page
+  foreign_column_name: wp_web_page_sk
+- table_name: web_returns
+  constraint_name: 2200_16501_14_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: web_returns
+  constraint_name: 2200_16501_3_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: web_returns
+  constraint_name: web_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: wr_item_sk
+  foreign_table_name: web_returns
+  foreign_column_name: wr_item_sk
+- table_name: web_returns
+  constraint_name: web_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: wr_item_sk
+  foreign_table_name: web_returns
+  foreign_column_name: wr_order_number
+- table_name: web_returns
+  constraint_name: web_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: wr_order_number
+  foreign_table_name: web_returns
+  foreign_column_name: wr_item_sk
+- table_name: web_returns
+  constraint_name: web_returns_pkey
+  constraint_type: PRIMARY KEY
+  column_name: wr_order_number
+  foreign_table_name: web_returns
+  foreign_column_name: wr_order_number
+- table_name: web_sales
+  constraint_name: 2200_16506_18_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: web_sales
+  constraint_name: 2200_16506_4_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: web_sales
+  constraint_name: web_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: ws_item_sk
+  foreign_table_name: web_sales
+  foreign_column_name: ws_order_number
+- table_name: web_sales
+  constraint_name: web_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: ws_item_sk
+  foreign_table_name: web_sales
+  foreign_column_name: ws_item_sk
+- table_name: web_sales
+  constraint_name: web_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: ws_order_number
+  foreign_table_name: web_sales
+  foreign_column_name: ws_order_number
+- table_name: web_sales
+  constraint_name: web_sales_pkey
+  constraint_type: PRIMARY KEY
+  column_name: ws_order_number
+  foreign_table_name: web_sales
+  foreign_column_name: ws_item_sk
+- table_name: web_site
+  constraint_name: 2200_16459_1_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: web_site
+  constraint_name: 2200_16459_2_not_null
+  constraint_type: CHECK
+  column_name: null
+  foreign_table_name: null
+  foreign_column_name: null
+- table_name: web_site
+  constraint_name: web_site_pkey
+  constraint_type: PRIMARY KEY
+  column_name: web_site_sk
+  foreign_table_name: web_site
+  foreign_column_name: web_site_sk
+indexes:
+- table_name: call_center
+  index_name: call_center_pkey
+  indexdef: CREATE UNIQUE INDEX call_center_pkey ON public.call_center USING btree
+    (cc_call_center_sk)
+- table_name: catalog_page
+  index_name: catalog_page_pkey
+  indexdef: CREATE UNIQUE INDEX catalog_page_pkey ON public.catalog_page USING btree
+    (cp_catalog_page_sk)
+- table_name: catalog_returns
+  index_name: catalog_returns_pkey
+  indexdef: CREATE UNIQUE INDEX catalog_returns_pkey ON public.catalog_returns USING
+    btree (cr_item_sk, cr_order_number)
+- table_name: catalog_sales
+  index_name: catalog_sales_pkey
+  indexdef: CREATE UNIQUE INDEX catalog_sales_pkey ON public.catalog_sales USING btree
+    (cs_item_sk, cs_order_number)
+- table_name: customer
+  index_name: customer_pkey
+  indexdef: CREATE UNIQUE INDEX customer_pkey ON public.customer USING btree (c_customer_sk)
+- table_name: customer_address
+  index_name: customer_address_pkey
+  indexdef: CREATE UNIQUE INDEX customer_address_pkey ON public.customer_address USING
+    btree (ca_address_sk)
+- table_name: customer_demographics
+  index_name: customer_demographics_pkey
+  indexdef: CREATE UNIQUE INDEX customer_demographics_pkey ON public.customer_demographics
+    USING btree (cd_demo_sk)
+- table_name: date_dim
+  index_name: date_dim_pkey
+  indexdef: CREATE UNIQUE INDEX date_dim_pkey ON public.date_dim USING btree (d_date_sk)
+- table_name: household_demographics
+  index_name: household_demographics_pkey
+  indexdef: CREATE UNIQUE INDEX household_demographics_pkey ON public.household_demographics
+    USING btree (hd_demo_sk)
+- table_name: income_band
+  index_name: income_band_pkey
+  indexdef: CREATE UNIQUE INDEX income_band_pkey ON public.income_band USING btree
+    (ib_income_band_sk)
+- table_name: inventory
+  index_name: inventory_pkey
+  indexdef: CREATE UNIQUE INDEX inventory_pkey ON public.inventory USING btree (inv_date_sk,
+    inv_item_sk, inv_warehouse_sk)
+- table_name: item
+  index_name: item_pkey
+  indexdef: CREATE UNIQUE INDEX item_pkey ON public.item USING btree (i_item_sk)
+- table_name: promotion
+  index_name: promotion_pkey
+  indexdef: CREATE UNIQUE INDEX promotion_pkey ON public.promotion USING btree (p_promo_sk)
+- table_name: reason
+  index_name: reason_pkey
+  indexdef: CREATE UNIQUE INDEX reason_pkey ON public.reason USING btree (r_reason_sk)
+- table_name: ship_mode
+  index_name: ship_mode_pkey
+  indexdef: CREATE UNIQUE INDEX ship_mode_pkey ON public.ship_mode USING btree (sm_ship_mode_sk)
+- table_name: store
+  index_name: store_pkey
+  indexdef: CREATE UNIQUE INDEX store_pkey ON public.store USING btree (s_store_sk)
+- table_name: store_returns
+  index_name: store_returns_pkey
+  indexdef: CREATE UNIQUE INDEX store_returns_pkey ON public.store_returns USING btree
+    (sr_item_sk, sr_ticket_number)
+- table_name: store_sales
+  index_name: store_sales_pkey
+  indexdef: CREATE UNIQUE INDEX store_sales_pkey ON public.store_sales USING btree
+    (ss_item_sk, ss_ticket_number)
+- table_name: time_dim
+  index_name: time_dim_pkey
+  indexdef: CREATE UNIQUE INDEX time_dim_pkey ON public.time_dim USING btree (t_time_sk)
+- table_name: warehouse
+  index_name: warehouse_pkey
+  indexdef: CREATE UNIQUE INDEX warehouse_pkey ON public.warehouse USING btree (w_warehouse_sk)
+- table_name: web_page
+  index_name: web_page_pkey
+  indexdef: CREATE UNIQUE INDEX web_page_pkey ON public.web_page USING btree (wp_web_page_sk)
+- table_name: web_returns
+  index_name: web_returns_pkey
+  indexdef: CREATE UNIQUE INDEX web_returns_pkey ON public.web_returns USING btree
+    (wr_item_sk, wr_order_number)
+- table_name: web_sales
+  index_name: web_sales_pkey
+  indexdef: CREATE UNIQUE INDEX web_sales_pkey ON public.web_sales USING btree (ws_item_sk,
+    ws_order_number)
+- table_name: web_site
+  index_name: web_site_pkey
+  indexdef: CREATE UNIQUE INDEX web_site_pkey ON public.web_site USING btree (web_site_sk)
