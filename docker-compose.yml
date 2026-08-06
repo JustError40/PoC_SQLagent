@@ -17,8 +17,10 @@ services:
       retries: 20
 
   ollama:
-    image: ollama/ollama:latest
+    # Pinned: latest jumped discovery-watchdog behavior between pulls; bump deliberately.
+    image: ollama/ollama:0.32.5
     container_name: sqlagent-ollama
+    gpus: all
     ports:
       - "11434:11434"
     volumes:
@@ -27,14 +29,22 @@ services:
       OLLAMA_HOST: 0.0.0.0:11434
       OLLAMA_NUM_PARALLEL: 1
       OLLAMA_MAX_LOADED_MODELS: 1
+      # Keep the model warm between agent calls without pinning it forever:
+      # default 5m unload makes every idle gap re-run llama-server startup and
+      # its flaky GPU-discovery watchdog.
+      OLLAMA_KEEP_ALIVE: "15m"
+      # Faster attention + less VRAM on Ampere and newer; harmless when unsupported.
+      OLLAMA_FLASH_ATTENTION: "1"
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
 
   api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sqlagent-api
+    container_name: sqlagent-api-${SKILL_NAME:-warehouse_prod}
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-warehouse}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-warehouse}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-warehouse}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${TARGET_DB:-warehouse}
       LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
       # The API runs inside Compose; localhost would point back to sqlagent-api.
       OLLAMA_BASE_URL: http://ollama:11434
@@ -42,11 +52,15 @@ services:
       OPENCODE_GO_BASE_URL: ${OPENCODE_GO_BASE_URL:-https://opencode.ai/zen/go/v1}
       OPENCODE_GO_API_KEY: ${OPENCODE_GO_API_KEY:-}
       OPENCODE_GO_MODEL: ${OPENCODE_GO_MODEL:-deepseek-v4-flash}
-      WORKSPACE_PATH: /app/skills/warehouse_prod
+      WORKSPACE_PATH: /app/skills/${SKILL_NAME:-warehouse_prod}
+      EXPLORER_ROUNDS: ${EXPLORER_ROUNDS:-3}
+      EXPLORER_PROBES_PER_ROUND: ${EXPLORER_PROBES_PER_ROUND:-3}
+      BOOTSTRAP_ON_START: ${BOOTSTRAP_ON_START:-1}
     ports:
-      - "8000:8000"
+      - "${API_PORT:-8000}:8000"
     volumes:
-      - ./skills/warehouse_prod:/app/skills/warehouse_prod
+      - ./skills/${SKILL_NAME:-warehouse_prod}:/app/skills/${SKILL_NAME:-warehouse_prod}
+      - ./sqlagent/web_static:/app/sqlagent/web_static:ro
     depends_on:
       postgres:
         condition: service_healthy

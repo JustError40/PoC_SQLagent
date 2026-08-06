@@ -16,8 +16,10 @@ DEFAULT_TOOLKIT = ROOT / ".cache" / "tpcds-kit"
 DEFAULT_DATA = ROOT / ".data" / "tpcds" / "sf10"
 DEFAULT_SCALE = 10
 TPCDS_TABLES = (
-    "call_center", "catalog_page", "catalog_returns", "catalog_sales", "catalog_order",
-    "catalog_order_lineitem", "customer", "customer_address", "customer_demographics",
+    # The official TPC-DS schema has 25 tables; catalog_order and
+    # catalog_order_lineitem are not TPC-DS tables.
+    "call_center", "catalog_page", "catalog_returns", "catalog_sales", "customer",
+    "customer_address", "customer_demographics",
     "date_dim", "dbgen_version", "household_demographics", "income_band", "inventory",
     "item", "promotion", "reason", "ship_mode", "store", "store_returns", "store_sales",
     "time_dim", "warehouse", "web_page", "web_returns", "web_sales", "web_site",
@@ -171,4 +173,3 @@ def bootstrap_tpcds(
     generated = generate_tpcds(scale, data_dir, toolkit, force)
     loaded = load_tpcds(dsn, data_dir, toolkit, replace)
     return {"generated": generated, "loaded": loaded}
-

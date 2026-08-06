@@ -12,12 +12,14 @@ from pydantic import BaseModel, Field
 
 from sqlagent.config import Settings
 from sqlagent.db import Database
-from sqlagent.evaluator import evaluate_workspace, promote_candidate
+from sqlagent.evaluator import default_corpus_path, evaluate_workspace, promote_candidate
 from sqlagent.evolution import run_evolution
+from sqlagent.explorer import run_exploration
 from sqlagent.llm import LLMUnavailable, OllamaClient, OpenCodeGoClient, build_llm
 from sqlagent.query_agent import ask
 from sqlagent.surveyor import run_survey
 from sqlagent.trajectories import read_trajectories
+from sqlagent.verification import verify_skill
 from sqlagent.workspace import Workspace
 
 
@@ -250,6 +252,11 @@ def status() -> dict[str, Any]:
             branch = workspace.current_branch()
         except Exception:
             branch = None
+    manifest = workspace.read_yaml("manifest.yaml", default={}) or {}
+    if not isinstance(manifest, dict):  # corrupt or legacy list-shaped manifest
+        manifest = {}
+    templates = manifest.get("templates") or {}
+    exploration = read_trajectories(workspace.root / "experience" / "exploration.jsonl")
     signal = _signal_snapshot(services["postgres"]["status"], services["ollama"]["status"], workspace, trajectories)
     active_signal = any(item["status"] == "running" for item in signal.values())
     signal_state = "processing" if active_signal else "ready"
@@ -267,14 +274,16 @@ def status() -> dict[str, Any]:
             "provider": settings.llm_provider,
             "model": settings.opencode_go_model if settings.llm_provider == "opencode_go" else settings.ollama_model,
         },
-        "workspace": {"status": "ready" if (workspace.root / "manifest.yaml").exists() else "needs_survey", "branch": branch, "path": str(workspace.root)},
+        "workspace": {"status": "ready" if (workspace.root / "manifest.yaml").exists() else "needs_survey", "branch": branch, "path": str(workspace.root), "templates_count": len(templates)},
         "pipeline": {
             "surveyor": "ready" if (workspace.root / "raw" / "schema_snapshot.json").exists() else "pending",
+            "explorer": "ready" if templates or exploration else "pending",
             "query_agent": "ready" if (workspace.root / "manifest.yaml").exists() else "pending",
             "evolution": "ready" if trajectories else "waiting_for_trajectories",
             "evaluator": "ready" if trajectories else "waiting_for_trajectories",
         },
         "trajectory_count": len(trajectories),
+        "exploration_count": len(exploration),
         "latest_trajectories": latest,
         "signal": {"state": signal_state, "stages": signal},
         "jobs": jobs.all(),
@@ -345,27 +354,107 @@ def survey_endpoint() -> dict[str, str]:
     return _start_job("survey", _tracked_operation("ingest", lambda: run_survey(db, workspace, llm)))
 
 
+@app.post("/api/explore")
+def explore_endpoint() -> dict[str, str]:
+    db, workspace, llm = runtime()
+    if not (workspace.root / "manifest.yaml").exists():
+        raise HTTPException(status_code=409, detail="Run Surveyor before exploring")
+
+    def operation() -> dict[str, Any]:
+        result = run_exploration(
+            db,
+            workspace,
+            llm,
+            rounds=settings.explorer_rounds,
+            probes_per_round=settings.explorer_probes_per_round,
+        )
+        return {"status": f"{result['rounds_run']} rounds, {len(result['written'])} artifacts", **result}
+
+    return _start_job("explore", _tracked_operation("ingest", operation))
+
+
 @app.post("/api/evaluate")
 def evaluate_endpoint() -> dict[str, str]:
     db, workspace, llm = runtime()
-    corpus = settings.project_root / "evals" / "regression.jsonl"
+    corpus = default_corpus_path(workspace, settings.project_root)
     return _start_job("evaluate", _tracked_operation("promote", lambda: evaluate_workspace(db, workspace, corpus, llm).as_dict(), "evaluated"))
+
+
+@app.post("/api/verify")
+def verify_endpoint() -> dict[str, str]:
+    db, workspace, _ = runtime()
+    if not (workspace.root / "manifest.yaml").exists():
+        raise HTTPException(status_code=409, detail="Run Surveyor before verifying")
+    return _start_job("verify", lambda: verify_skill(db, workspace))
+
+
+@app.post("/api/optimize")
+def optimize_endpoint() -> dict[str, str]:
+    """One-click skill improvement: probe the database, then learn from query trajectories."""
+
+    db, workspace, llm = runtime()
+    if not (workspace.root / "manifest.yaml").exists():
+        raise HTTPException(status_code=409, detail="Run Surveyor before optimizing")
+
+    def operation() -> dict[str, Any]:
+        from sqlagent.explorer import optimize_skill
+
+        optimization = optimize_skill(
+            db,
+            workspace,
+            llm,
+            rounds_per_domain=1,
+            probes_per_round=settings.explorer_probes_per_round,
+        )
+        try:
+            evolution = run_evolution(workspace, llm=llm)
+        except Exception as exc:  # no trajectories yet etc. — exploration results still stand
+            evolution = {"status": "skipped", "reason": str(exc)[:200]}
+        return {**optimization, "evolution": evolution}
+
+    return _start_job("optimize", _tracked_operation("learn", operation))
 
 
 @app.post("/api/evolve")
 def evolve_endpoint() -> dict[str, str]:
-    _, workspace, _ = runtime()
-    return _start_job("evolve", _tracked_operation("learn", lambda: run_evolution(workspace), "candidate"))
+    _, workspace, llm = runtime()
+    return _start_job("evolve", _tracked_operation("learn", lambda: run_evolution(workspace, llm=llm), "candidate"))
 
 
 @app.post("/api/promote")
 def promote_endpoint() -> dict[str, str]:
     db, workspace, llm = runtime()
-    corpus = settings.project_root / "evals" / "regression.jsonl"
+    corpus = default_corpus_path(workspace, settings.project_root)
     return _start_job(
         "promote",
         _tracked_operation("promote", lambda: promote_candidate(db, workspace, corpus, None, llm), "promoted"),
     )
+
+
+def _periodic_verification() -> None:
+    """Re-validate skill templates on a timer so stale knowledge is marked failing."""
+
+    interval_hours = settings.verify_interval_hours
+    if interval_hours <= 0:
+        return
+
+    def loop() -> None:
+        import time
+
+        time.sleep(min(300.0, interval_hours * 3600))  # let bootstrap settle, then baseline
+        while True:
+            try:
+                db, workspace, _ = runtime()
+                if (workspace.root / "manifest.yaml").exists():
+                    verify_skill(db, workspace)
+            except Exception:
+                pass  # the next tick retries; verification must never take the API down
+            time.sleep(interval_hours * 3600)
+
+    threading.Thread(target=loop, name="sqlagent-verify", daemon=True).start()
+
+
+_periodic_verification()
 
 
 @app.get("/api/jobs/{job_id}")

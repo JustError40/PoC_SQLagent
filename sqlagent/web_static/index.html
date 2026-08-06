@@ -10,47 +10,38 @@
   <body>
     <div class="shell">
       <header class="topbar">
-        <a class="brand" href="/" aria-label="SQL Agent field console home">
-          <span class="brand-mark"><i></i><i></i><i></i></span>
-          <span>SQL Agent <em>/</em> Field Console</span>
-        </a>
+        <span class="brand">SQL Agent <em>/</em> Field Console</span>
         <div class="topbar-meta">
-          <span class="eyebrow">local environment</span>
           <span class="dataset-pill" id="datasetName">—</span>
           <button class="quiet-button" id="refreshButton">Refresh status</button>
         </div>
       </header>
 
       <main>
-        <section class="hero-grid">
-          <div class="hero-copy">
-            <p class="kicker">database intelligence / 01</p>
-            <h1>Ask the warehouse<br /><span>what it knows.</span></h1>
-            <p class="hero-note">A live control surface for the Surveyor, Query Agent, and the skill workspace they leave behind.</p>
-          </div>
-          <div class="signal-card" aria-label="Pipeline signal">
-            <div class="signal-label"><span>processing signal</span><b id="signalState">connecting</b></div>
-            <div class="signal-track"><span class="signal-dot"></span><span class="signal-line"></span><span class="signal-end"></span></div>
-            <div class="signal-foot"><span data-signal-stage="ingest"><b>ingest</b><i>waiting</i></span><span data-signal-stage="reason"><b>reason</b><i>waiting</i></span><span data-signal-stage="learn"><b>learn</b><i>waiting</i></span><span data-signal-stage="promote"><b>promote</b><i>waiting</i></span></div>
-          </div>
+        <section class="signal-strip" aria-label="Pipeline signal">
+          <span data-signal-stage="ingest"><b>ingest</b><i>waiting</i></span>
+          <span data-signal-stage="reason"><b>reason</b><i>waiting</i></span>
+          <span data-signal-stage="learn"><b>learn</b><i>waiting</i></span>
+          <span data-signal-stage="promote"><b>promote</b><i>waiting</i></span>
+          <span class="signal-overall" id="signalState">connecting</span>
         </section>
 
         <section class="status-grid" aria-label="System status">
           <article class="status-card" data-service="postgres">
-            <div class="card-top"><span class="status-dot"></span><span>01 / data plane</span><span class="status-value">—</span></div>
-            <h2>PostgreSQL</h2><p class="status-detail">waiting for heartbeat</p>
+            <div class="card-top"><span class="status-dot"></span><span>PostgreSQL</span><span class="status-value">—</span></div>
+            <p class="status-detail">waiting for heartbeat</p>
           </article>
           <article class="status-card" data-service="ollama">
-            <div class="card-top"><span class="status-dot"></span><span>02 / cognition</span><span class="status-value">—</span></div>
-            <h2>LLM provider</h2><p class="status-detail">waiting for model</p>
+            <div class="card-top"><span class="status-dot"></span><span>LLM provider</span><span class="status-value">—</span></div>
+            <p class="status-detail">waiting for model</p>
           </article>
           <article class="status-card" data-service="workspace">
-            <div class="card-top"><span class="status-dot"></span><span>03 / memory</span><span class="status-value">—</span></div>
-            <h2>Skill workspace</h2><p class="status-detail">waiting for survey</p>
+            <div class="card-top"><span class="status-dot"></span><span>Skill workspace</span><span class="status-value">—</span></div>
+            <p class="status-detail">waiting for survey</p>
           </article>
-          <article class="status-card metric-card">
-            <div class="card-top"><span class="metric-label">trajectory log</span><span class="metric-value" id="trajectoryCount">0</span></div>
-            <p>questions observed</p><div class="metric-rule"><span id="trajectoryRule"></span></div>
+          <article class="status-card" data-service="trajectories">
+            <div class="card-top"><span class="status-dot"></span><span>Trajectories</span><span class="status-value" id="trajectoryCount">0</span></div>
+            <p class="status-detail">questions observed</p>
           </article>
         </section>
 
@@ -59,21 +50,51 @@
             <div class="panel-heading"><div><p class="kicker">query agent / live</p><h2>Command the data</h2></div><span class="panel-code">READ ONLY</span></div>
             <form id="askForm">
               <label for="question">Question in plain language</label>
-              <div class="input-wrap"><textarea id="question" rows="3" placeholder="e.g. выручка новых клиентов по месяцам">выручка новых клиентов по месяцам</textarea><button class="run-button" type="submit"><span>Run query</span><b>↗</b></button></div>
+              <div class="input-wrap"><textarea id="question" rows="3" placeholder="ask a question about your data">выручка новых клиентов по месяцам</textarea><button class="run-button" type="submit"><span>Run query</span><b>↗</b></button></div>
             </form>
             <div class="suggestions"><span>try a signal</span><button data-question="выручка по месяцам">monthly revenue</button><button data-question="топ категорий по выручке">top categories</button><button data-question="заказы по статусам">orders by status</button></div>
             <div class="result-shell" id="resultShell"><div class="empty-result"><span class="empty-index">A /</span><p>Results will appear here.<br /><small>EXPLAIN runs before every execution.</small></p></div></div>
           </div>
 
           <aside class="pipeline-panel panel">
-            <div class="panel-heading"><div><p class="kicker">system / flow</p><h2>Pipeline</h2></div><span class="pulse" id="pipelinePulse"></span></div>
+            <div class="panel-heading"><div><p class="kicker">system / flow</p><h2>Pipeline</h2></div></div>
             <div class="pipeline-list">
-              <div class="pipeline-step" data-stage="surveyor"><span class="step-index">01</span><div><strong>Surveyor</strong><small>inventory / profiles</small></div><b>pending</b></div>
-              <div class="pipeline-step" data-stage="query_agent"><span class="step-index">02</span><div><strong>Query Agent</strong><small>route / explain / execute</small></div><b>pending</b></div>
-              <div class="pipeline-step" data-stage="evolution"><span class="step-index">03</span><div><strong>Evolution</strong><small>attribute / mutate</small></div><b>pending</b></div>
-              <div class="pipeline-step" data-stage="evaluator"><span class="step-index">04</span><div><strong>Evaluator</strong><small>replay / gate / promote</small></div><b>pending</b></div>
+              <div class="pipeline-step" data-stage="surveyor"><span class="step-index">01</span><div><strong>Surveyor</strong><small>inventory / profiles / verified joins</small></div><b>pending</b></div>
+              <div class="pipeline-step" data-stage="explorer"><span class="step-index">02</span><div><strong>Explorer</strong><small>probe / verify / write templates</small></div><b>pending</b></div>
+              <div class="pipeline-step" data-stage="query_agent"><span class="step-index">03</span><div><strong>Query Agent</strong><small>route / explain / execute</small></div><b>pending</b></div>
+              <div class="pipeline-step" data-stage="evolution"><span class="step-index">04</span><div><strong>Evolution</strong><small>cluster trajectories / mutate skill</small></div><b>pending</b></div>
+              <div class="pipeline-step" data-stage="evaluator"><span class="step-index">05</span><div><strong>Evaluator</strong><small>replay / gate / promote</small></div><b>pending</b></div>
             </div>
-            <div class="pipeline-actions"><button class="outline-button" id="surveyButton">Run survey</button><button class="outline-button" id="evaluateButton">Evaluate corpus</button><button class="outline-button" id="evolveButton">Evolve skill</button><button class="outline-button" id="promoteButton">Promote candidate</button></div>
+            <div class="pipeline-actions">
+              <div class="action-row" data-action="survey">
+                <button class="outline-button" id="surveyButton">1. Run survey</button>
+                <small>Scans the schema, profiles columns and verifies FK joins against real data, then builds the skill workspace. Run this first on a new database.</small>
+              </div>
+              <div class="action-row" data-action="explore">
+                <button class="outline-button" id="exploreButton">2. Explore database</button>
+                <small>The model probes the database with read-only queries and turns verified findings into reusable templates and rules. Requires a survey; safe to repeat.</small>
+              </div>
+              <div class="action-row" data-action="optimize">
+                <button class="outline-button" id="optimizeButton">Optimize skill</button>
+                <small>One click: improves each skill domain separately — the agent explores the database with the schema scoped to one domain at a time, writes verified findings into the skill, then re-verifies all templates and opens an evolution candidate from trajectories. Can be run at any moment.</small>
+              </div>
+              <div class="action-row" data-action="evaluate">
+                <button class="outline-button" id="evaluateButton">Evaluate corpus</button>
+                <small>Replays the golden corpus (generated deterministically from the surveyed schema, never by the model) against the current skill and reports correctness, unsafe queries and p95 latency.</small>
+              </div>
+              <div class="action-row" data-action="verify">
+                <button class="outline-button" id="verifyButton">Verify skill</button>
+                <small>Re-executes every learned template against the live database, snapshots results and marks failing templates so the agent stops routing to them. Also runs periodically in the background.</small>
+              </div>
+              <div class="action-row" data-action="evolve">
+                <button class="outline-button" id="evolveButton">3. Evolve skill</button>
+                <small>Creates an evolution/* branch where the model improves up to 3 skill files based on recent query trajectories. Needs at least one answered question.</small>
+              </div>
+              <div class="action-row" data-action="promote">
+                <button class="outline-button" id="promoteButton">4. Promote candidate</button>
+                <small>Replays the corpus on main vs the evolution candidate and merges + tags it only when the gate passes. Requires an evolution/* branch.</small>
+              </div>
+            </div>
           </aside>
         </section>
 

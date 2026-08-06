@@ -33,10 +33,52 @@ function renderTraces(items) {
   body.innerHTML = items.map((item) => `<tr><td>${escapeHtml(item.question || '—')}</td><td>${item.status === 'ok' ? 'verified' : 'failed'}</td><td>${item.elapsed_ms == null ? '—' : `${Number(item.elapsed_ms).toFixed(1)} ms`}</td><td>${formatTime(item.created_at)}</td></tr>`).join('');
 }
 
+function jobSummary(job) {
+  const result = job.result;
+  if (job.status === 'failed') return job.error || 'failed';
+  if (!result) return '';
+  if (job.name === 'survey') return `${result.tables ?? '?'} tables documented`;
+  if (job.name === 'explore') {
+    if (result.stop_reason) return `stopped: ${result.stop_reason}`;
+    return `${result.rounds_run ?? 0} rounds, ${(result.written || []).length} artifacts written`;
+  }
+  if (job.name === 'evolve') {
+    if (result.status === 'insufficient_trajectories') return `needs ${result.required} trajectories, have ${result.count} — ask questions first`;
+    return `${result.branch || ''} · ${(result.changed_files || []).join(', ')}`;
+  }
+  if (job.name === 'evaluate') return `correctness ${(Number(result.correctness || 0) * 100).toFixed(0)}% · unsafe ${result.unsafe ?? 0} · p95 ${Number(result.p95_exec_ms || 0).toFixed(0)} ms`;
+  if (job.name === 'promote') return result.status === 'promoted' ? `promoted · tag ${result.tag}` : `rejected by gate${result.branch ? ` · ${result.branch}` : ''}`;
+  return '';
+}
+
 function renderJobs(items) {
   const list = $('#jobsList');
   if (!items?.length) { list.innerHTML = '<p class="table-empty">No background jobs.</p>'; return; }
-  list.innerHTML = items.map((job) => `<div class="job-row ${job.status}"><div><b>${escapeHtml(job.name)}</b><small> / ${escapeHtml(job.id)}</small></div><b>${escapeHtml(job.status)}</b></div>`).join('');
+  list.innerHTML = items.map((job) => {
+    const summary = jobSummary(job);
+    return `<div class="job-row ${job.status}"><div><b>${escapeHtml(job.name)}</b><small> / ${escapeHtml(job.id)}</small>${summary ? `<small class="job-summary">${escapeHtml(summary)}</small>` : ''}</div><b>${escapeHtml(job.status)}</b></div>`;
+  }).join('');
+}
+
+function updateActionStates(data) {
+  const workspaceReady = data.workspace?.status === 'ready';
+  const hasTrajectories = (data.trajectory_count || 0) > 0;
+  const onCandidate = (data.workspace?.branch || '').startsWith('evolution/');
+  const hints = {
+    survey: workspaceReady ? 'workspace exists — re-running overwrites the generated skill' : '',
+    explore: workspaceReady ? '' : 'requires a completed survey',
+    evaluate: workspaceReady ? '' : 'requires a completed survey',
+    evolve: !workspaceReady ? 'requires a completed survey' : (!hasTrajectories ? 'works on trajectories — ask at least one question first' : ''),
+    promote: !workspaceReady ? 'requires a completed survey' : (!onCandidate ? 'requires an evolution/* branch — run evolve first' : 'will gate and merge the current candidate'),
+  };
+  Object.entries(hints).forEach(([action, hint]) => {
+    const row = document.querySelector(`[data-action="${action}"]`);
+    if (!row) return;
+    const caption = row.querySelector('small');
+    if (!caption.dataset.base) caption.dataset.base = caption.textContent;
+    caption.textContent = hint ? `${caption.dataset.base} Note: ${hint}.` : caption.dataset.base;
+    row.classList.toggle('attention', Boolean(hint) && action !== 'survey');
+  });
 }
 
 function renderPipeline(pipeline) {
@@ -59,7 +101,6 @@ function renderSignal(signal) {
   });
   const hasError = Object.values(stages).some((value) => value.status === 'error');
   $('#signalState').textContent = hasError ? 'attention' : (signal?.state || 'connecting');
-  document.querySelector('.signal-card')?.classList.toggle('processing', signal?.state === 'processing');
 }
 
 async function refreshStatus() {
@@ -71,9 +112,8 @@ async function refreshStatus() {
     setStatusCard('ollama', data.ollama.status === 'error' ? 'offline' : data.ollama.status, data.ollama.detail || data.ollama.model);
     setStatusCard('workspace', data.workspace.status === 'ready' ? 'ready' : 'pending', data.workspace.branch ? `branch ${data.workspace.branch}` : 'run survey to build');
     $('#trajectoryCount').textContent = data.trajectory_count || 0;
-    $('#trajectoryRule').style.width = `${Math.min(100, (data.trajectory_count || 0) * 10)}%`;
     $('#branchName').textContent = `branch ${data.workspace.branch || '—'}`;
-    renderSignal(data.signal); renderPipeline(data.pipeline); renderTraces(data.latest_trajectories); renderJobs(data.jobs);
+    renderSignal(data.signal); renderPipeline(data.pipeline); renderTraces(data.latest_trajectories); renderJobs(data.jobs); updateActionStates(data);
     $('#lastUpdated').textContent = `status pulled ${new Date().toLocaleTimeString()}`;
   } catch (error) { $('#lastUpdated').textContent = 'status endpoint unavailable'; }
 }
@@ -100,7 +140,7 @@ async function launchJob(path, button) {
     if (!response.ok) throw new Error(data.detail || 'Job could not start');
     refreshStatus();
   } catch (error) { $('#lastUpdated').textContent = error.message; }
-  finally { setTimeout(() => { button.disabled = false; }, 800); }
+  finally { setTimeout(() => { button.disabled = false; refreshStatus(); }, 800); }
 }
 
 function escapeHtml(value) { return String(value ?? '—').replace(/[&<>'"]/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char])); }
@@ -109,7 +149,10 @@ function formatTime(value) { return value ? new Date(value).toLocaleTimeString([
 $('#askForm').addEventListener('submit', submitQuestion);
 $('#refreshButton').addEventListener('click', refreshStatus);
 $('#surveyButton').addEventListener('click', (event) => launchJob('/api/survey', event.currentTarget));
+$('#exploreButton').addEventListener('click', (event) => launchJob('/api/explore', event.currentTarget));
 $('#evaluateButton').addEventListener('click', (event) => launchJob('/api/evaluate', event.currentTarget));
+$('#verifyButton').addEventListener('click', (event) => launchJob('/api/verify', event.currentTarget));
+$('#optimizeButton').addEventListener('click', (event) => launchJob('/api/optimize', event.currentTarget));
 $('#evolveButton').addEventListener('click', (event) => launchJob('/api/evolve', event.currentTarget));
 $('#promoteButton').addEventListener('click', (event) => launchJob('/api/promote', event.currentTarget));
 document.querySelectorAll('[data-question]').forEach((button) => button.addEventListener('click', () => { $('#question').value = button.dataset.question; $('#question').focus(); }));

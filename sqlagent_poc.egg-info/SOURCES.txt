@@ -1,3 +1,4 @@
+LICENSE
 README.md
 pyproject.toml
 db_seed/__init__.py
@@ -17,6 +18,8 @@ sqlagent/evaluator/__init__.py
 sqlagent/evaluator/engine.py
 sqlagent/evolution/__init__.py
 sqlagent/evolution/graph.py
+sqlagent/explorer/__init__.py
+sqlagent/explorer/graph.py
 sqlagent/query_agent/__init__.py
 sqlagent/query_agent/graph.py
 sqlagent/surveyor/__init__.py
@@ -28,5 +31,9 @@ sqlagent_poc.egg-info/entry_points.txt
 sqlagent_poc.egg-info/requires.txt
 sqlagent_poc.egg-info/top_level.txt
 tests/test_db_guard.py
+tests/test_explorer.py
+tests/test_llm_provider.py
+tests/test_query_repair.py
 tests/test_query_router.py
+tests/test_survey_generic.py
 tests/test_workspace.py

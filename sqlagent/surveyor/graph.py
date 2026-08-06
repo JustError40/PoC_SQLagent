@@ -10,6 +10,7 @@ from langgraph.graph import END, START, StateGraph
 from psycopg import sql
 
 from sqlagent.db import Database, json_safe
+from sqlagent.evaluator import rebuild_golden
 from sqlagent.llm import LLMUnavailable, OllamaClient
 from sqlagent.workspace import Workspace
 
@@ -20,38 +21,16 @@ class SurveyState(TypedDict, total=False):
     constraints: list[dict[str, Any]]
     indexes: list[dict[str, Any]]
     profiles: dict[str, dict[str, Any]]
+    primary_keys: dict[str, list[str]]
+    verified_joins: list[dict[str, Any]]
+    dangerous_joins: list[dict[str, Any]]
     semantics: dict[str, dict[str, str]]
     domains: dict[str, list[str]]
     workspace_path: str
     llm_used: bool
 
 
-DOMAIN_MAP = {
-    "sales": ["orders", "order_items", "order_payments", "shipments", "returns", "stores"],
-    "customers": ["customers", "customer_campaigns", "marketing_campaigns"],
-    "logistics": ["shipments", "stores", "employees"],
-    "finance": ["order_payments", "expenses", "daily_fx_rates"],
-    "inventory": ["products", "inventory_snapshots", "suppliers", "product_suppliers"],
-}
-
-DESCRIPTIONS = {
-    "customers": "Customer master with segment, region, signup date and soft deletion.",
-    "products": "Sellable product catalog with category, price and cost.",
-    "orders": "Order-level sales facts partitioned by order date; total_amount is already order grain.",
-    "order_items": "Line-item facts; joining them to orders changes the grain to item level.",
-    "order_payments": "Payment events; multiple rows can belong to one order and cause fanout.",
-    "shipments": "Shipment status and delivery timestamps, normally at most one row per order.",
-    "returns": "Returned order items and return reasons.",
-    "stores": "Retail store master and region.",
-    "marketing_campaigns": "Campaign calendar and acquisition channel.",
-    "customer_campaigns": "Many-to-many customer acquisition attribution.",
-    "employees": "Employees assigned to stores.",
-    "suppliers": "Supplier master.",
-    "product_suppliers": "Product-to-supplier relationship with lead time.",
-    "inventory_snapshots": "Periodic product stock snapshots by warehouse.",
-    "expenses": "Store operating expenses by day and category.",
-    "daily_fx_rates": "Daily currency exchange rates.",
-}
+FANOUT_THRESHOLD = 1.2
 
 
 def _fetch_rows(conn: psycopg.Connection, query: str, params: tuple[Any, ...] = ()) -> list[dict[str, Any]]:
@@ -60,15 +39,26 @@ def _fetch_rows(conn: psycopg.Connection, query: str, params: tuple[Any, ...] = 
     return [json_safe(dict(zip(columns, row))) for row in cursor.fetchall()]
 
 
+def _slug(value: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_")
+    return slug or "domain"
+
+
 def inventory_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
     with psycopg.connect(db.dsn) as conn:
         tables = _fetch_rows(
             conn,
             """
             SELECT table_name, table_type
-            FROM information_schema.tables
+            FROM information_schema.tables t
             WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
-              AND table_name NOT LIKE 'orders_%'
+              AND NOT EXISTS (
+                  SELECT 1
+                  FROM pg_inherits i
+                  JOIN pg_class c ON c.oid = i.inhrelid
+                  JOIN pg_namespace n ON n.oid = c.relnamespace
+                  WHERE n.nspname = 'public' AND c.relname = t.table_name
+              )
             ORDER BY table_name
             """,
         )
@@ -106,7 +96,17 @@ def inventory_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
             FROM pg_indexes WHERE schemaname = 'public' ORDER BY tablename, indexname
             """,
         )
-    return {"inventory": tables, "columns": columns, "constraints": constraints, "indexes": indexes}
+    primary_keys: dict[str, list[str]] = {}
+    for row in constraints:
+        if row["constraint_type"] == "PRIMARY KEY" and row.get("column_name"):
+            primary_keys.setdefault(row["table_name"], []).append(row["column_name"])
+    return {
+        "inventory": tables,
+        "columns": columns,
+        "constraints": constraints,
+        "indexes": indexes,
+        "primary_keys": primary_keys,
+    }
 
 
 def profiling_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
@@ -148,52 +148,165 @@ def profiling_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
     return {"profiles": profiles}
 
 
+def joins_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
+    """Verify FK-derived join candidates against real data and classify fanout risk."""
+
+    foreign_keys = [
+        row
+        for row in state["constraints"]
+        if row["constraint_type"] == "FOREIGN KEY" and row.get("foreign_table_name") and row.get("column_name")
+    ]
+    verified: list[dict[str, Any]] = []
+    dangerous: list[dict[str, Any]] = []
+    known_tables = set(state["columns"])
+    with psycopg.connect(db.dsn) as conn:
+        for fk in foreign_keys:
+            child, column = fk["table_name"], fk["column_name"]
+            parent, parent_column = fk["foreign_table_name"], fk["foreign_column_name"]
+            if child not in known_tables or parent not in known_tables:
+                continue
+            query = sql.SQL(
+                "SELECT count(*) AS total, count({col}) AS non_null, "
+                "count(DISTINCT {col}) AS distinct_refs FROM {table}"
+            ).format(col=sql.Identifier(column), table=sql.Identifier(child))
+            try:
+                total, non_null, distinct_refs = conn.execute(query).fetchone()
+            except psycopg.Error:
+                continue
+            fanout = round(non_null / distinct_refs, 3) if distinct_refs else 0.0
+            null_fraction = round((total - non_null) / total, 3) if total else 0.0
+            cardinality = "one_to_one_expected" if 0 < fanout <= 1.05 else "many_to_one"
+            verified.append(
+                {
+                    "left": f"{child}.{column}",
+                    "right": f"{parent}.{parent_column}",
+                    "cardinality": cardinality,
+                    "verified": True,
+                    "avg_fanout": fanout,
+                    "null_fraction": null_fraction,
+                }
+            )
+            if fanout > FANOUT_THRESHOLD:
+                dangerous.append(
+                    {
+                        "left": f"{parent}.{parent_column}",
+                        "right": f"{child}.{column}",
+                        "reason": f"one-to-many fanout: avg {fanout} {child} rows per {parent} row",
+                        "required_action": f"preaggregate {child} before joining {parent}-grain measures",
+                    }
+                )
+    return {"verified_joins": verified, "dangerous_joins": dangerous}
+
+
+def _profile_hints(state: SurveyState, table: str) -> dict[str, Any]:
+    """Compact per-column hints (samples/ranges) to ground LLM semantics in data."""
+
+    hints: dict[str, Any] = {}
+    for column, profile in (state.get("profiles", {}).get(table) or {}).items():
+        if "error" in profile:
+            continue
+        hint: dict[str, Any] = {}
+        if profile.get("top_values"):
+            hint["sample_values"] = [item["value"] for item in profile["top_values"][:5]]
+        if profile.get("min") is not None and profile.get("max") is not None:
+            hint["range"] = [str(profile["min"])[:40], str(profile["max"])[:40]]
+        hint["distinct"] = profile.get("distinct")
+        hints[column] = hint
+    return hints
+
+
 def semantics_node(state: SurveyState, *, llm: OllamaClient | None = None) -> dict[str, Any]:
     semantics = {
         table: {
-            "description": DESCRIPTIONS.get(table, f"Warehouse table {table}."),
-            "grain": "one row per " + ("order" if table == "orders" else table.rstrip("s")),
+            "description": f"Table {table} with {len(columns)} columns.",
+            "grain": "one row per " + ", ".join(state.get("primary_keys", {}).get(table) or ["record"]),
         }
-        for table in state["columns"]
+        for table, columns in state["columns"].items()
     }
     used = False
     if llm:
-        prompt = json.dumps(
-            {table: [column["column_name"] for column in columns] for table, columns in state["columns"].items()},
-            ensure_ascii=False,
-        )
+        brief = {
+            table: {
+                "columns": [f"{column['column_name']} {column['data_type']}" for column in columns][:40],
+                "hints": _profile_hints(state, table),
+            }
+            for table, columns in state["columns"].items()
+        }
         try:
             answer = llm.chat_json(
-                "Describe warehouse tables. Return JSON object table -> {description, grain}. Keep facts concise.",
-                prompt,
+                "You document a PostgreSQL database for a SQL agent. For each table return a concise "
+                "description (one sentence, grounded in column names and sample values) and its grain "
+                "('one row per ...'). Return JSON object table -> {description, grain}. "
+                "Do not invent business facts that the columns do not support.",
+                json.dumps(brief, ensure_ascii=False),
             )
             for table, value in answer.items():
                 if table in semantics and isinstance(value, dict):
-                    semantics[table].update({key: str(val) for key, val in value.items() if key in {"description", "grain"}})
+                    semantics[table].update(
+                        {key: str(val) for key, val in value.items() if key in {"description", "grain"}}
+                    )
             used = True
         except LLMUnavailable:
             pass
     return {"semantics": semantics, "llm_used": used}
 
 
-def domains_node(state: SurveyState) -> dict[str, Any]:
-    known = set(state["columns"])
-    domains = {domain: [table for table in tables if table in known] for domain, tables in DOMAIN_MAP.items()}
-    remaining = sorted(known - {table for tables in domains.values() for table in tables})
-    if remaining:
-        domains["other"] = remaining
+def domains_node(state: SurveyState, *, llm: OllamaClient | None = None) -> dict[str, Any]:
+    known = sorted(state["columns"])
+    domains: dict[str, list[str]] = {"all": known}
+    if llm:
+        brief = {
+            table: {
+                "description": state["semantics"][table]["description"],
+                "columns": [column["column_name"] for column in state["columns"][table]][:30],
+            }
+            for table in known
+        }
+        try:
+            answer = llm.chat_json(
+                "Group these database tables into 2-6 coherent business domains. "
+                "Return JSON object domain_name -> [table names]. Every table must appear in exactly one domain. "
+                "Use short lowercase snake_case domain names.",
+                json.dumps(brief, ensure_ascii=False),
+            )
+            grouped: dict[str, list[str]] = {}
+            assigned: set[str] = set()
+            for name, tables in answer.items():
+                if not isinstance(tables, list):
+                    continue
+                members = [str(table) for table in tables if str(table) in known and str(table) not in assigned]
+                if members:
+                    grouped[_slug(str(name))] = sorted(members)
+                    assigned.update(members)
+            missing = sorted(set(known) - assigned)
+            if missing:
+                grouped["other"] = missing
+            if grouped:
+                domains = grouped
+        except LLMUnavailable:
+            pass
     return {"domains": domains}
 
 
-def _template_files() -> dict[str, str]:
-    return {
-        "monthly_revenue.sql": """-- order grain: do not join order_payments or order_items for this metric\nSELECT date_trunc('month', order_date)::date AS month,\n       round(sum(total_amount)::numeric, 2) AS revenue\nFROM orders\nWHERE NOT is_deleted AND status <> 'cancelled'\nGROUP BY 1 ORDER BY 1;\n""",
-        "new_customer_revenue.sql": """WITH first_orders AS (\n  SELECT customer_id, min(order_date) AS first_order_date\n  FROM orders WHERE NOT is_deleted AND status <> 'cancelled'\n  GROUP BY customer_id\n)\nSELECT date_trunc('month', o.order_date)::date AS month,\n       round(sum(o.total_amount)::numeric, 2) AS revenue\nFROM orders o\nJOIN first_orders f ON f.customer_id = o.customer_id\n  AND f.first_order_date = o.order_date\nWHERE NOT o.is_deleted AND o.status <> 'cancelled'\nGROUP BY 1 ORDER BY 1;\n""",
-        "top_categories.sql": """SELECT p.category, round(sum(i.quantity * i.unit_price)::numeric, 2) AS revenue\nFROM order_items i\nJOIN products p ON p.id = i.product_id\nGROUP BY p.category ORDER BY revenue DESC;\n""",
-        "revenue_by_region.sql": """SELECT s.region, round(sum(o.total_amount)::numeric, 2) AS revenue\nFROM orders o JOIN stores s ON s.id = o.store_id\nWHERE NOT o.is_deleted AND o.status <> 'cancelled'\nGROUP BY s.region ORDER BY revenue DESC;\n""",
-        "on_time_delivery.sql": """SELECT round(100.0 * avg((delivered_at <= shipped_at + interval '5 days')::int), 2) AS on_time_percent\nFROM shipments WHERE status = 'delivered';\n""",
-        "product_quarterly_growth.sql": """WITH quarterly_sales AS (\n  SELECT oi.product_id, date_trunc('quarter', oi.order_date)::date AS quarter,\n         sum(oi.quantity * oi.unit_price)::numeric AS sales\n  FROM order_items oi JOIN orders o ON o.id = oi.order_id\n  WHERE NOT o.is_deleted AND o.status <> 'cancelled'\n  GROUP BY oi.product_id, date_trunc('quarter', oi.order_date)::date\n), history AS (\n  SELECT product_id, quarter, sales,\n         lag(quarter, 1) OVER (PARTITION BY product_id ORDER BY quarter) AS previous_quarter,\n         lag(quarter, 2) OVER (PARTITION BY product_id ORDER BY quarter) AS two_quarters_ago,\n         lag(sales, 1) OVER (PARTITION BY product_id ORDER BY quarter) AS previous_sales,\n         lag(sales, 2) OVER (PARTITION BY product_id ORDER BY quarter) AS two_quarters_ago_sales\n  FROM quarterly_sales\n)\nSELECT DISTINCT ON (h.product_id) p.id AS product_id, p.name, h.quarter AS latest_quarter,\n       round(h.two_quarters_ago_sales, 2) AS sales_two_quarters_ago,\n       round(h.previous_sales, 2) AS sales_previous_quarter,\n       round(h.sales, 2) AS sales_latest_quarter\nFROM history h JOIN products p ON p.id = h.product_id\nWHERE h.previous_quarter = (h.two_quarters_ago + interval '3 months')::date\n  AND h.quarter = (h.previous_quarter + interval '3 months')::date\n  AND h.two_quarters_ago_sales < h.previous_sales\n  AND h.previous_sales < h.sales\nORDER BY h.product_id, h.quarter DESC;\n""",
-    }
+def _skill_md(workspace_name: str, dangerous_joins: list[dict[str, Any]]) -> str:
+    lines = [
+        f"# {workspace_name} skill",
+        "",
+        "## Router",
+        "Use `manifest.yaml` first, then load only the domain and artifact files selected for the question.",
+        "",
+        "## Query protocol",
+        "1. Identify the metric grain. 2. Prefer a template from `manifest.yaml`. 3. Keep queries read-only.",
+        "4. Run EXPLAIN before execution. 5. Check invariants before returning results.",
+        "",
+        "## Grain rules",
+    ]
+    if dangerous_joins:
+        for join in dangerous_joins:
+            lines.append(f"- `{join['left']}` -> `{join['right']}`: {join['reason']}; {join['required_action']}.")
+    else:
+        lines.append("- No one-to-many fanout joins detected during survey.")
+    return "\n".join(lines) + "\n"
 
 
 def save_node(state: SurveyState) -> dict[str, Any]:
@@ -202,13 +315,10 @@ def save_node(state: SurveyState) -> dict[str, Any]:
     workspace.write_text(".gitignore", "experience/trajectories.jsonl\n.cache/\n")
     if workspace._git("ls-files", "--error-unmatch", "experience/trajectories.jsonl", check=False):
         workspace._git("rm", "--cached", "--ignore-unmatch", "experience/trajectories.jsonl")
-    workspace.write_text(
-        "SKILL.md",
-        """# warehouse_prod skill\n\n## Router\nUse `manifest.yaml` first, then load only the domain and artifact files selected for the question.\n\n## Query protocol\n1. Identify the metric grain. 2. Prefer a template. 3. Keep queries read-only.\n4. Run EXPLAIN before execution. 5. Check invariants before returning results.\n\n## Grain rules\n`orders.total_amount` is order grain. `order_items` and `order_payments` are one-to-many\nrelations and must not be joined when aggregating order-level measures unless pre-aggregated.\n""",
-    )
+    workspace.write_text("SKILL.md", _skill_md(workspace.root.name, state["dangerous_joins"]))
     manifest = {
         "version": 1,
-        "workspace": "warehouse_prod",
+        "workspace": workspace.root.name,
         "generated_by": "surveyor",
         "tables": sorted(state["columns"]),
         "domains": state["domains"],
@@ -220,11 +330,23 @@ def save_node(state: SurveyState) -> dict[str, Any]:
             "invariants": "evals/invariants.yaml",
             "templates": "templates/",
         },
+        # name -> {path, description, grain}; the explorer and evolution fill this in.
+        "templates": {},
     }
     workspace.write_yaml("manifest.yaml", manifest)
     workspace.write_yaml(
         "schema/tables.yaml",
-        {"tables": [{"name": table, "description": state["semantics"][table]["description"], "columns": columns} for table, columns in state["columns"].items()]},
+        {
+            "tables": [
+                {
+                    "name": table,
+                    "description": state["semantics"][table]["description"],
+                    "grain": state["semantics"][table]["grain"],
+                    "columns": columns,
+                }
+                for table, columns in state["columns"].items()
+            ]
+        },
     )
     workspace.write_yaml(
         "schema/constraints.yaml",
@@ -236,49 +358,22 @@ def save_node(state: SurveyState) -> dict[str, Any]:
     workspace.write_yaml("domains/index.yaml", state["domains"])
     for domain, tables in state["domains"].items():
         workspace.write_yaml(f"domains/{domain}.yaml", {"domain": domain, "tables": tables})
-    workspace.write_yaml(
-        "relationships/verified_joins.yaml",
-        {
-            "joins": [
-                {"left": "orders.customer_id", "right": "customers.id", "cardinality": "many_to_one", "verified": True},
-                {"left": "orders.store_id", "right": "stores.id", "cardinality": "many_to_one", "verified": True},
-                {"left": "order_items.product_id", "right": "products.id", "cardinality": "many_to_one", "verified": True},
-                {"left": "shipments.order_id", "right": "orders.id", "cardinality": "one_to_one_expected", "verified": True},
-                {"left": "customers.id", "right": "customer_campaigns.customer_id", "cardinality": "one_to_many", "verified": True},
-            ]
-        },
-    )
-    workspace.write_yaml(
-        "relationships/dangerous_joins.yaml",
-        {
-            "joins": [
-                {"left": "orders.id", "right": "order_items.order_id", "reason": "line-item fanout", "required_action": "preaggregate or use item grain"},
-                {"left": "orders.id", "right": "order_payments.order_id", "reason": "payment-event fanout", "required_action": "preaggregate before joining order measures"},
-            ]
-        },
-    )
+    workspace.write_yaml("relationships/verified_joins.yaml", {"joins": state["verified_joins"]})
+    workspace.write_yaml("relationships/dangerous_joins.yaml", {"joins": state["dangerous_joins"]})
     workspace.write_yaml("policies/forbidden_operations.yaml", {"read_only": True, "forbidden_tables": ["pg_authid", "pg_shadow"], "max_result_rows": 500, "explain_required": True})
-    workspace.write_yaml(
-        "evals/invariants.yaml",
-        {"invariants": [{"id": "non_negative_revenue", "expression": "revenue >= 0"}, {"id": "no_order_fanout", "expression": "order-level sums do not multiply after one-to-many joins"}, {"id": "bounded_result", "expression": "rows <= 500"}]},
-    )
-    for relative, content in _template_files().items():
-        workspace.write_text(f"templates/{relative}", content)
-    exploration = [
-        {"question": "monthly revenue", "template": "templates/monthly_revenue.sql", "status": "verified"},
-        {"question": "new customer revenue by month", "template": "templates/new_customer_revenue.sql", "status": "verified"},
-        {"question": "revenue by region", "template": "templates/revenue_by_region.sql", "status": "verified"},
-        {"question": "top categories", "template": "templates/top_categories.sql", "status": "verified"},
-        {"question": "on time delivery", "template": "templates/on_time_delivery.sql", "status": "verified"},
-    ]
-    workspace.write_text("experience/synthetic_exploration.jsonl", "\n".join(json.dumps(item, ensure_ascii=False) for item in exploration) + "\n")
+    invariants = [{"id": "bounded_result", "expression": "rows <= 500"}]
+    for index, join in enumerate(state["dangerous_joins"]):
+        invariants.append({"id": f"no_fanout_{index}", "expression": join["required_action"]})
+    workspace.write_yaml("evals/invariants.yaml", {"invariants": invariants})
+    rebuild_golden(workspace)  # deterministic golden corpus: an independent correctness yardstick
+    workspace.write_text("experience/exploration.jsonl", "")
     workspace.write_text("experience/trajectories.jsonl", "")
-    workspace.commit("survey: generate warehouse skill workspace")
+    workspace.commit("survey: generate skill workspace")
     return {"workspace": str(workspace.root), "tables": len(state["columns"]), "llm_used": state.get("llm_used", False)}
 
 
 def run_survey(db: Database, workspace: Workspace, llm: OllamaClient | None = None) -> dict[str, Any]:
-    """Run the inventory -> profiling -> semantics -> domains -> save graph."""
+    """Run the inventory -> profiling -> joins -> semantics -> domains -> save graph."""
 
     def inventory(state: SurveyState) -> dict[str, Any]:
         return inventory_node(state, db=db)
@@ -286,8 +381,14 @@ def run_survey(db: Database, workspace: Workspace, llm: OllamaClient | None = No
     def profiling(state: SurveyState) -> dict[str, Any]:
         return profiling_node(state, db=db)
 
+    def joins(state: SurveyState) -> dict[str, Any]:
+        return joins_node(state, db=db)
+
     def semantics(state: SurveyState) -> dict[str, Any]:
         return semantics_node(state, llm=llm)
+
+    def domains(state: SurveyState) -> dict[str, Any]:
+        return domains_node(state, llm=llm)
 
     def save(state: SurveyState) -> dict[str, Any]:
         return save_node(state)
@@ -295,12 +396,14 @@ def run_survey(db: Database, workspace: Workspace, llm: OllamaClient | None = No
     graph = StateGraph(SurveyState)
     graph.add_node("inventory", inventory)
     graph.add_node("profiling", profiling)
+    graph.add_node("joins", joins)
     graph.add_node("semantics", semantics)
-    graph.add_node("domains", domains_node)
+    graph.add_node("domains", domains)
     graph.add_node("save", save)
     graph.add_edge(START, "inventory")
     graph.add_edge("inventory", "profiling")
-    graph.add_edge("profiling", "semantics")
+    graph.add_edge("profiling", "joins")
+    graph.add_edge("joins", "semantics")
     graph.add_edge("semantics", "domains")
     graph.add_edge("domains", "save")
     graph.add_edge("save", END)

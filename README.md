@@ -1,8 +1,15 @@
 # SQLagent PoC
 
-End-to-end PoC самоэволюционирующей database-skill среды:
+End-to-end PoC самоадаптирующейся database-skill среды. Агент сам строит и
+улучшает свой skill для той БД, к которой подключён, — без подгонки кода под
+конкретную схему:
 
-`Surveyor → Query Agent → trajectories → Evolution → Evaluator → promotion`
+`Surveyor → Explorer → Query Agent → trajectories → Evolution → Evaluator → promotion`
+
+Все знания о конкретной БД живут только в skill workspace (артефактах), а не в
+коде: Surveyor извлекает их детерминированными коллекторами и LLM из данных,
+Explorer итеративно исследует БД read-only probe-запросами и дозаписывает
+проверенные templates/правила, Evolution улучшает skill по trajectories.
 
 ## Быстрый запуск
 
@@ -13,6 +20,7 @@ docker compose up -d postgres ollama
 python -m sqlagent seed
 python -m sqlagent demo-load
 python -m sqlagent survey
+python -m sqlagent explore
 python -m sqlagent ask "выручка новых клиентов по месяцам"
 python -m sqlagent evaluate
 ```
@@ -75,11 +83,30 @@ Postgres или backend health probes. Skill workspace примонтирова�
 
 - `seed` пересоздаёт тестовую БД и наполняет её детерминированными данными. `SEED_ORDERS` управляет размером факта.
 - `demo-load` восстанавливает скачанный `db_seed/demo/dvdrental.sql` в отдельную БД `dvdrental`; `warehouse` при этом не меняется.
-- `survey` запускает LangGraph Surveyor: inventory, profiles, семантику, домены, verified/dangerous joins и templates.
-- `ask` запускает read-only Query Agent с EXPLAIN gate, invariant check и JSONL trajectory.
+- `survey` запускает LangGraph Surveyor: inventory, profiles, проверка FK-joins на реальных данных (verified/dangerous по измеренному fanout), семантика таблиц и домены через LLM. Ничего не знает о конкретной БД.
+- `explore` запускает Explorer: модель итеративно планирует read-only probe-запросы, выполняет их через те же safety-gates (validate → EXPLAIN → execute) и дозаписывает в skill только проверенные артефакты — templates, dangerous joins, learned rules. `EXPLORER_ROUNDS`/`EXPLORER_PROBES_PER_ROUND` ограничивают бюджет.
+- `bootstrap` = `survey` + `explore`, но только если workspace ещё не построен; используется при старте контейнера.
+- `ask` запускает read-only Query Agent: LLM-router по `manifest.yaml`, EXPLAIN gate, invariant check (правила читаются из `evals/invariants.yaml` skill'а) и JSONL trajectory.
 - `evaluate` переигрывает `evals/regression.jsonl` и выводит correctness, unsafe, p95 и tool calls.
-- `evolve` создаёт ветку `evolution/<id>` и ограниченную мутацию одной поверхности максимум в трёх файлах.
+- `evolve` создаёт ветку `evolution/<id>`; мутацию предлагает LLM по trajectories (максимум 3 файла, только разрешённые поверхности), без LLM — детерминированный fallback.
 - `promote` сравнивает текущую evolution-ветку с `main`, применяет gate и при успехе делает merge + tag `promoted-<date>`.
+
+## Адаптация к новой БД
+
+Код агента DB-агностичен; адаптация задаётся двумя переменными:
+
+```bash
+export DATABASE_URL=postgresql://warehouse@localhost:5432/dvdrental
+export WORKSPACE_PATH=skills/dvdrental
+python -m sqlagent bootstrap   # survey + explore строят новый skill с нуля
+python -m sqlagent ask "top rented film categories"
+```
+
+При старте docker-контейнера `docker-entrypoint.sh` автоматически запускает
+`python -m sqlagent bootstrap` (отключается `BOOTSTRAP_ON_START=0`): пустой
+`WORKSPACE_PATH` → агент сам исследует свою БД до старта API, существующий
+manifest → сразу API. «Второй агент для другой БД» — это второй контейнер с
+другими `DATABASE_URL`, `WORKSPACE_PATH` и volume под skill.
 
 ## Безопасность и воспроизводимость
 

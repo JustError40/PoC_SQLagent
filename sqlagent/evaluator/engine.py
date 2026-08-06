@@ -11,6 +11,17 @@ from sqlagent.db import Database
 from sqlagent.query_agent import QueryAgent
 from sqlagent.workspace import Workspace
 
+from .golden import GOLDEN_PATH
+
+
+def default_corpus_path(workspace: Workspace, project_root: Path) -> Path:
+    """Prefer the workspace's own deterministic golden corpus over the project one."""
+
+    golden = workspace.root / GOLDEN_PATH
+    if golden.exists():
+        return golden
+    return project_root / "evals" / "regression.jsonl"
+
 
 @dataclass
 class CaseReport:

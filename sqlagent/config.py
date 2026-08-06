@@ -25,6 +25,10 @@ class Settings:
     tpcds_toolkit_path: Path = PROJECT_ROOT / ".cache" / "tpcds-kit"
     max_result_rows: int = 500
     statement_timeout_ms: int = 15_000
+    explorer_rounds: int = 3
+    explorer_probes_per_round: int = 3
+    bootstrap_on_start: bool = True
+    verify_interval_hours: float = 24.0
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -46,4 +50,8 @@ class Settings:
             tpcds_toolkit_path=Path(os.getenv("TPCDS_TOOLKIT_PATH", str(cls.tpcds_toolkit_path))),
             max_result_rows=int(os.getenv("MAX_RESULT_ROWS", str(cls.max_result_rows))),
             statement_timeout_ms=int(os.getenv("STATEMENT_TIMEOUT_MS", str(cls.statement_timeout_ms))),
+            explorer_rounds=int(os.getenv("EXPLORER_ROUNDS", str(cls.explorer_rounds))),
+            explorer_probes_per_round=int(os.getenv("EXPLORER_PROBES_PER_ROUND", str(cls.explorer_probes_per_round))),
+            bootstrap_on_start=os.getenv("BOOTSTRAP_ON_START", "1").strip() not in {"0", "false", "no"},
+            verify_interval_hours=float(os.getenv("VERIFY_INTERVAL_HOURS", str(cls.verify_interval_hours))),
         )
