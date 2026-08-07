@@ -166,6 +166,10 @@ class OpenCodeGoClient(OllamaClient):
         super().__init__(base_url, model, cache_dir, timeout, event_hook)
         self.api_key = api_key.strip()
 
+    provider_label = "OpenCode Go"
+    api_key_env = "OPENCODE_GO_API_KEY"
+    cache_provider = "opencode_go"
+
     def _headers(self) -> dict[str, str]:
         return {
             "Authorization": f"Bearer {self.api_key}",
@@ -175,11 +179,11 @@ class OpenCodeGoClient(OllamaClient):
 
     def _cache_path(self, payload: dict[str, Any]) -> Path | None:
         # Keep provider caches isolated when the same model name is used locally and remotely.
-        return super()._cache_path({"provider": "opencode_go", "base_url": self.base_url, **payload})
+        return super()._cache_path({"provider": self.cache_provider, "base_url": self.base_url, **payload})
 
     def _ensure_key(self) -> None:
         if not self.api_key:
-            message = "OPENCODE_GO_API_KEY is not configured"
+            message = f"{self.api_key_env} is not configured"
             self._emit("error", message)
             raise LLMUnavailable(message)
 
@@ -187,11 +191,11 @@ class OpenCodeGoClient(OllamaClient):
     def _content(response: httpx.Response) -> str:
         choices = response.json().get("choices", [])
         if not choices or not isinstance(choices[0], dict):
-            raise ValueError("OpenCode Go response did not contain choices")
+            raise ValueError("LLM provider response did not contain choices")
         message = choices[0].get("message", {})
         content = message.get("content", "") if isinstance(message, dict) else ""
         if not isinstance(content, str) or not content.strip():
-            raise ValueError("OpenCode Go response did not contain message content")
+            raise ValueError("LLM provider response did not contain message content")
         return content
 
     @staticmethod
@@ -253,8 +257,8 @@ class OpenCodeGoClient(OllamaClient):
                 last_error = exc
                 if attempt < retries:
                     continue
-        self._emit("error", str(last_error or "unknown OpenCode Go error"))
-        raise LLMUnavailable(f"OpenCode Go model {self.model!r} did not return JSON: {last_error}")
+        self._emit("error", str(last_error or f"unknown {self.provider_label} error"))
+        raise LLMUnavailable(f"{self.provider_label} model {self.model!r} did not return JSON: {last_error}")
 
     def chat_text(self, system: str, user: str) -> str:
         self._ensure_key()
@@ -280,7 +284,7 @@ class OpenCodeGoClient(OllamaClient):
             return content
         except (httpx.HTTPError, ValueError, KeyError) as exc:
             self._emit("error", str(exc))
-            raise LLMUnavailable(f"OpenCode Go model {self.model!r} is unavailable: {exc}") from exc
+            raise LLMUnavailable(f"{self.provider_label} model {self.model!r} is unavailable: {exc}") from exc
 
     def list_models(self) -> list[dict[str, Any]]:
         """Fetch the provider catalog only when explicitly requested by an API caller."""
@@ -290,10 +294,18 @@ class OpenCodeGoClient(OllamaClient):
             response.raise_for_status()
             data = response.json().get("data", [])
             if not isinstance(data, list):
-                raise ValueError("OpenCode Go model catalog is not a list")
+                raise ValueError("LLM provider model catalog is not a list")
             return [item for item in data if isinstance(item, dict)]
         except (httpx.HTTPError, ValueError, KeyError) as exc:
-            raise LLMUnavailable(f"OpenCode Go model catalog is unavailable: {exc}") from exc
+            raise LLMUnavailable(f"{self.provider_label} model catalog is unavailable: {exc}") from exc
+
+
+class LiteLLMClient(OpenCodeGoClient):
+    """LiteLLM proxy client using its OpenAI-compatible chat completions API."""
+
+    provider_label = "LiteLLM"
+    api_key_env = "LITELLM_API_KEY"
+    cache_provider = "litellm"
 
 
 def build_llm(
@@ -304,11 +316,23 @@ def build_llm(
     opencode_go_base_url: str,
     opencode_go_api_key: str,
     opencode_go_model: str,
+    litellm_base_url: str,
+    litellm_api_key: str,
+    litellm_model: str,
     cache_dir: Path,
     event_hook: LLMEventHook | None = None,
 ) -> OllamaClient:
     if provider == "ollama":
-        return OllamaClient(ollama_base_url, ollama_model, cache_dir / "ollama", event_hook=event_hook)
+        # Ollama is temporarily disabled; use the LiteLLM proxy instead.
+        raise ValueError("LLM_PROVIDER 'ollama' is temporarily disabled; use litellm")
+    if provider == "litellm":
+        return LiteLLMClient(
+            litellm_base_url,
+            litellm_api_key,
+            litellm_model,
+            cache_dir / "litellm",
+            event_hook=event_hook,
+        )
     if provider == "opencode_go":
         return OpenCodeGoClient(
             opencode_go_base_url,
@@ -317,4 +341,4 @@ def build_llm(
             cache_dir / "opencode_go",
             event_hook=event_hook,
         )
-    raise ValueError(f"Unsupported LLM_PROVIDER {provider!r}; use ollama or opencode_go")
+    raise ValueError(f"Unsupported LLM_PROVIDER {provider!r}; use litellm or opencode_go")

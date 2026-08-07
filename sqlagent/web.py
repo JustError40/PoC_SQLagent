@@ -30,7 +30,7 @@ settings = Settings.from_env()
 _service_lock = threading.Lock()
 _services: dict[str, dict[str, str]] = {
     "postgres": {"status": "configured", "detail": "waiting for an agent database response"},
-    "ollama": {"status": "configured", "detail": f"{settings.llm_provider}/{settings.opencode_go_model if settings.llm_provider == 'opencode_go' else settings.ollama_model}; waiting for an agent response"},
+    "ollama": {"status": "configured", "detail": f"{settings.llm_provider}/{settings.active_llm_model}; waiting for an agent response"},
 }
 
 
@@ -71,6 +71,9 @@ def runtime() -> tuple[Database, Workspace, OllamaClient]:
             opencode_go_base_url=settings.opencode_go_base_url,
             opencode_go_api_key=settings.opencode_go_api_key,
             opencode_go_model=settings.opencode_go_model,
+            litellm_base_url=settings.litellm_base_url,
+            litellm_api_key=settings.litellm_api_key,
+            litellm_model=settings.litellm_model,
             cache_dir=workspace.root / ".cache" / "llm",
             event_hook=_ollama_event,
         ),
@@ -222,8 +225,8 @@ def health() -> dict[str, Any]:
         "ollama": {
             **services["ollama"],
             "provider": settings.llm_provider,
-            "model": settings.opencode_go_model if settings.llm_provider == "opencode_go" else settings.ollama_model,
-            "base_url": settings.opencode_go_base_url if settings.llm_provider == "opencode_go" else settings.ollama_base_url,
+            "model": settings.active_llm_model,
+            "base_url": settings.active_llm_base_url,
         },
         "workspace": {"ok": workspace_ok, "path": str(workspace.root)},
     }
@@ -272,7 +275,7 @@ def status() -> dict[str, Any]:
         "ollama": {
             **services["ollama"],
             "provider": settings.llm_provider,
-            "model": settings.opencode_go_model if settings.llm_provider == "opencode_go" else settings.ollama_model,
+            "model": settings.active_llm_model,
         },
         "workspace": {"status": "ready" if (workspace.root / "manifest.yaml").exists() else "needs_survey", "branch": branch, "path": str(workspace.root), "templates_count": len(templates)},
         "pipeline": {
@@ -319,10 +322,10 @@ def ask_endpoint(request: AskRequest) -> dict[str, Any]:
 @app.get("/api/llm/models")
 def llm_models() -> dict[str, Any]:
     """Return models from the configured provider on demand; this endpoint is never polled."""
-    if settings.llm_provider != "opencode_go":
+    if settings.llm_provider not in {"opencode_go", "litellm"}:
         return {
             "provider": settings.llm_provider,
-            "models": [{"id": settings.ollama_model, "owned_by": "ollama"}],
+            "models": [{"id": settings.active_llm_model, "owned_by": settings.llm_provider}],
         }
     try:
         client = build_llm(
@@ -332,10 +335,13 @@ def llm_models() -> dict[str, Any]:
             opencode_go_base_url=settings.opencode_go_base_url,
             opencode_go_api_key=settings.opencode_go_api_key,
             opencode_go_model=settings.opencode_go_model,
+            litellm_base_url=settings.litellm_base_url,
+            litellm_api_key=settings.litellm_api_key,
+            litellm_model=settings.litellm_model,
             cache_dir=Workspace(settings.workspace_path).root / ".cache" / "llm",
         )
         if not isinstance(client, OpenCodeGoClient):
-            raise LLMUnavailable("OpenCode Go provider is not configured")
+            raise LLMUnavailable(f"{settings.llm_provider} provider does not expose a model catalog")
         return {"provider": settings.llm_provider, "models": client.list_models()}
     except LLMUnavailable as exc:
         raise HTTPException(status_code=503, detail=str(exc)) from exc

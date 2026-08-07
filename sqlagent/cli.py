@@ -31,6 +31,9 @@ def _runtime(settings: Settings) -> tuple[Database, Workspace, OllamaClient]:
         opencode_go_base_url=settings.opencode_go_base_url,
         opencode_go_api_key=settings.opencode_go_api_key,
         opencode_go_model=settings.opencode_go_model,
+        litellm_base_url=settings.litellm_base_url,
+        litellm_api_key=settings.litellm_api_key,
+        litellm_model=settings.litellm_model,
         cache_dir=workspace.root / ".cache" / "llm",
     )
     return db, workspace, llm

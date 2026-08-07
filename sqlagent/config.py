@@ -12,12 +12,15 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 class Settings:
     project_root: Path = PROJECT_ROOT
     database_url: str = "postgresql://warehouse@localhost:5432/warehouse"
-    llm_provider: str = "ollama"
+    llm_provider: str = "litellm"
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "openbmb/minicpm5:fp16"
     opencode_go_base_url: str = "https://opencode.ai/zen/go/v1"
     opencode_go_api_key: str = ""
     opencode_go_model: str = "deepseek-v4-flash"
+    litellm_base_url: str = "http://localhost:4000/v1"
+    litellm_api_key: str = ""
+    litellm_model: str = "hosted_vllm/gemma4-chat"
     workspace_path: Path = PROJECT_ROOT / "skills" / "warehouse_prod"
     seed_orders: int = 50_000
     tpcds_scale: int = 10
@@ -43,6 +46,9 @@ class Settings:
             opencode_go_base_url=os.getenv("OPENCODE_GO_BASE_URL", cls.opencode_go_base_url).rstrip("/"),
             opencode_go_api_key=os.getenv("OPENCODE_GO_API_KEY", cls.opencode_go_api_key),
             opencode_go_model=os.getenv("OPENCODE_GO_MODEL", cls.opencode_go_model),
+            litellm_base_url=os.getenv("LITELLM_BASE_URL", cls.litellm_base_url).rstrip("/"),
+            litellm_api_key=os.getenv("LITELLM_API_KEY", cls.litellm_api_key),
+            litellm_model=os.getenv("LITELLM_MODEL", cls.litellm_model),
             workspace_path=workspace,
             seed_orders=int(os.getenv("SEED_ORDERS", str(cls.seed_orders))),
             tpcds_scale=int(os.getenv("TPCDS_SCALE", str(cls.tpcds_scale))),
@@ -55,3 +61,17 @@ class Settings:
             bootstrap_on_start=os.getenv("BOOTSTRAP_ON_START", "1").strip() not in {"0", "false", "no"},
             verify_interval_hours=float(os.getenv("VERIFY_INTERVAL_HOURS", str(cls.verify_interval_hours))),
         )
+
+    @property
+    def active_llm_model(self) -> str:
+        return {
+            "litellm": self.litellm_model,
+            "opencode_go": self.opencode_go_model,
+        }.get(self.llm_provider, self.ollama_model)
+
+    @property
+    def active_llm_base_url(self) -> str:
+        return {
+            "litellm": self.litellm_base_url,
+            "opencode_go": self.opencode_go_base_url,
+        }.get(self.llm_provider, self.ollama_base_url)

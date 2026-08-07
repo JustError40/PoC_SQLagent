@@ -21,6 +21,9 @@ def test_build_llm_selects_opencode_go(tmp_path: Path) -> None:
         opencode_go_base_url=settings.opencode_go_base_url,
         opencode_go_api_key=settings.opencode_go_api_key,
         opencode_go_model=settings.opencode_go_model,
+        litellm_base_url=settings.litellm_base_url,
+        litellm_api_key=settings.litellm_api_key,
+        litellm_model=settings.litellm_model,
         cache_dir=tmp_path,
     )
 
@@ -108,3 +111,59 @@ def test_invalid_cache_is_discarded_and_request_continues(monkeypatch, tmp_path:
 
     assert client.chat_json("Return SQL", "question", retries=0) == {"sql": "SELECT 1"}
     assert cache_path.read_text(encoding="utf-8").strip() == '{\n  "sql": "SELECT 1"\n}'
+
+
+def _build_kwargs(settings: Settings, tmp_path: Path) -> dict[str, object]:
+    return {
+        "provider": settings.llm_provider,
+        "ollama_base_url": settings.ollama_base_url,
+        "ollama_model": settings.ollama_model,
+        "opencode_go_base_url": settings.opencode_go_base_url,
+        "opencode_go_api_key": settings.opencode_go_api_key,
+        "opencode_go_model": settings.opencode_go_model,
+        "litellm_base_url": settings.litellm_base_url,
+        "litellm_api_key": settings.litellm_api_key,
+        "litellm_model": settings.litellm_model,
+        "cache_dir": tmp_path,
+    }
+
+
+def test_build_llm_selects_litellm(tmp_path: Path) -> None:
+    from sqlagent.llm import LiteLLMClient
+
+    settings = Settings(
+        llm_provider="litellm",
+        litellm_base_url="http://litellm:4000/v1",
+        litellm_api_key="sk-test",
+        litellm_model="hosted_vllm/gemma4-chat",
+    )
+
+    client = build_llm(**_build_kwargs(settings, tmp_path))
+
+    assert isinstance(client, LiteLLMClient)
+    assert client.model == "hosted_vllm/gemma4-chat"
+    assert client.base_url == "http://litellm:4000/v1"
+
+
+def test_build_llm_rejects_disabled_ollama(tmp_path: Path) -> None:
+    settings = Settings(llm_provider="ollama")
+
+    try:
+        build_llm(**_build_kwargs(settings, tmp_path))
+    except ValueError as exc:
+        assert "temporarily disabled" in str(exc)
+    else:
+        raise AssertionError("ollama provider must be rejected while disabled")
+
+
+def test_litellm_without_key_fails_before_network(tmp_path: Path) -> None:
+    from sqlagent.llm import LiteLLMClient
+
+    client = LiteLLMClient("http://litellm:4000/v1", "", "hosted_vllm/gemma4-chat", tmp_path)
+
+    try:
+        client.chat_text("system", "user")
+    except Exception as exc:
+        assert "LITELLM_API_KEY" in str(exc)
+    else:
+        raise AssertionError("missing LiteLLM key must fail explicitly")
