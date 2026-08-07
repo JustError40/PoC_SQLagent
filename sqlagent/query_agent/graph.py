@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 from typing import Any, TypedDict
 
@@ -66,7 +67,9 @@ _AMBIGUITY_TERMS = (
     "performance",
     "overall",
 )
-REACT_MAX_ATTEMPTS = 3
+# Repair budget for the ReAct loop; configurable because harder TPC-DS questions
+# (multi-hop joins, cross-channel unions) legitimately need more iterations.
+REACT_MAX_ATTEMPTS = int(os.getenv("REACT_MAX_ATTEMPTS", "15"))
 
 _META_QUESTION_TERMS = ("таблиц", "колонк", "table", "column", "schema", "схема", "каталог")
 _SYSTEM_CATALOG_RE = re.compile(r"\b(information_schema|pg_catalog)\b", re.IGNORECASE)
