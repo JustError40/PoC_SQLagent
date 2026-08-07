@@ -13,7 +13,6 @@ cd "$(dirname "$0")/.."
 
 git pull --ff-only origin main || echo "!! git pull failed; continuing with the local checkout"
 
-PIP_INDEX_URL="${PIP_INDEX_URL:-https://pypi.tuna.tsinghua.edu.cn/simple}" docker compose build api
-docker compose up -d
+PIP_INDEX_URL="${PIP_INDEX_URL:-https://pypi.tuna.tsinghua.edu.cn/simple}" docker compose up -d --build
 
 exec python3 scripts/test_campaign.py
