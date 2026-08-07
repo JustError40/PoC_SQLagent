@@ -102,7 +102,7 @@ def test_invalid_cache_is_discarded_and_request_continues(monkeypatch, tmp_path:
         "response_format": {"type": "json_object"},
         "temperature": 0.7,
         "top_p": 0.95,
-        "max_tokens": 4096,
+        "max_tokens": 16384,
     }
     cache_path = client._cache_path(payload)
     assert cache_path is not None

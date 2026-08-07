@@ -225,7 +225,7 @@ class OpenCodeGoClient(OllamaClient):
             "response_format": {"type": "json_object"},
             "temperature": 0.7,
             "top_p": 0.95,
-            "max_tokens": 4096,
+            "max_tokens": 16384,
         }
         cache_path = self._cache_path(payload)
         cached = self._read_cached_json(cache_path)
@@ -268,7 +268,7 @@ class OpenCodeGoClient(OllamaClient):
             "stream": False,
             "temperature": 0.7,
             "top_p": 0.95,
-            "max_tokens": 4096,
+            "max_tokens": 16384,
         }
         self._emit("request_started", self.model)
         try:
