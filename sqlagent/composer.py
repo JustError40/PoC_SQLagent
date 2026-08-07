@@ -15,7 +15,8 @@ from typing import Any
 
 AGGREGATIONS = {"sum", "avg", "min", "max", "count", "count_distinct"}
 FILTER_OPS = {"=", "!=", ">", ">=", "<", "<="}
-MAX_JOINS = 2
+MAX_JOINS = 4
+MAX_MEASURES = 4
 
 DECOMPOSE_PROMPT = (
     "You plan one analytical PostgreSQL query as JSON parts instead of writing SQL. "
@@ -23,11 +24,12 @@ DECOMPOSE_PROMPT = (
     "Return JSON with: "
     '"from": main table; '
     '"joins": [{"table", "left", "right"}] where left is a column of an already used table and '
-    "right is a column of the joined table (max 2, empty list when not needed); "
+    "right is a column of the joined table (max 4, empty list when not needed); "
     '"group_by": [{"table", "column"}] for the entities the question asks about; '
-    '"measure": {"agg": one of sum|avg|min|max|count|count_distinct, "table", "column", "alias"}; '
+    '"measures": [{"agg": one of sum|avg|min|max|count|count_distinct, "table", "column", "alias"}] '
+    "— one to four measures; questions like 'revenue and profit' or 'average basket' need several; "
     '"filters": [{"table", "column", "op": one of =|!=|>|>=|<|<=, "value"}] (empty list when not needed); '
-    '"order": {"by": measure alias or a group column, "dir": asc|desc}; '
+    '"order": {"by": a measure alias or a group column, "dir": asc|desc}; '
     '"limit": number. Use empty lists where nothing is needed. '
     'If a table you need is missing from the supplied schema map, return '
     '{"needed_tables": [exact table names you want to see]} instead of a plan.'
@@ -40,6 +42,7 @@ SPEC_JSON_SCHEMA: dict[str, Any] = {
         "joins": {"type": "array"},
         "group_by": {"type": "array"},
         "measure": {"type": "object"},
+        "measures": {"type": "array"},
         "filters": {"type": "array"},
         "order": {"type": "object"},
         "limit": {"type": "integer"},
@@ -140,9 +143,14 @@ def assemble_spec(
         group_exprs.append(f"{_quote_ident(table)}.{_quote_ident(column)}")
         group_columns.append(column)
 
-    measure_alias = ""
-    measure = spec.get("measure")
-    if measure:
+    measure_aliases: list[str] = []
+    measures = spec.get("measures")
+    if not measures and spec.get("measure"):
+        measures = [spec["measure"]]
+    measures = measures or []
+    if len(measures) > MAX_MEASURES:
+        raise ValueError(f"too many measures (max {MAX_MEASURES})")
+    for measure in measures:
         if not isinstance(measure, dict):
             raise ValueError("measure is not an object")
         agg = str(measure.get("agg") or "count").lower()
@@ -154,6 +162,8 @@ def assemble_spec(
             raise ValueError(f"measure table not joined: {table}")
         _check_column(schema, table, column)
         measure_alias = re.sub(r"\W+", "_", str(measure.get("alias") or f"{agg}_{column}")).strip("_") or "measure"
+        if measure_alias in measure_aliases:
+            raise ValueError(f"duplicate measure alias: {measure_alias}")
         if agg == "count" and column == "*":
             expression = "COUNT(*)"
         elif agg == "count_distinct":
@@ -161,6 +171,7 @@ def assemble_spec(
         else:
             expression = f"{agg.upper()}({_quote_ident(table)}.{_quote_ident(column)})"
         select_parts.append(f"{expression} AS {_quote_ident(measure_alias)}")
+        measure_aliases.append(measure_alias)
     if not select_parts:
         raise ValueError("query plan selects nothing: add group_by or a measure")
 
@@ -182,9 +193,9 @@ def assemble_spec(
     order = spec.get("order")
     if isinstance(order, dict) and order.get("by"):
         by = str(order["by"])
-        if by == "measure" and measure_alias:
-            by = measure_alias
-        if by not in group_columns and by != measure_alias:
+        if by == "measure" and measure_aliases:
+            by = measure_aliases[0]
+        if by not in group_columns and by not in measure_aliases:
             raise ValueError(f"order column is not selected: {by}")
         direction = "DESC" if str(order.get("dir") or "desc").lower() == "desc" else "ASC"
         order_clause = f" ORDER BY {_quote_ident(by)} {direction}"

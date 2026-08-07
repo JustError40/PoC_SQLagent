@@ -27,7 +27,7 @@ class Settings:
     tpcds_data_path: Path = PROJECT_ROOT / ".data" / "tpcds" / "sf10"
     tpcds_toolkit_path: Path = PROJECT_ROOT / ".cache" / "tpcds-kit"
     max_result_rows: int = 500
-    statement_timeout_ms: int = 15_000
+    statement_timeout_ms: int = 120_000
     explorer_rounds: int = 3
     explorer_probes_per_round: int = 3
     bootstrap_on_start: bool = True

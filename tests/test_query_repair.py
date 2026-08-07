@@ -82,3 +82,50 @@ def test_react_retries_when_repair_echoes_the_same_sql(tmp_path) -> None:
     assert result["react_attempts"] == 2
     phases = [(step["attempt"], step["phase"]) for step in result["react_steps"]]
     assert (1, "observe") in phases and (2, "act") in phases
+
+
+class SlowThenFastDatabase:
+    def execute(self, query):
+        elapsed = 50_000.0 if "ORDER BY 1" in query else 200.0
+        return QueryResult(columns=["id"], rows=[{"id": 1}], elapsed_ms=elapsed)
+
+    def explain(self, query):
+        return {"plan": {"Plan": {"Node Type": "Aggregate", "Plan Rows": 1, "Actual Rows": 1}},
+                "total_cost": 1.0, "actual_ms": 0.1, "rows": 1}
+
+
+class OptimizerLLM:
+    def chat_json(self, system, user, schema=None):
+        if "optimize a correct PostgreSQL query" in system:
+            return {"sql": "SELECT * FROM returns", "rationale": "drop useless sort"}
+        if "verify that a SQL query" in system:
+            return {"answered": True, "feedback": ""}
+        return {"sql": "SELECT * FROM returns ORDER BY 1"}
+
+
+def test_optimizer_rewrites_slow_query_and_adopts_faster_plan(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr("sqlagent.query_agent.graph.REACT_OPTIMIZE_MS", 1000.0)
+
+    result = QueryAgent(SlowThenFastDatabase(), Workspace(tmp_path / "skill"), OptimizerLLM()).run("покажи возвраты")
+
+    assert not result.get("error")
+    assert result["sql"] == "SELECT * FROM returns"
+    assert result["result"]["elapsed_ms"] == 200.0
+    actions = [step.get("action") for step in result["react_steps"]]
+    assert "optimize_adopted" in actions
+
+
+def test_optimizer_keeps_original_when_rewrite_is_slower(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr("sqlagent.query_agent.graph.REACT_OPTIMIZE_MS", 1000.0)
+
+    class SlowerRewriteLLM(OptimizerLLM):
+        def chat_json(self, system, user, schema=None):
+            if "optimize a correct PostgreSQL query" in system:
+                return {"sql": "SELECT * FROM returns ORDER BY 1", "rationale": "no idea"}
+            return super().chat_json(system, user, schema)
+
+    result = QueryAgent(SlowThenFastDatabase(), Workspace(tmp_path / "skill"), SlowerRewriteLLM()).run("покажи возвраты")
+
+    assert not result.get("error")
+    assert result["result"]["elapsed_ms"] == 50_000.0
+    assert "optimize_adopted" not in [step.get("action") for step in result["react_steps"]]

@@ -180,3 +180,84 @@ def test_agent_stops_cleanly_when_model_repeats_a_broken_plan(tmp_path) -> None:
 
     assert "budget exhausted" in result["error"]
     assert result["react_attempts"] > 1
+
+
+SCHEMA4 = {
+    "store_sales": ["ss_sold_date_sk", "ss_store_sk", "ss_item_sk", "ss_net_paid", "ss_net_profit", "ss_ticket_number"],
+    "date_dim": ["d_date_sk", "d_year"],
+    "store": ["s_store_sk", "s_store_name"],
+    "item": ["i_item_sk", "i_category"],
+}
+
+
+def test_assemble_multiple_measures() -> None:
+    spec = {
+        "from": "store_sales",
+        "joins": [{"table": "store", "left": "ss_store_sk", "right": "s_store_sk"}],
+        "group_by": [{"table": "store", "column": "s_store_name"}],
+        "measures": [
+            {"agg": "sum", "column": "ss_net_paid", "alias": "revenue"},
+            {"agg": "sum", "column": "ss_net_profit", "alias": "profit"},
+            {"agg": "count_distinct", "column": "ss_ticket_number", "alias": "tickets"},
+        ],
+        "order": {"by": "profit", "dir": "desc"},
+    }
+    sql = assemble_spec(spec, SCHEMA4)
+    assert 'SUM("store_sales"."ss_net_paid") AS "revenue"' in sql
+    assert 'SUM("store_sales"."ss_net_profit") AS "profit"' in sql
+    assert 'COUNT(DISTINCT "store_sales"."ss_ticket_number") AS "tickets"' in sql
+    assert sql.endswith('ORDER BY "profit" DESC LIMIT 100')
+
+
+def test_assemble_four_joins_allowed() -> None:
+    spec = {
+        "from": "store_sales",
+        "joins": [
+            {"table": "date_dim", "left": "ss_sold_date_sk", "right": "d_date_sk"},
+            {"table": "store", "left": "ss_store_sk", "right": "s_store_sk"},
+            {"table": "item", "left": "ss_item_sk", "right": "i_item_sk"},
+        ],
+        "group_by": [{"table": "item", "column": "i_category"}],
+        "measure": {"agg": "sum", "column": "ss_net_paid", "alias": "revenue"},
+    }
+    sql = assemble_spec(spec, SCHEMA4)
+    assert sql.count("JOIN") == 3
+
+
+def test_assemble_duplicate_measure_alias_rejected() -> None:
+    spec = {
+        "from": "store_sales",
+        "measures": [
+            {"agg": "sum", "column": "ss_net_paid", "alias": "x"},
+            {"agg": "avg", "column": "ss_net_paid", "alias": "x"},
+        ],
+    }
+    with pytest.raises(ValueError, match="duplicate measure alias"):
+        assemble_spec(spec, SCHEMA4)
+
+
+def test_plan_digest_flattens_plan_stats() -> None:
+    from sqlagent.query_agent.graph import _plan_digest
+
+    plan = {
+        "Plan": {
+            "Node Type": "Aggregate",
+            "Plan Rows": 100,
+            "Actual Rows": 102,
+            "Plans": [
+                {
+                    "Node Type": "Seq Scan",
+                    "Relation Name": "store_sales",
+                    "Plan Rows": 1000,
+                    "Actual Rows": 28800991,
+                    "Shared Read Blocks": 400000,
+                }
+            ],
+        }
+    }
+    digest = _plan_digest(plan)
+    assert digest[0]["node"] == "Aggregate"
+    assert digest[1]["relation"] == "store_sales"
+    assert digest[1]["estimated_rows"] == 1000
+    assert digest[1]["actual_rows"] == 28800991
+    assert digest[1]["shared_read"] == 400000

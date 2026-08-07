@@ -9,7 +9,7 @@ from typing import Any, TypedDict
 from langgraph.graph import END, START, StateGraph
 
 from sqlagent.composer import DECOMPOSE_PROMPT, SPEC_JSON_SCHEMA, assemble_spec
-from sqlagent.db import Database, QueryResult, QuerySafetyError
+from sqlagent.db import Database, QueryResult, QuerySafetyError, validate_read_only
 from sqlagent.llm import LLMUnavailable, OllamaClient
 from sqlagent.sqllint import lint_sql, schema_from_tables_yaml
 from sqlagent.trajectories import append_trajectory
@@ -70,9 +70,49 @@ _AMBIGUITY_TERMS = (
 # Repair budget for the ReAct loop; configurable because harder TPC-DS questions
 # (multi-hop joins, cross-channel unions) legitimately need more iterations.
 REACT_MAX_ATTEMPTS = int(os.getenv("REACT_MAX_ATTEMPTS", "15"))
+# Post-execution EXPLAIN-driven optimization: queries slower than this threshold get
+# one bounded rewrite pass fed with plan statistics. 0 disables the optimizer.
+REACT_OPTIMIZE_MS = float(os.getenv("REACT_OPTIMIZE_MS", "10000"))
+REACT_OPTIMIZE_PASSES = int(os.getenv("REACT_OPTIMIZE_PASSES", "1"))
 
 _META_QUESTION_TERMS = ("таблиц", "колонк", "table", "column", "schema", "схема", "каталог")
 _SYSTEM_CATALOG_RE = re.compile(r"\b(information_schema|pg_catalog)\b", re.IGNORECASE)
+
+
+def _plan_digest(plan: dict[str, Any], *, max_nodes: int = 24) -> list[dict[str, Any]]:
+    """Flatten an EXPLAIN (ANALYZE, BUFFERS) plan into the few stats an optimizer needs:
+    node types, row estimates vs actuals, buffer hits/reads and temp spills."""
+
+    digest: list[dict[str, Any]] = []
+
+    def walk(node: dict[str, Any], depth: int) -> None:
+        if len(digest) >= max_nodes or not isinstance(node, dict):
+            return
+        entry: dict[str, Any] = {"node": node.get("Node Type"), "depth": depth}
+        estimated = node.get("Plan Rows")
+        actual = node.get("Actual Rows")
+        if estimated is not None and actual is not None:
+            entry["estimated_rows"] = estimated
+            entry["actual_rows"] = actual
+        for key, label in (
+            ("Shared Hit Blocks", "shared_hit"),
+            ("Shared Read Blocks", "shared_read"),
+            ("Temp Read Blocks", "temp_read"),
+            ("Temp Written Blocks", "temp_written"),
+        ):
+            value = node.get(key)
+            if value:
+                entry[label] = value
+        if node.get("Relation Name"):
+            entry["relation"] = node["Relation Name"]
+        if node.get("Sort Method"):
+            entry["sort_method"] = node["Sort Method"]
+        digest.append(entry)
+        for child in node.get("Plans") or []:
+            walk(child, depth + 1)
+
+    walk(plan.get("Plan", plan) if isinstance(plan, dict) else {}, 0)
+    return digest
 
 
 def metadata_drift(question: str, sql: str) -> bool:
@@ -373,7 +413,7 @@ def _select_tables(state: "QueryState", schema_map: dict[str, list[str]], llm: "
     }
     try:
         answer = llm.chat_json(
-            "You choose which database tables are needed to answer a question. Pick 1 to 3 tables, "
+            "You choose which database tables are needed to answer a question. Pick 1 to 5 tables, "
             "only from the provided list. Return JSON {\"tables\": [names]}.",
             json.dumps({"question": state["question"], "tables": brief}, ensure_ascii=False),
         )
@@ -772,6 +812,104 @@ Return JSON with sql and a short rationale.""",
                 }
             return {"critic": verdict}
 
+        def optimizer(state: QueryState) -> dict[str, Any]:
+            """EXPLAIN-driven speed pass: if the executed query is slow, ask the model for a
+            faster equivalent using plan statistics, then keep the rewrite only when it
+            validates, passes the same invariants and actually runs faster. Any failure
+            keeps the original answer — optimization must never break correctness."""
+
+            if state.get("error") or state.get("critic_rejected") or not self.llm:
+                return {}
+            if REACT_OPTIMIZE_MS <= 0 or REACT_OPTIMIZE_PASSES <= 0:
+                return {}
+            result = state.get("result") or {}
+            elapsed = float(result.get("elapsed_ms") or 0.0)
+            if elapsed < REACT_OPTIMIZE_MS:
+                return {}
+            steps = list(state.get("react_steps", []))
+            current_sql = state.get("sql") or ""
+            current_explain = state.get("explain") or {}
+            best: dict[str, Any] | None = None
+            for pass_no in range(1, REACT_OPTIMIZE_PASSES + 1):
+                try:
+                    answer = self.llm.chat_json(
+                        "You optimize a correct PostgreSQL query for speed. The query already answers the "
+                        "question; return a faster equivalent producing the same rows (order may differ). "
+                        "Use the EXPLAIN ANALYZE statistics: filter fact tables before joins, aggregate each "
+                        "side before UNION ALL, drop unused joins/dimensions, prefer EXISTS over row-multiplying "
+                        "joins, avoid repeated scans of the same fact table. Use only tables and columns from "
+                        "the schema map. Return JSON {sql, rationale}.",
+                        json.dumps(
+                            {
+                                "question": state["question"],
+                                "sql": current_sql,
+                                "elapsed_ms": elapsed,
+                                "plan_stats": _plan_digest(current_explain.get("plan") or {}),
+                                "schema": _schema_digest(state.get("loaded_files", {})),
+                            },
+                            ensure_ascii=False,
+                        ),
+                        schema={
+                            "type": "object",
+                            "properties": {"sql": {"type": "string"}, "rationale": {"type": "string"}},
+                            "required": ["sql"],
+                        },
+                    )
+                except LLMUnavailable as exc:
+                    steps.append({"phase": "stop", "action": "optimize_unavailable", "error": str(exc)[:200]})
+                    break
+                candidate = _clean_sql(str(answer.get("sql", "")))
+                if not candidate or candidate == current_sql:
+                    steps.append({"phase": "observe", "action": "optimize_noop", "pass": pass_no})
+                    break
+                try:
+                    query = validate_read_only(candidate)
+                    lint_schema = _workspace_schema(self.workspace)
+                    if lint_schema:
+                        problems = lint_sql(query, lint_schema)
+                        if problems:
+                            raise ValueError("lint failed: " + "; ".join(problems))
+                    candidate_explain = self.db.explain(query)
+                    candidate_result = self.db.execute(query)
+                except Exception as exc:
+                    steps.append({"phase": "observe", "action": "optimize_candidate_failed", "pass": pass_no, "error": str(exc)[:200]})
+                    continue
+                declared = (self.workspace.read_yaml("evals/invariants.yaml", default={}) or {}).get("invariants", [])
+                if not _invariant_check(candidate_result, declared)["passed"]:
+                    steps.append({"phase": "observe", "action": "optimize_invariants_failed", "pass": pass_no})
+                    continue
+                if candidate_result.elapsed_ms < elapsed:
+                    best = {
+                        "sql": query,
+                        "explain": candidate_explain,
+                        "result": candidate_result.as_json(),
+                    }
+                    elapsed = candidate_result.elapsed_ms
+                    current_sql = query
+                    current_explain = candidate_explain
+                steps.append({
+                    "phase": "act",
+                    "action": "optimize_sql",
+                    "pass": pass_no,
+                    "elapsed_ms": round(candidate_result.elapsed_ms, 3),
+                    "rationale": str(answer.get("rationale", ""))[:240],
+                })
+            if best is None:
+                return {"react_steps": steps}
+            steps.append({
+                "phase": "act",
+                "action": "optimize_adopted",
+                "before_ms": (state.get("result") or {}).get("elapsed_ms"),
+                "after_ms": best["result"].get("elapsed_ms"),
+            })
+            return {
+                "sql": best["sql"],
+                "explain": best["explain"],
+                "result": best["result"],
+                "react_steps": steps,
+                "llm_used": True,
+            }
+
         def persist(state: QueryState) -> dict[str, Any]:
             trajectory = {
                 "question": state["question"],
@@ -814,6 +952,7 @@ Return JSON with sql and a short rationale.""",
         graph.add_node("execute", executor)
         graph.add_node("invariant_check", invariants)
         graph.add_node("critic", critic)
+        graph.add_node("optimizer", optimizer)
         graph.add_node("persist", persist)
         graph.add_edge(START, "router")
         graph.add_edge("router", "loader")
@@ -852,9 +991,10 @@ Return JSON with sql and a short rationale.""",
         graph.add_edge("invariant_check", "critic")
         graph.add_conditional_edges(
             "critic",
-            lambda state: "react_repair" if state.get("critic_rejected") else "persist",
-            {"react_repair": "react_repair", "persist": "persist"},
+            lambda state: "react_repair" if state.get("critic_rejected") else "optimizer",
+            {"react_repair": "react_repair", "optimizer": "optimizer"},
         )
+        graph.add_edge("optimizer", "persist")
         graph.add_edge("persist", END)
         result = graph.compile().invoke({"question": question, "workspace_path": str(self.workspace.root)})
         return {key: value for key, value in result.items() if key not in {"loaded_files"}}
