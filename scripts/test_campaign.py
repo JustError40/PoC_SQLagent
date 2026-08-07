@@ -35,6 +35,8 @@ ASK_TIMEOUT_SEC = float(os.getenv("CAMPAIGN_ASK_TIMEOUT_SEC", "1800"))
 JOB_TIMEOUT_SEC = float(os.getenv("CAMPAIGN_JOB_TIMEOUT_SEC", "3600"))
 FAIL_THRESHOLD = int(os.getenv("CAMPAIGN_FAIL_THRESHOLD", "3"))
 GIT_PUSH = os.getenv("CAMPAIGN_GIT_PUSH", "1").strip() not in {"0", "false", "no"}
+# Comma-separated stage names to skip on resume (e.g. "survey,explore,optimize,evolve,verify").
+SKIP_STAGES = {name.strip() for name in os.getenv("CAMPAIGN_SKIP_STAGES", "").split(",") if name.strip()}
 
 
 def log(message: str) -> None:
@@ -90,10 +92,11 @@ def run_job(name: str, path: str) -> dict:
 def learning_loop(rounds_note: str) -> dict:
     """All evolution/exploration stages, in dependency order."""
     outcomes = {}
-    outcomes["explore"] = run_job("explore", "/api/explore")
-    outcomes["optimize"] = run_job("optimize", "/api/optimize")
-    outcomes["evolve"] = run_job("evolve", "/api/evolve")
-    outcomes["verify"] = run_job("verify", "/api/verify")
+    for stage in ("explore", "optimize", "evolve", "verify"):
+        if stage in SKIP_STAGES:
+            outcomes[stage] = {"status": "skipped_env"}
+        else:
+            outcomes[stage] = run_job(stage, f"/api/{stage}")
     log(f"learning loop ({rounds_note}) done: "
         + ", ".join(f"{k}={v.get('status')}" for k, v in outcomes.items()))
     return outcomes
@@ -226,7 +229,7 @@ def main() -> int:
     log(f"agent: {agent_info}")
 
     stages = {}
-    if (health.get("workspace") or {}).get("ok"):
+    if "survey" in SKIP_STAGES or (health.get("workspace") or {}).get("ok"):
         log("workspace already surveyed; skipping survey")
         stages["survey"] = {"status": "skipped_existing"}
     else:
