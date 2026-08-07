@@ -20,6 +20,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-}
     container_name: sqlagent-api-${SKILL_NAME:-warehouse_prod}
     extra_hosts:
       # Reach the LiteLLM proxy (and other services) running on the Docker host.
