@@ -90,7 +90,7 @@ def _extract_corrections(failed_sql: str, error: str, fixed_sql: str) -> list[di
 
 
 def _manifest_context(workspace: Workspace) -> dict[str, Any]:
-    manifest = workspace.read_yaml("manifest.yaml", default={}) or {}
+    manifest = workspace.read_manifest()
     return {
         "tables": manifest.get("tables", []),
         "domains": manifest.get("domains", {}),
@@ -268,7 +268,7 @@ def _apply_template(workspace: Workspace, db: Database, artifact: dict[str, Any]
     except Exception:
         return None
     name = _slug(str(artifact.get("name") or "metric"))
-    manifest = workspace.read_yaml("manifest.yaml", default={}) or {}
+    manifest = workspace.read_manifest()
     templates = manifest.setdefault("templates", {})
     if name in templates:
         return None
@@ -552,7 +552,7 @@ def optimize_skill(
 
     from sqlagent.verification import verify_skill
 
-    manifest = workspace.read_yaml("manifest.yaml", default={}) or {}
+    manifest = workspace.read_manifest()
     domains = sorted((manifest.get("domains") or {}).keys())
     per_domain: dict[str, Any] = {}
     targets = domains or [None]

@@ -13,7 +13,7 @@ from sqlagent.db import Database, QueryResult, QuerySafetyError, validate_read_o
 from sqlagent.llm import LLMUnavailable, OllamaClient
 from sqlagent.sqllint import lint_sql, schema_from_tables_yaml
 from sqlagent.trajectories import append_trajectory
-from sqlagent.workspace import Workspace
+from sqlagent.workspace import Workspace, normalize_manifest
 
 
 def _workspace_schema(workspace: Workspace) -> dict[str, list[str]]:
@@ -158,9 +158,7 @@ def route_question(
     domains = manifest.get("domains") or {}
     # Templates that failed periodic revalidation are no longer trusted; the agent
     # falls back to another template or to fresh generation instead of using them.
-    raw_templates = manifest.get("templates") or {}
-    if not isinstance(raw_templates, dict):  # legacy manifest shape
-        raw_templates = {}
+    raw_templates = normalize_manifest(manifest).get("templates") or {}
     templates = {
         name: meta
         for name, meta in raw_templates.items()
@@ -257,7 +255,7 @@ def _record_template_metrics(workspace: Workspace, state: "QueryState") -> None:
     elapsed = result.get("elapsed_ms")
     if not template or state.get("error") or not isinstance(elapsed, (int, float)):
         return
-    manifest = workspace.read_yaml("manifest.yaml", default={}) or {}
+    manifest = workspace.read_manifest()
     templates = manifest.get("templates")
     if not isinstance(templates, dict) or template not in templates:
         return
@@ -292,7 +290,7 @@ def _learn_template(workspace: Workspace, state: "QueryState") -> None:
         return
     try:
         fingerprint = hashlib.sha1(sql_text.encode("utf-8")).hexdigest()[:10]
-        manifest = workspace.read_yaml("manifest.yaml", default={}) or {}
+        manifest = workspace.read_manifest()
         templates = manifest.get("templates")
         if not isinstance(templates, dict):
             templates = {}
@@ -435,7 +433,7 @@ class QueryAgent:
         graph = StateGraph(QueryState)
 
         def router(state: QueryState) -> dict[str, Any]:
-            manifest = self.workspace.read_yaml("manifest.yaml", default={}) or {}
+            manifest = self.workspace.read_manifest()
             route, files, template = route_question(state["question"], manifest=manifest, llm=self.llm)
             return {"route": route, "selected_files": files, "template": template or ""}
 
@@ -448,7 +446,7 @@ class QueryAgent:
             # A few verified templates serve as few-shot style examples for generation,
             # even when none of them directly matches the question. Templates that touch
             # the routed domain's tables come first.
-            manifest = self.workspace.read_yaml("manifest.yaml", default={}) or {}
+            manifest = self.workspace.read_manifest()
             templates = manifest.get("templates")
             if isinstance(templates, dict):
                 domain_tables = _domain_tables(loaded, state.get("route", ""))
@@ -471,7 +469,7 @@ class QueryAgent:
             return {"loaded_files": loaded}
 
         def telemetry(state: QueryState) -> dict[str, Any]:
-            manifest = self.workspace.read_yaml("manifest.yaml", default={}) or {}
+            manifest = self.workspace.read_manifest()
             known_metrics = sorted((manifest.get("templates") or {}).keys())
             payload = detect_ambiguity(state["question"], known_metrics)
             return {
@@ -488,7 +486,7 @@ class QueryAgent:
 
         def sql_generator(state: QueryState) -> dict[str, Any]:
             template = state.get("template")
-            manifest = self.workspace.read_yaml("manifest.yaml", default={}) or {}
+            manifest = self.workspace.read_manifest()
             if template:
                 path = str(((manifest.get("templates") or {}).get(template) or {}).get("path") or "")
                 if path and path in state["loaded_files"]:

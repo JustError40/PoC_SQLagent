@@ -64,6 +64,8 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate_parser.add_argument("--corpus", type=Path, default=None)
     subparsers.add_parser("golden", help="regenerate the deterministic golden corpus from the surveyed schema")
     subparsers.add_parser("verify", help="re-execute all skill templates and record their health into the manifest")
+    lint_parser = subparsers.add_parser("lint", help="validate the skill manifest shape")
+    lint_parser.add_argument("--fix", action="store_true", help="rewrite manifest.yaml in the canonical shape")
     promote_parser = subparsers.add_parser("promote", help="evaluate and promote the current evolution candidate")
     promote_parser.add_argument("--branch", default=None)
     promote_parser.add_argument("--corpus", type=Path, default=None)
@@ -149,6 +151,20 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         print(json.dumps(verify_skill(db, workspace), ensure_ascii=False, indent=2, default=str))
         return 0
+    if args.command == "lint":
+        raw = workspace.read_yaml("manifest.yaml", default=None)
+        if raw is None:
+            print("manifest.yaml is missing; run `python -m sqlagent survey` first", file=sys.stderr)
+            return 2
+        from sqlagent.workspace import lint_manifest, normalize_manifest
+
+        issues = lint_manifest(raw)
+        fixed = False
+        if issues and args.fix:
+            workspace.write_yaml("manifest.yaml", normalize_manifest(raw))
+            fixed = True
+        print(json.dumps({"issues": issues, "fixed": fixed}, ensure_ascii=False, indent=2))
+        return 0 if not issues or fixed else 1
     if args.command == "evaluate":
         selected_workspace = Workspace((args.workspace or settings.workspace_path).resolve())
         corpus = (args.corpus or default_corpus_path(selected_workspace, settings.project_root)).resolve()

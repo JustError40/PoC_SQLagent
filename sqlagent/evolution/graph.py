@@ -82,7 +82,7 @@ def _fallback_mutation(workspace: Workspace, surface: str) -> list[str]:
         workspace.write_text("experience/learned_failure_rules.yaml", "rules:\n  - avoid_unbounded_one_to_many_joins: true\n")
         changed.append("experience/learned_failure_rules.yaml")
     else:
-        manifest = workspace.read_yaml("manifest.yaml", default={}) or {}
+        manifest = workspace.read_manifest()
         hint = "load relationships/dangerous_joins.yaml for metrics on fanout-prone tables"
         if hint not in manifest.setdefault("router_hints", []):
             manifest["router_hints"].append(hint)
@@ -109,7 +109,7 @@ def _llm_mutation(workspace: Workspace, state: EvolutionState, llm: OllamaClient
         "target_surface": state["surface"],
         "trajectories": brief,
         "dangerous_joins": (workspace.read_yaml("relationships/dangerous_joins.yaml", default={}) or {}).get("joins", []),
-        "templates": (workspace.read_yaml("manifest.yaml", default={}) or {}).get("templates", {}),
+        "templates": workspace.read_manifest().get("templates", {}),
     }
     answer = llm.chat_json(
         "You improve your own SQL skill workspace from query trajectories. Propose one small mutation on "
@@ -132,6 +132,9 @@ def _llm_mutation(workspace: Workspace, state: EvolutionState, llm: OllamaClient
             content = validate_read_only(content) + ";\n"
         workspace.write_text(path, content)
         changed.append(path)
+    if "manifest.yaml" in changed:
+        # The model may serialize manifest templates as a list; restore the canonical shape.
+        workspace.write_yaml("manifest.yaml", workspace.read_manifest())
     return changed
 
 

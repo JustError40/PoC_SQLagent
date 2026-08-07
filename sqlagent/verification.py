@@ -28,7 +28,7 @@ def _result_hash(rows: list[dict[str, Any]]) -> str:
 def verify_skill(db: Database, workspace: Workspace) -> dict[str, Any]:
     """Re-execute all manifest templates and record their health into the manifest."""
 
-    manifest = workspace.read_yaml("manifest.yaml", default={}) or {}
+    manifest = workspace.read_manifest()
     templates: dict[str, Any] = manifest.get("templates") or {}
     now = datetime.now(timezone.utc).isoformat()
     report_entries: list[dict[str, Any]] = []

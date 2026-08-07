@@ -12,6 +12,64 @@ class WorkspaceError(RuntimeError):
     pass
 
 
+def normalize_manifest(manifest: Any) -> dict[str, Any]:
+    """Coerce a manifest into the canonical mapping shape.
+
+    LLM-written manifests (evolution mutations) sometimes serialize
+    ``templates`` as a list of ``{"path": ..., "description": ...}`` entries,
+    while every consumer expects a ``name -> meta`` mapping. Normalizing on
+    read keeps all readers tolerant of both shapes.
+    """
+
+    if not isinstance(manifest, dict):
+        return {}
+    templates = manifest.get("templates")
+    if isinstance(templates, list):
+        normalized: dict[str, Any] = {}
+        for item in templates:
+            if not isinstance(item, dict):
+                continue
+            path = str(item.get("path") or "")
+            name = str(item.get("name") or "") or (Path(path).stem if path else "")
+            if not name:
+                continue
+            meta = {key: value for key, value in item.items() if key != "name"}
+            meta.setdefault("path", path or f"templates/{name}.sql")
+            normalized[name] = meta
+        manifest["templates"] = normalized
+    elif templates is not None and not isinstance(templates, dict):
+        manifest["templates"] = {}
+    return manifest
+
+
+def lint_manifest(manifest: Any) -> list[str]:
+    """Validate the raw manifest shape; returns a list of problems (empty = ok)."""
+
+    if not isinstance(manifest, dict):
+        return ["manifest is not a mapping"]
+    issues: list[str] = []
+    tables = manifest.get("tables")
+    if tables is not None and not isinstance(tables, list):
+        issues.append("tables must be a list of table names")
+    domains = manifest.get("domains")
+    if domains is not None and not isinstance(domains, dict):
+        issues.append("domains must be a mapping of domain -> tables")
+    templates = manifest.get("templates")
+    if templates is None:
+        return issues
+    if isinstance(templates, list):
+        issues.append("templates is a list; expected a name -> meta mapping (auto-repaired on read)")
+    elif not isinstance(templates, dict):
+        issues.append("templates must be a mapping")
+    else:
+        for name, meta in templates.items():
+            if not isinstance(meta, dict):
+                issues.append(f"templates.{name} must be a mapping")
+            elif not meta.get("path"):
+                issues.append(f"templates.{name} is missing path")
+    return issues
+
+
 class Workspace:
     """Filesystem skill workspace with small, auditable git operations."""
 
@@ -50,6 +108,11 @@ class Workspace:
         if not path.exists():
             return default
         return yaml.safe_load(path.read_text(encoding="utf-8"))
+
+    def read_manifest(self) -> dict[str, Any]:
+        """Read manifest.yaml normalized into the canonical shape."""
+
+        return normalize_manifest(self.read_yaml("manifest.yaml", default={}) or {})
 
     def write_json(self, relative: str, value: Any) -> Path:
         return self.write_text(relative, json.dumps(value, ensure_ascii=False, indent=2) + "\n")

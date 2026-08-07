@@ -255,7 +255,7 @@ def status() -> dict[str, Any]:
             branch = workspace.current_branch()
         except Exception:
             branch = None
-    manifest = workspace.read_yaml("manifest.yaml", default={}) or {}
+    manifest = workspace.read_manifest()
     if not isinstance(manifest, dict):  # corrupt or legacy list-shaped manifest
         manifest = {}
     templates = manifest.get("templates") or {}
