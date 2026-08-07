@@ -192,20 +192,36 @@ def render_results(report: dict) -> str:
 
 
 def git_publish() -> str:
-    commands = [
+    def run(command: list[str]) -> tuple[int, str]:
+        completed = subprocess.run(command, cwd=REPO_ROOT, capture_output=True, text=True)
+        return completed.returncode, f"$ {' '.join(command)}\n{completed.stdout}{completed.stderr}".strip()
+
+    output = []
+    for command in (
         ["git", "add", str(RESULTS_PATH.name)],
         ["git", "-c", "user.name=sqlagent-campaign", "-c", "user.email=sqlagent-campaign@localhost",
          "commit", "-m", f"test campaign results {datetime.now(timezone.utc).date().isoformat()}"],
-    ]
-    if GIT_PUSH:
-        commands.append(["git", "push", "origin", "main"])
-    output = []
-    for command in commands:
-        completed = subprocess.run(command, cwd=REPO_ROOT, capture_output=True, text=True)
-        output.append(f"$ {' '.join(command)}\n{completed.stdout}{completed.stderr}".strip())
-        if completed.returncode and command[1] != "commit":  # empty commit is fine
-            output.append(f"!! command failed with code {completed.returncode}")
-            break
+    ):
+        code, text = run(command)
+        output.append(text)
+    if not GIT_PUSH:
+        return "\n".join(output)
+
+    # main may have moved since the campaign started: rebase the results commit onto
+    # it (Results.md is a fresh file, conflicts are unlikely), then push.
+    code, text = run(["git", "pull", "--rebase", "origin", "main"])
+    output.append(text)
+    if code:
+        output.append("!! rebase failed; aborting it and pushing a results branch instead")
+        run(["git", "rebase", "--abort"])
+    code, text = run(["git", "push", "origin", "main"])
+    output.append(text)
+    if code:
+        branch = "results/" + datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+        code2, text2 = run(["git", "push", "origin", f"HEAD:refs/heads/{branch}"])
+        output.append(text2)
+        output.append(f"!! push to main rejected; results were pushed to branch {branch!r}" if not code2
+                      else "!! push failed entirely; Results.md remains on the server only")
     return "\n".join(output)
 
 
