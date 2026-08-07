@@ -1,22 +1,22 @@
 # SQL Agent TPC-DS Test Campaign — Results
 
-- Started: 2026-08-07T11:56:15.349106+00:00
-- Finished: 2026-08-07T13:02:58.139198+00:00
-- Total wall time: 15.4 min (budget 6.0 h)
+- Started: 2026-08-07T11:48:11.240055+00:00
+- Finished: 2026-08-07T13:22:06.192626+00:00
+- Total wall time: 32.4 min (budget 6.0 h)
 - Agent: `litellm/hosted_vllm/qwen-summary via http://host.docker.internal:8445/v1, db=waiting for an agent database response`
 
 ## Summary
 
 | Block | Questions | OK | Clarification | Error | Retried OK | Block time |
 |---|---|---|---|---|---|---|
-| Уровень 1. Базовое исследование схемы | 7 | 3 | 0 | 4 | 0 | 4.3 min |
-| Уровень 2. Возвраты и бизнес-метрики | 7 | 0 | 0 | 7 | 0 | 1.7 min |
-| Уровень 3. Сравнение каналов | 8 | 0 | 0 | 8 | 0 | 3.7 min |
-| Уровень 4. Клиенты и сегментация | 8 | 0 | 0 | 8 | 0 | 1.0 min |
-| Уровень 5. Остатки и логистика | 8 | 0 | 0 | 8 | 0 | 3.0 min |
-| Уровень 6. Сложные аналитические запросы | 10 | 0 | 0 | 10 | 0 | 1.7 min |
+| Уровень 1. Базовое исследование схемы | 7 | 0 | 0 | 7 | 0 | 15.3 min |
+| Уровень 2. Возвраты и бизнес-метрики | 7 | 0 | 0 | 7 | 0 | 4.0 min |
+| Уровень 3. Сравнение каналов | 8 | 0 | 0 | 8 | 0 | 2.3 min |
+| Уровень 4. Клиенты и сегментация | 8 | 0 | 0 | 8 | 0 | 2.7 min |
+| Уровень 5. Остатки и логистика | 8 | 0 | 0 | 8 | 0 | 3.7 min |
+| Уровень 6. Сложные аналитические запросы | 10 | 0 | 0 | 10 | 0 | 4.3 min |
 
-**Total: 3 ok / 0 clarification / 45 error / 0 skipped out of 48**
+**Total: 0 ok / 0 clarification / 48 error / 0 skipped out of 48**
 
 ## Learning stages
 
@@ -27,11 +27,11 @@
     "error": ""
   },
   "explore": {
-    "status": "skipped_env",
+    "status": "completed",
     "error": ""
   },
   "optimize": {
-    "status": "completed",
+    "status": "timeout",
     "error": ""
   },
   "evolve": {
@@ -39,8 +39,8 @@
     "error": ""
   },
   "verify": {
-    "status": "completed",
-    "error": ""
+    "status": "failed",
+    "error": "'list' object has no attribute 'items'"
   }
 }
 ```
@@ -51,10 +51,10 @@
 
 | # | Question | Status | Time, s | Agent rows | ReAct | Error |
 |---|---|---|---|---|---|---|
-| 1 | Покажи выручку магазинов по годам | ok | 38.1 | 60 | 0 |  |
-| 2 | Какие 20 товаров принесли больше всего выручки в магазинах? | ok | 24.8 | 20 | 0 |  |
-| 3 | Покажи продажи по категориям товаров | ok | 55.6 | 11 | 0 |  |
-| 4 | Сколько уникальных покупателей было в каждом году? | error | 0.1 | - | - | HTTP 500: Internal Server Error |
+| 1 | Покажи выручку магазинов по годам | error | 0.1 | - | - | HTTP 500: Internal Server Error |
+| 2 | Какие 20 товаров принесли больше всего выручки в магазинах? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
+| 3 | Покажи продажи по категориям товаров | error | 0.0 | - | - | HTTP 500: Internal Server Error |
+| 4 | Сколько уникальных покупателей было в каждом году? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 5 | Какие штаты принесли больше всего интернет-выручки? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 6 | Покажи средний размер одной покупки по магазинам | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 7 | Какие бренды продавались чаще всего через каталог? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
@@ -75,7 +75,7 @@
 
 | # | Question | Status | Time, s | Agent rows | ReAct | Error |
 |---|---|---|---|---|---|---|
-| 1 | Сравни выручку магазина, интернета и каталога по кварталам | error | 0.0 | - | - | HTTP 500: Internal Server Error |
+| 1 | Сравни выручку магазина, интернета и каталога по кварталам | error | 0.1 | - | - | HTTP 500: Internal Server Error |
 | 2 | Для каждой категории покажи наиболее прибыльный канал | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 3 | Какие товары хорошо продаются онлайн, но плохо — в магазинах? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 4 | Какие клиенты покупали через все три канала? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
@@ -101,21 +101,21 @@
 
 | # | Question | Status | Time, s | Agent rows | ReAct | Error |
 |---|---|---|---|---|---|---|
-| 1 | Какие товары чаще всего заканчивались на складах? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
+| 1 | Какие товары чаще всего заканчивались на складах? | error | 0.1 | - | - | HTTP 500: Internal Server Error |
 | 2 | Найди товары с высоким остатком и низкими продажами | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 3 | На каких складах больше всего залежавшихся товаров? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 4 | Какие товары продавались при почти нулевом остатке? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 5 | Сравни сроки доставки по способам доставки | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 6 | Какие склады обслуживают самые прибыльные заказы? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 7 | Найди регионы с высокой выручкой и долгой доставкой | error | 0.0 | - | - | HTTP 500: Internal Server Error |
-| 8 | Какие товары следует перераспределить между складами? | error | 0.1 | - | - | HTTP 500: Internal Server Error |
+| 8 | Какие товары следует перераспределить между складами? | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 
 ### Уровень 6. Сложные аналитические запросы (`level6_analytics`)
 
 | # | Question | Status | Time, s | Agent rows | ReAct | Error |
 |---|---|---|---|---|---|---|
 | 1 | Найди месяцы, когда продажи категории отклонялись от среднего более чем на два стандартных отклонения | error | 0.1 | - | - | HTTP 500: Internal Server Error |
-| 2 | Покажи товары с ростом продаж три квартала подряд | error | 0.0 | - | - | HTTP 500: Internal Server Error |
+| 2 | Покажи товары с ростом продаж три квартала подряд | error | 0.1 | - | - | HTTP 500: Internal Server Error |
 | 3 | Найди пары товаров, которые часто покупают вместе | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 4 | Рассчитай накопительную выручку каждого магазина по месяцам | error | 0.0 | - | - | HTTP 500: Internal Server Error |
 | 5 | Покажи вклад каждого товара в выручку своей категории | error | 0.0 | - | - | HTTP 500: Internal Server Error |
