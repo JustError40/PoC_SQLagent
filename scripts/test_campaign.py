@@ -31,9 +31,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 QUESTIONS_PATH = Path(os.getenv("CAMPAIGN_QUESTIONS", REPO_ROOT / "evals" / "test_campaign.json"))
 RESULTS_PATH = Path(os.getenv("CAMPAIGN_RESULTS", REPO_ROOT / "Results.md"))
 TIME_BUDGET_HOURS = float(os.getenv("CAMPAIGN_TIME_BUDGET_HOURS", "6"))
-# A fresh workspace makes the entrypoint run survey before uvicorn starts, so the
-# API can take a long while to come up; poll patiently.
-API_WAIT_TIMEOUT_SEC = float(os.getenv("CAMPAIGN_API_WAIT_TIMEOUT_SEC", "5400"))
 ASK_TIMEOUT_SEC = float(os.getenv("CAMPAIGN_ASK_TIMEOUT_SEC", "1800"))
 JOB_TIMEOUT_SEC = float(os.getenv("CAMPAIGN_JOB_TIMEOUT_SEC", "3600"))
 FAIL_THRESHOLD = int(os.getenv("CAMPAIGN_FAIL_THRESHOLD", "3"))
@@ -62,14 +59,14 @@ def http(method: str, path: str, payload: dict | None = None, timeout: float = 6
         return {"__http_error__": None, "detail": str(exc)[:500]}
 
 
-def wait_for_api(timeout_sec: float = API_WAIT_TIMEOUT_SEC) -> bool:
-    deadline = time.monotonic() + timeout_sec
-    while time.monotonic() < deadline:
+def wait_for_api() -> bool:
+    # No timeout: a fresh workspace makes the entrypoint survey the whole database
+    # before uvicorn starts, and that can take arbitrarily long on big scales.
+    while True:
         health = http("GET", "/api/health", timeout=15)
         if health.get("ok"):
             return True
         time.sleep(30)
-    return False
 
 
 def run_job(name: str, path: str) -> dict:
