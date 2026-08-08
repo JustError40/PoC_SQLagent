@@ -11,13 +11,6 @@ import sqlglot
 from sqlglot import exp
 from sqlglot.optimizer.qualify import qualify
 
-
-def lint_sql(sql_text: str, schema: dict[str, list[str]]) -> list[str]:
-    """Return a list of problems found in sql_text; empty list means the query is clean.
-
-    schema maps table name -> column names (exactly as surveyed from the database).
-    """
-
 SYSTEM_SCHEMAS = {"information_schema", "pg_catalog"}
 
 

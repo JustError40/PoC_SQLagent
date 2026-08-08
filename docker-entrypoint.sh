@@ -6,7 +6,7 @@ set -e
 # The workspace is a bind-mounted git repo owned by the host user; mark it safe
 # so in-container git (evolution branches, status) does not fail with
 # "detected dubious ownership".
-git config --global --add safe.directory "${WORKSPACE_PATH:-/app/skills/warehouse_prod}" 2>/dev/null || true
+git config --global --add safe.directory "${WORKSPACE_PATH:-/app/runs/local/skill}" 2>/dev/null || true
 # Evolution/survey commits into the workspace repo need an identity inside the container.
 git config --global user.name "${GIT_AUTHOR_NAME:-sqlagent}" 2>/dev/null || true
 git config --global user.email "${GIT_AUTHOR_EMAIL:-sqlagent@localhost}" 2>/dev/null || true

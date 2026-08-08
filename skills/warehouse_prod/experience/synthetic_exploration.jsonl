@@ -1,5 +1,0 @@
-{"question": "monthly revenue", "template": "templates/monthly_revenue.sql", "status": "verified"}
-{"question": "new customer revenue by month", "template": "templates/new_customer_revenue.sql", "status": "verified"}
-{"question": "revenue by region", "template": "templates/revenue_by_region.sql", "status": "verified"}
-{"question": "top categories", "template": "templates/top_categories.sql", "status": "verified"}
-{"question": "on time delivery", "template": "templates/on_time_delivery.sql", "status": "verified"}

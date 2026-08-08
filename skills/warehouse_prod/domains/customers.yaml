@@ -1,5 +1,0 @@
-domain: customers
-tables:
-- customers
-- customer_campaigns
-- marketing_campaigns

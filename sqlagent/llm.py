@@ -4,17 +4,56 @@ import hashlib
 import json
 import re
 import tempfile
+import threading
+from contextlib import contextmanager
+from contextvars import ContextVar
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Iterator
 
 import httpx
+
+from sqlagent.concurrency import AdaptiveLimiter, LITELLM_LIMITER
+from sqlagent.telemetry import Span, span
 
 
 class LLMUnavailable(RuntimeError):
     """Raised when the configured language-model provider cannot answer."""
 
 
+class LLMSchemaViolation(ValueError):
+    pass
+
+
+def _validate_schema(value: Any, schema: dict[str, Any] | None, path: str = "$") -> None:
+    if not schema:
+        return
+    expected = schema.get("type")
+    matches = {
+        "object": isinstance(value, dict),
+        "array": isinstance(value, list),
+        "string": isinstance(value, str),
+        "number": isinstance(value, (int, float)) and not isinstance(value, bool),
+        "integer": isinstance(value, int) and not isinstance(value, bool),
+        "boolean": isinstance(value, bool),
+        "null": value is None,
+    }
+    if expected in matches and not matches[expected]:
+        raise LLMSchemaViolation(f"LLM schema violation at {path}: expected {expected}")
+    if isinstance(value, dict):
+        for required in schema.get("required") or []:
+            if required not in value:
+                raise LLMSchemaViolation(f"LLM schema violation at {path}: missing {required}")
+        properties = schema.get("properties") or {}
+        for key, item in value.items():
+            if key in properties:
+                _validate_schema(item, properties[key], f"{path}.{key}")
+    elif isinstance(value, list) and schema.get("items"):
+        for index, item in enumerate(value):
+            _validate_schema(item, schema["items"], f"{path}[{index}]")
+
+
 LLMEventHook = Callable[[str, str], None]
+_cache_writes_enabled: ContextVar[bool] = ContextVar("sqlagent_cache_writes_enabled", default=True)
 
 
 class OllamaClient:
@@ -25,12 +64,60 @@ class OllamaClient:
         cache_dir: Path | None = None,
         timeout: float = 180.0,
         event_hook: LLMEventHook | None = None,
+        limiter: AdaptiveLimiter | None = LITELLM_LIMITER,
+        priority: int = 0,
     ) -> None:
         self.base_url = base_url.rstrip("/")
         self.model = model
         self.cache_dir = cache_dir
         self.timeout = timeout
         self.event_hook = event_hook
+        self.limiter = limiter
+        self.priority = priority
+        self._cache_state_lock = threading.Lock()
+        self._cache_write_disable_depth = 0
+
+    @contextmanager
+    def cache_writes_disabled(self) -> Iterator[None]:
+        token = _cache_writes_enabled.set(False)
+        with self._cache_state_lock:
+            self._cache_write_disable_depth += 1
+        try:
+            yield
+        finally:
+            with self._cache_state_lock:
+                self._cache_write_disable_depth -= 1
+            _cache_writes_enabled.reset(token)
+
+    def _cache_writes_allowed(self) -> bool:
+        with self._cache_state_lock:
+            return _cache_writes_enabled.get() and self._cache_write_disable_depth == 0
+
+    def _limited(self):
+        from contextlib import nullcontext
+
+        return self.limiter.slot(priority=self.priority) if self.limiter else nullcontext()
+
+    @staticmethod
+    def _prompt_meta(system: str, user: str, schema: dict[str, Any] | None = None) -> dict[str, Any]:
+        return {
+            "prompt_hash": hashlib.sha256((system + "\0" + user).encode()).hexdigest(),
+            "schema_hash": (
+                hashlib.sha256(json.dumps(schema, sort_keys=True).encode()).hexdigest() if schema else None
+            ),
+        }
+
+    @staticmethod
+    def _usage(response: httpx.Response, llm_span: Span) -> None:
+        try:
+            body = response.json()
+        except ValueError:
+            return
+        usage = body.get("usage") or {}
+        for key in ("prompt_tokens", "completion_tokens", "reasoning_tokens", "total_tokens"):
+            llm_span.attributes[key] = usage.get(key)
+        choices = body.get("choices") or []
+        llm_span.attributes["finish_reason"] = choices[0].get("finish_reason") if choices else None
 
     def _emit(self, event: str, detail: str) -> None:
         if self.event_hook:
@@ -52,16 +139,17 @@ class OllamaClient:
                 raise ValueError("cached LLM response must be a JSON object")
         except (OSError, TypeError, ValueError) as exc:
             self._emit("cache_invalid", f"{self.model}: {exc}")
-            try:
-                cache_path.unlink(missing_ok=True)
-            except OSError:
-                pass
+            if self._cache_writes_allowed():
+                try:
+                    cache_path.unlink(missing_ok=True)
+                except OSError:
+                    pass
             return None
         self._emit("response_cached", self.model)
         return value
 
     def _write_cached_json(self, cache_path: Path | None, value: dict[str, Any]) -> None:
-        if cache_path is None:
+        if cache_path is None or not self._cache_writes_allowed():
             return
         temporary_path: Path | None = None
         try:
@@ -104,16 +192,39 @@ class OllamaClient:
         cache_path = self._cache_path(payload)
         cached = self._read_cached_json(cache_path)
         if cached is not None:
+            with span(
+                "llm",
+                "chat_json",
+                provider="ollama",
+                model=self.model,
+                cache_hit=True,
+                prompt_tokens=None,
+                completion_tokens=None,
+                reasoning_tokens=None,
+                finish_reason=None,
+                **self._prompt_meta(system, user, schema),
+            ):
+                pass
             return cached
 
         last_error: Exception | None = None
         self._emit("request_started", self.model)
         for attempt in range(retries + 1):
             try:
-                response = httpx.post(f"{self.base_url}/api/chat", json=payload, timeout=self.timeout)
-                response.raise_for_status()
-                content = response.json().get("message", {}).get("content", "")
+                with self._limited(), span(
+                    "llm", "chat_json", provider="ollama", model=self.model, attempt=attempt + 1,
+                    cache_hit=False, **self._prompt_meta(system, user, schema)
+                ) as llm_span:
+                    response = httpx.post(f"{self.base_url}/api/chat", json=payload, timeout=self.timeout)
+                    response.raise_for_status()
+                    body = response.json()
+                    content = body.get("message", {}).get("content", "")
+                    llm_span.attributes["prompt_tokens"] = body.get("prompt_eval_count")
+                    llm_span.attributes["completion_tokens"] = body.get("eval_count")
+                    llm_span.attributes["reasoning_tokens"] = None
+                    llm_span.attributes["finish_reason"] = body.get("done_reason")
                 result = self._parse_json(content)
+                _validate_schema(result, schema)
                 self._write_cached_json(cache_path, result)
                 self._emit("response", self.model)
                 return result
@@ -133,9 +244,18 @@ class OllamaClient:
         }
         self._emit("request_started", self.model)
         try:
-            response = httpx.post(f"{self.base_url}/api/chat", json=payload, timeout=self.timeout)
-            response.raise_for_status()
-            content = str(response.json().get("message", {}).get("content", ""))
+            with self._limited(), span(
+                "llm", "chat_text", provider="ollama", model=self.model, cache_hit=False,
+                **self._prompt_meta(system, user)
+            ) as llm_span:
+                response = httpx.post(f"{self.base_url}/api/chat", json=payload, timeout=self.timeout)
+                response.raise_for_status()
+                body = response.json()
+                content = str(body.get("message", {}).get("content", ""))
+                llm_span.attributes["prompt_tokens"] = body.get("prompt_eval_count")
+                llm_span.attributes["completion_tokens"] = body.get("eval_count")
+                llm_span.attributes["reasoning_tokens"] = None
+                llm_span.attributes["finish_reason"] = body.get("done_reason")
             self._emit("response", self.model)
             return content
         except (httpx.HTTPError, ValueError, KeyError) as exc:
@@ -162,8 +282,10 @@ class OpenCodeGoClient(OllamaClient):
         cache_dir: Path | None = None,
         timeout: float = 180.0,
         event_hook: LLMEventHook | None = None,
+        limiter: AdaptiveLimiter | None = LITELLM_LIMITER,
+        priority: int = 0,
     ) -> None:
-        super().__init__(base_url, model, cache_dir, timeout, event_hook)
+        super().__init__(base_url, model, cache_dir, timeout, event_hook, limiter, priority)
         self.api_key = api_key.strip()
 
     provider_label = "OpenCode Go"
@@ -230,20 +352,39 @@ class OpenCodeGoClient(OllamaClient):
         cache_path = self._cache_path(payload)
         cached = self._read_cached_json(cache_path)
         if cached is not None:
+            with span(
+                "llm",
+                "chat_json",
+                provider=self.cache_provider,
+                model=self.model,
+                cache_hit=True,
+                prompt_tokens=None,
+                completion_tokens=None,
+                reasoning_tokens=None,
+                finish_reason=None,
+                **self._prompt_meta(system_prompt, user, schema),
+            ):
+                pass
             return cached
 
         last_error: Exception | None = None
         self._emit("request_started", self.model)
         for attempt in range(retries + 1):
             try:
-                response = httpx.post(
-                    f"{self.base_url}/chat/completions",
-                    headers=self._headers(),
-                    json=payload,
-                    timeout=self.timeout,
-                )
-                response.raise_for_status()
+                with self._limited(), span(
+                    "llm", "chat_json", provider=self.cache_provider, model=self.model, attempt=attempt + 1,
+                    cache_hit=False, **self._prompt_meta(system_prompt, user, schema)
+                ) as llm_span:
+                    response = httpx.post(
+                        f"{self.base_url}/chat/completions",
+                        headers=self._headers(),
+                        json=payload,
+                        timeout=self.timeout,
+                    )
+                    response.raise_for_status()
+                    self._usage(response, llm_span)
                 result = self._parse_json(self._content(response))
+                _validate_schema(result, schema)
                 self._write_cached_json(cache_path, result)
                 self._emit("response", self.model)
                 return result
@@ -272,14 +413,19 @@ class OpenCodeGoClient(OllamaClient):
         }
         self._emit("request_started", self.model)
         try:
-            response = httpx.post(
-                f"{self.base_url}/chat/completions",
-                headers=self._headers(),
-                json=payload,
-                timeout=self.timeout,
-            )
-            response.raise_for_status()
-            content = self._content(response)
+            with self._limited(), span(
+                "llm", "chat_text", provider=self.cache_provider, model=self.model, cache_hit=False,
+                **self._prompt_meta(system, user)
+            ) as llm_span:
+                response = httpx.post(
+                    f"{self.base_url}/chat/completions",
+                    headers=self._headers(),
+                    json=payload,
+                    timeout=self.timeout,
+                )
+                response.raise_for_status()
+                self._usage(response, llm_span)
+                content = self._content(response)
             self._emit("response", self.model)
             return content
         except (httpx.HTTPError, ValueError, KeyError) as exc:
@@ -321,6 +467,7 @@ def build_llm(
     litellm_model: str,
     cache_dir: Path,
     event_hook: LLMEventHook | None = None,
+    priority: int = 0,
 ) -> OllamaClient:
     if provider == "ollama":
         # Ollama is temporarily disabled; use the LiteLLM proxy instead.
@@ -332,6 +479,7 @@ def build_llm(
             litellm_model,
             cache_dir / "litellm",
             event_hook=event_hook,
+            priority=priority,
         )
     if provider == "opencode_go":
         return OpenCodeGoClient(
@@ -340,5 +488,6 @@ def build_llm(
             opencode_go_model,
             cache_dir / "opencode_go",
             event_hook=event_hook,
+            priority=priority,
         )
     raise ValueError(f"Unsupported LLM_PROVIDER {provider!r}; use litellm or opencode_go")

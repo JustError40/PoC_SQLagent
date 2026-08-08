@@ -1,7 +1,0 @@
-invariants:
-- id: non_negative_revenue
-  expression: revenue >= 0
-- id: no_order_fanout
-  expression: order-level sums do not multiply after one-to-many joins
-- id: bounded_result
-  expression: rows <= 500

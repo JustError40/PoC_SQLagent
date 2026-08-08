@@ -30,7 +30,8 @@ DECOMPOSE_PROMPT = (
     "— one to four measures; questions like 'revenue and profit' or 'average basket' need several; "
     '"filters": [{"table", "column", "op": one of =|!=|>|>=|<|<=, "value"}] (empty list when not needed); '
     '"order": {"by": a measure alias or a group column, "dir": asc|desc}; '
-    '"limit": number. Use empty lists where nothing is needed. '
+    'Optional "limit": number only when the user explicitly asks for top/bottom N; otherwise omit it. '
+    "UI preview limits are applied outside SQL and must not change the analytical result. Use empty lists where nothing is needed. "
     'If a table you need is missing from the supplied schema map, return '
     '{"needed_tables": [exact table names you want to see]} instead of a plan.'
 )
@@ -100,8 +101,8 @@ def assemble_spec(
     spec: dict[str, Any],
     schema: dict[str, list[str]],
     *,
-    default_limit: int = 100,
-    max_limit: int = 500,
+    default_limit: int | None = None,
+    max_limit: int | None = None,
 ) -> str:
     """Build one read-only SELECT from a validated query plan; raise ValueError on any bad part."""
 
@@ -200,11 +201,17 @@ def assemble_spec(
         direction = "DESC" if str(order.get("dir") or "desc").lower() == "desc" else "ASC"
         order_clause = f" ORDER BY {_quote_ident(by)} {direction}"
 
-    try:
-        limit = int(spec.get("limit") or default_limit)
-    except (TypeError, ValueError):
-        limit = default_limit
-    limit = max(1, min(limit, max_limit))
+    raw_limit = spec.get("limit", default_limit)
+    limit: int | None = None
+    if raw_limit is not None:
+        try:
+            limit = int(raw_limit)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("limit must be a positive integer") from exc
+        if limit <= 0:
+            raise ValueError("limit must be a positive integer")
+        if max_limit is not None:
+            limit = min(limit, max_limit)
 
     query = f"SELECT {', '.join(select_parts)} FROM {_quote_ident(base)}"
     if join_clauses:
@@ -213,5 +220,7 @@ def assemble_spec(
         query += " WHERE " + " AND ".join(where_parts)
     if group_exprs:
         query += " GROUP BY " + ", ".join(group_exprs)
-    query += order_clause + f" LIMIT {limit}"
+    query += order_clause
+    if limit is not None:
+        query += f" LIMIT {limit}"
     return query

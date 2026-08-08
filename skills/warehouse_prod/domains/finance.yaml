@@ -1,5 +1,0 @@
-domain: finance
-tables:
-- order_payments
-- expenses
-- daily_fx_rates

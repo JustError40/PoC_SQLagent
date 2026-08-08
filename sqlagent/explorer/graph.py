@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 import re
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, TypedDict
 
@@ -191,11 +192,11 @@ def _run_probe(db: Database, record: dict[str, Any]) -> dict[str, Any]:
 
 
 def act_node(state: ExplorerState, *, db: Database, workspace: Workspace, llm: OllamaClient | None) -> dict[str, Any]:
-    results: list[dict[str, Any]] = []
-    corrections: list[dict[str, Any]] = []
     log_path = _exploration_log_path(workspace)
     lint_schema = _lint_schema(workspace)
-    for probe in state.get("probes", []):
+
+    def execute_probe(probe: dict[str, Any]) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+        local_corrections: list[dict[str, Any]] = []
         record: dict[str, Any] = {
             "round": state.get("round_index", 0),
             "name": probe["name"],
@@ -217,12 +218,24 @@ def act_node(state: ExplorerState, *, db: Database, workspace: Workspace, llm: O
                 if repaired is not None:
                     found = _extract_corrections(probe["sql"], record["error"], repaired["sql"])
                     if found:
-                        corrections.extend(found)
-                        append_trajectory(workspace.root / "experience" / "error_corrections.jsonl", {"round": state.get("round_index", 0), "corrections": found})
+                        local_corrections.extend(found)
                     record = repaired
                     record.update({"round": record.get("round", state.get("round_index", 0)), "name": probe["name"], "question": probe["question"], "repaired": True})
+        return record, local_corrections
+
+    probes = list(state.get("probes", []))
+    with ThreadPoolExecutor(max_workers=min(8, max(1, len(probes))), thread_name_prefix="explorer-probe") as pool:
+        completed = list(pool.map(execute_probe, probes))
+    # Only artifact/log writes are serialized; the results retain planner order.
+    results = [item[0] for item in completed]
+    corrections = [correction for _, found in completed for correction in found]
+    for record, found in completed:
+        if found:
+            append_trajectory(
+                workspace.root / "experience" / "error_corrections.jsonl",
+                {"round": state.get("round_index", 0), "corrections": found},
+            )
         append_trajectory(log_path, record)
-        results.append(record)
     _save_identifier_notes(workspace, corrections)
     return {"results": results, "corrections": corrections}
 
@@ -302,7 +315,7 @@ def _apply_verified_join(workspace: Workspace, db: Database, artifact: dict[str,
             lc=pgsql.Identifier(left_column),
             rc=pgsql.Identifier(right_column),
         )
-        with psycopg.connect(db.dsn) as conn:
+        with db._limited(), psycopg.connect(db.dsn) as conn:
             if conn.execute(query).fetchone() is None:
                 return None
     except Exception:

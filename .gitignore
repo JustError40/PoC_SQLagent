@@ -13,8 +13,6 @@ __pycache__/
 .secrets/
 **/.git/
 .cache/
-skills/warehouse_prod/.cache/
-skills/warehouse_prod/raw/*.json
-skills/warehouse_prod/experience/trajectories.jsonl
+runs/
 .data/
 .cache/tpcds-kit/

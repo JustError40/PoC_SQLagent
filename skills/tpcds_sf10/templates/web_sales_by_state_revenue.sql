@@ -1,1 +1,0 @@
-SELECT ca.ca_state AS state, SUM(ws.ws_net_profit) AS total_internet_revenue FROM web_sales ws JOIN customer_address ca ON CAST(ca.ca_zip AS INTEGER) = ws.ws_ship_addr_sk GROUP BY state ORDER BY total_internet_revenue DESC;

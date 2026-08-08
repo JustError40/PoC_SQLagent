@@ -4,16 +4,32 @@ import hashlib
 import json
 import os
 import re
+import uuid
+from contextlib import nullcontext
 from typing import Any, TypedDict
 
 from langgraph.graph import END, START, StateGraph
+try:
+    from langgraph.errors import GraphRecursionError
+except ImportError:  # pragma: no cover - compatibility with older LangGraph
+    GraphRecursionError = RuntimeError
 
 from sqlagent.composer import DECOMPOSE_PROMPT, SPEC_JSON_SCHEMA, assemble_spec
+from sqlagent.analytical import (
+    AnalyticalPlanCompiler,
+    AnalyticalPlanError,
+    compile_analytical_plan,
+    is_complex_question,
+    select_analytical_candidate,
+)
 from sqlagent.db import Database, QueryResult, QuerySafetyError, validate_read_only
+from sqlagent.errors import classify_error
 from sqlagent.llm import LLMUnavailable, OllamaClient
 from sqlagent.sqllint import lint_sql, schema_from_tables_yaml
 from sqlagent.trajectories import append_trajectory
 from sqlagent.workspace import Workspace, normalize_manifest
+from sqlagent.telemetry import trace_context
+from sqlagent.scratch import ScratchExecutor, ScratchLimits
 
 
 def _workspace_schema(workspace: Workspace) -> dict[str, list[str]]:
@@ -21,7 +37,21 @@ def _workspace_schema(workspace: Workspace) -> dict[str, list[str]]:
     return schema_from_tables_yaml(tables)
 
 
+def _compile_model_plan(spec: dict[str, Any], schema: dict[str, list[str]]) -> str:
+    if spec.get("stages"):
+        return compile_analytical_plan(spec, schema).sql
+    return assemble_spec(spec, schema)
+
+
+def _scratch_model_plan(spec: dict[str, Any], schema: dict[str, list[str]]) -> dict[str, Any]:
+    if not spec.get("stages") or not any(stage.get("materialize") for stage in spec["stages"]):
+        return {}
+    compiled = AnalyticalPlanCompiler(schema).compile_scratch(spec)
+    return {"scratch_stages": list(compiled.stages), "scratch_final": compiled.final_sql}
+
+
 class QueryState(TypedDict, total=False):
+    request_id: str
     question: str
     workspace_path: str
     selected_files: list[str]
@@ -45,6 +75,8 @@ class QueryState(TypedDict, total=False):
     schema_scope: list[str]
     critic: dict[str, Any]
     critic_rejected: bool
+    scratch_stages: list[str]
+    scratch_final: str
 
 
 CORE_FILES = [
@@ -74,6 +106,12 @@ REACT_MAX_ATTEMPTS = int(os.getenv("REACT_MAX_ATTEMPTS", "15"))
 # one bounded rewrite pass fed with plan statistics. 0 disables the optimizer.
 REACT_OPTIMIZE_MS = float(os.getenv("REACT_OPTIMIZE_MS", "10000"))
 REACT_OPTIMIZE_PASSES = int(os.getenv("REACT_OPTIMIZE_PASSES", "1"))
+
+
+def recursion_limit_for_attempts(attempts: int, optimize_passes: int = 1) -> int:
+    """Every repair can traverse repair -> validate -> explain -> execute -> critic."""
+
+    return 16 + max(0, attempts) * 6 + max(0, optimize_passes) * 2
 
 _META_QUESTION_TERMS = ("таблиц", "колонк", "table", "column", "schema", "схема", "каталог")
 _SYSTEM_CATALOG_RE = re.compile(r"\b(information_schema|pg_catalog)\b", re.IGNORECASE)
@@ -244,7 +282,7 @@ def _invariant_check(result: QueryResult, declared: list[dict[str, Any]] | None 
             value = row.get(column)
             if isinstance(value, (int, float)) and value < 0:
                 failures.append(f"{invariant.get('id', column)}: {column} is negative")
-    return {"passed": not failures and len(result.rows) <= 500, "failures": failures, "rows": len(result.rows)}
+    return {"passed": not failures, "failures": failures, "rows": len(result.rows)}
 
 
 def _record_template_metrics(workspace: Workspace, state: "QueryState") -> None:
@@ -424,10 +462,18 @@ def _select_tables(state: "QueryState", schema_map: dict[str, list[str]], llm: "
 
 
 class QueryAgent:
-    def __init__(self, db: Database, workspace: Workspace, llm: OllamaClient | None = None) -> None:
+    def __init__(
+        self,
+        db: Database,
+        workspace: Workspace,
+        llm: OllamaClient | None = None,
+        *,
+        read_only_evaluation: bool = False,
+    ) -> None:
         self.db = db
         self.workspace = workspace
         self.llm = llm
+        self.read_only_evaluation = read_only_evaluation
 
     def run(self, question: str) -> dict[str, Any]:
         graph = StateGraph(QueryState)
@@ -494,6 +540,23 @@ class QueryAgent:
             if self.llm:
                 schema_map = _workspace_schema(self.workspace)
                 if schema_map:
+                    if is_complex_question(state["question"]):
+                        try:
+                            complex_spec, compiled, _ = select_analytical_candidate(
+                                question=state["question"],
+                                context=_generation_context(state),
+                                schema=schema_map,
+                                llm=self.llm,
+                                db=self.db,
+                            )
+                            return {
+                                "sql": compiled.sql,
+                                "spec": complex_spec,
+                                "llm_used": True,
+                                **_scratch_model_plan(complex_spec, schema_map),
+                            }
+                        except (AnalyticalPlanError, LLMUnavailable, ValueError, KeyError, TypeError):
+                            pass
                     # Primary path: the model plans the query in small JSON parts and the
                     # deterministic assembler builds the SQL (no syntax hallucination).
                     scope = _domain_tables(state.get("loaded_files", {}), state.get("route", ""))
@@ -503,7 +566,9 @@ class QueryAgent:
                     scoped = {"schema_scope": sorted(scope)} if scope else {}
                     try:
                         spec = self.llm.chat_json(
-                            DECOMPOSE_PROMPT,
+                            DECOMPOSE_PROMPT
+                            + " For complex analytics prefer an analytical-plan DAG with stages: scan, filter, "
+                            "join, aggregate, union_all, window, rank, project. Declare grain and join cardinality.",
                             json.dumps(context, ensure_ascii=False),
                             schema=SPEC_JSON_SCHEMA,
                         )
@@ -518,16 +583,23 @@ class QueryAgent:
                             scoped = {"schema_scope": sorted(scope)}
                             try:
                                 spec = self.llm.chat_json(
-                                    DECOMPOSE_PROMPT,
+                                    DECOMPOSE_PROMPT
+                                    + " Use an analytical-plan DAG when the question needs unions, windows, ranks, cohorts or ratios.",
                                     json.dumps(_generation_context(state, scope), ensure_ascii=False),
                                     schema=SPEC_JSON_SCHEMA,
                                 )
                             except LLMUnavailable as exc:
                                 return {"error": f"SQL generation failed: {exc}", "llm_used": False}
-                    if isinstance(spec, dict) and spec.get("from"):
+                    if isinstance(spec, dict) and (spec.get("from") or spec.get("stages")):
                         try:
-                            return {"sql": assemble_spec(spec, schema_map), "spec": spec, "llm_used": True, **scoped}
-                        except ValueError as exc:
+                            return {
+                                "sql": _compile_model_plan(spec, schema_map),
+                                "spec": spec,
+                                "llm_used": True,
+                                **_scratch_model_plan(spec, schema_map),
+                                **scoped,
+                            }
+                        except (ValueError, AnalyticalPlanError) as exc:
                             return {"spec": spec, "error": f"query plan assembly failed: {exc}", "llm_used": True, **scoped}
                 # Fallback for providers that cannot emit a query plan: free-form SQL.
                 try:
@@ -562,7 +634,8 @@ class QueryAgent:
             if state.get("error"):
                 return {}
             try:
-                return {"explain": self.db.explain(state["sql"])}
+                method = getattr(self.db, "explain_estimate", None) or self.db.explain
+                return {"explain": method(state["sql"])}
             except Exception as exc:
                 return {"error": f"EXPLAIN failed: {exc}"}
 
@@ -621,7 +694,7 @@ class QueryAgent:
                         ),
                         schema=SPEC_JSON_SCHEMA,
                     )
-                    if not isinstance(fixed_spec, dict) or not fixed_spec.get("from"):
+                    if not isinstance(fixed_spec, dict) or not (fixed_spec.get("from") or fixed_spec.get("stages")):
                         raise ValueError("repair returned no valid query plan")
                     if fixed_spec == state.get("spec"):
                         steps.append({
@@ -637,8 +710,8 @@ class QueryAgent:
                             "error": f"previous repair returned an unchanged query plan; change it to fix: {error}",
                         }
                     try:
-                        repaired_sql = assemble_spec(fixed_spec, schema_map)
-                    except ValueError as exc:
+                        repaired_sql = _compile_model_plan(fixed_spec, schema_map)
+                    except (ValueError, AnalyticalPlanError) as exc:
                         steps.append({
                             "attempt": attempt,
                             "phase": "observe",
@@ -669,6 +742,7 @@ class QueryAgent:
                         "react_repair_ready": True,
                         "react_retry": False,
                         "llm_used": True,
+                        **_scratch_model_plan(fixed_spec, schema_map),
                     }
                 answer = self.llm.chat_json(
                     """You are a bounded ReAct SQL repair agent. Observe the error and act by returning one corrected PostgreSQL query.
@@ -744,7 +818,27 @@ Return JSON with sql and a short rationale.""",
             if state.get("error"):
                 return {}
             try:
-                return {"result": self.db.execute(state["sql"]).as_json()}
+                if state.get("scratch_stages") and state.get("scratch_final") and getattr(self.db, "dsn", None):
+                    scratch = ScratchExecutor(
+                        self.db.dsn,
+                        ScratchLimits(
+                            max_rows=int(os.getenv("SCRATCH_MAX_ROWS", "1000000")),
+                            max_bytes=int(os.getenv("SCRATCH_MAX_BYTES", str(512 * 1024 * 1024))),
+                            timeout_ms=int(os.getenv("SCRATCH_TIMEOUT_MS", "120000")),
+                        ),
+                        preview_rows=int(getattr(self.db, "max_rows", 500)),
+                        limiter=getattr(self.db, "limiter", None),
+                        priority=int(getattr(self.db, "priority", 0)),
+                    )
+                    return {
+                        "result": scratch.execute(
+                            state.get("request_id") or uuid.uuid4().hex,
+                            state["scratch_stages"],
+                            state["scratch_final"],
+                        ).as_json()
+                    }
+                method = getattr(self.db, "execute_preview", None) or self.db.execute
+                return {"result": method(state["sql"]).as_json()}
             except Exception as exc:
                 return {"error": f"execution failed: {exc}"}
 
@@ -867,8 +961,28 @@ Return JSON with sql and a short rationale.""",
                         problems = lint_sql(query, lint_schema)
                         if problems:
                             raise ValueError("lint failed: " + "; ".join(problems))
-                    candidate_explain = self.db.explain(query)
-                    candidate_result = self.db.execute(query)
+                    estimate = getattr(self.db, "explain_estimate", None) or self.db.explain
+                    candidate_explain = estimate(query)
+                    compare = getattr(self.db, "compare_queries_full", None)
+                    if compare is not None:
+                        equivalence = compare(current_sql, query)
+                        equivalent = bool(
+                            equivalence.equivalent
+                            if hasattr(equivalence, "equivalent")
+                            else equivalence.get("equivalent")
+                        )
+                    else:
+                        # Compatibility for unit-test doubles. Production Database always
+                        # performs the PostgreSQL EXCEPT ALL comparison above.
+                        execute = getattr(self.db, "execute_preview", None) or self.db.execute
+                        left = execute(current_sql).rows
+                        right = execute(query).rows
+                        equivalent = sorted(map(str, left)) == sorted(map(str, right))
+                    if not equivalent:
+                        steps.append({"phase": "observe", "action": "optimize_not_equivalent", "pass": pass_no})
+                        continue
+                    execute = getattr(self.db, "execute_preview", None) or self.db.execute
+                    candidate_result = execute(query)
                 except Exception as exc:
                     steps.append({"phase": "observe", "action": "optimize_candidate_failed", "pass": pass_no, "error": str(exc)[:200]})
                     continue
@@ -910,6 +1024,7 @@ Return JSON with sql and a short rationale.""",
 
         def persist(state: QueryState) -> dict[str, Any]:
             trajectory = {
+                "request_id": state.get("request_id"),
                 "question": state["question"],
                 "route": state.get("route"),
                 "template": state.get("template") or None,
@@ -921,6 +1036,11 @@ Return JSON with sql and a short rationale.""",
                 "invariants": state.get("invariants"),
                 "critic": state.get("critic") or None,
                 "error": state.get("error"),
+                "error_info": (
+                    classify_error(str(state.get("error")), stage="query_agent").as_dict()
+                    if state.get("error")
+                    else None
+                ),
                 "llm_used": state.get("llm_used", False),
                 "telemetry": state.get("telemetry", {
                     "ambiguity_detected": False,
@@ -934,9 +1054,10 @@ Return JSON with sql and a short rationale.""",
                     "steps": state.get("react_steps", []),
                 },
             }
-            append_trajectory(self.workspace.root / "experience" / "trajectories.jsonl", trajectory)
-            _record_template_metrics(self.workspace, state)
-            _learn_template(self.workspace, state)
+            if not self.read_only_evaluation:
+                append_trajectory(self.workspace.root / "experience" / "trajectories.jsonl", trajectory)
+                _record_template_metrics(self.workspace, state)
+                _learn_template(self.workspace, state)
             return {}
 
         graph.add_node("router", router)
@@ -994,9 +1115,60 @@ Return JSON with sql and a short rationale.""",
         )
         graph.add_edge("optimizer", "persist")
         graph.add_edge("persist", END)
-        result = graph.compile().invoke({"question": question, "workspace_path": str(self.workspace.root)})
-        return {key: value for key, value in result.items() if key not in {"loaded_files"}}
+        request_id = uuid.uuid4().hex
+        cache_context = (
+            self.llm.cache_writes_disabled()
+            if self.read_only_evaluation and self.llm and hasattr(self.llm, "cache_writes_disabled")
+            else nullcontext()
+        )
+        with trace_context(request_id) as trace, cache_context:
+            try:
+                result = graph.compile().invoke(
+                    {"question": question, "workspace_path": str(self.workspace.root), "request_id": request_id},
+                    config={"recursion_limit": recursion_limit_for_attempts(REACT_MAX_ATTEMPTS, REACT_OPTIMIZE_PASSES)},
+                )
+            except GraphRecursionError as exc:
+                error = classify_error(exc, stage="langgraph")
+                return {
+                    "request_id": request_id,
+                    "status": "pipeline_failed",
+                    "error": str(exc),
+                    "error_info": error.as_dict(),
+                    "telemetry": trace.as_dict(),
+                }
+        response = {key: value for key, value in result.items() if key not in {"loaded_files"}}
+        response["request_id"] = request_id
+        response["status"] = (
+            "clarified" if response.get("clarification") else ("pipeline_failed" if response.get("error") else "answered")
+        )
+        telemetry_payload = dict(response.get("telemetry") or {})
+        telemetry_payload.update(trace.as_dict())
+        response["telemetry"] = telemetry_payload
+        if response.get("error"):
+            stage = "internal"
+            lowered = str(response["error"]).lower()
+            for prefix, candidate_stage in (
+                ("sql generation", "llm_generation"),
+                ("query plan assembly", "plan"),
+                ("lint", "validation"),
+                ("explain", "explain"),
+                ("execution", "execution"),
+                ("critic", "critic"),
+                ("react", "react"),
+            ):
+                if lowered.startswith(prefix):
+                    stage = candidate_stage
+                    break
+            response["error_info"] = classify_error(str(response["error"]), stage=stage).as_dict()
+        return response
 
 
-def ask(db: Database, workspace: Workspace, question: str, llm: OllamaClient | None = None) -> dict[str, Any]:
-    return QueryAgent(db, workspace, llm).run(question)
+def ask(
+    db: Database,
+    workspace: Workspace,
+    question: str,
+    llm: OllamaClient | None = None,
+    *,
+    read_only_evaluation: bool = False,
+) -> dict[str, Any]:
+    return QueryAgent(db, workspace, llm, read_only_evaluation=read_only_evaluation).run(question)

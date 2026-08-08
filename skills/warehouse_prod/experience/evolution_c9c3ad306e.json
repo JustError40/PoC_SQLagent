@@ -1,8 +1,0 @@
-{
-  "surface": "joins",
-  "reason": "trajectory references a one-to-many order relation",
-  "changed_files": [
-    "relationships/learned_rules.yaml",
-    "templates/payment_revenue.sql"
-  ]
-}

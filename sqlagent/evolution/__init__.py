@@ -1,4 +1,3 @@
-from .graph import run_evolution
+from .graph import evolve_failure, run_evolution
 
-__all__ = ["run_evolution"]
-
+__all__ = ["evolve_failure", "run_evolution"]

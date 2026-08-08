@@ -8,8 +8,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    tmpfs:
+      - /var/lib/postgresql/data:size=${POSTGRES_TMPFS_SIZE_BYTES:?Run scripts/campaign_preflight.py first},mode=0700
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
@@ -35,7 +35,9 @@ services:
       OPENCODE_GO_BASE_URL: ${OPENCODE_GO_BASE_URL:-https://opencode.ai/zen/go/v1}
       OPENCODE_GO_API_KEY: ${OPENCODE_GO_API_KEY:-}
       OPENCODE_GO_MODEL: ${OPENCODE_GO_MODEL:-deepseek-v4-flash}
-      WORKSPACE_PATH: /app/skills/${SKILL_NAME:-warehouse_prod}
+      RUN_ID: ${RUN_ID:?Set a unique RUN_ID for this campaign}
+      RUNS_ROOT: /app/runs
+      WORKSPACE_PATH: /app/runs/${RUN_ID}/skill
       EXPLORER_ROUNDS: ${EXPLORER_ROUNDS:-3}
       EXPLORER_PROBES_PER_ROUND: ${EXPLORER_PROBES_PER_ROUND:-3}
       REACT_MAX_ATTEMPTS: ${REACT_MAX_ATTEMPTS:-15}
@@ -45,10 +47,29 @@ services:
     ports:
       - "${API_PORT:-8000}:8000"
     volumes:
-      - ./skills/${SKILL_NAME:-warehouse_prod}:/app/skills/${SKILL_NAME:-warehouse_prod}
+      - ./runs:/app/runs
       - ./sqlagent/web_static:/app/sqlagent/web_static:ro
     depends_on:
       postgres:
         condition: service_healthy
-volumes:
-  postgres_data:
+
+  loader:
+    profiles: ["campaign"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-}
+    entrypoint: ["python", "-m", "sqlagent"]
+    command: ["tpcds-bootstrap", "--scale", "${TPCDS_SCALE:-10}", "--replace"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-warehouse}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-warehouse}
+      TPCDS_SCALE: ${TPCDS_SCALE:-10}
+      TPCDS_DATA_PATH: /app/.data/tpcds/sf${TPCDS_SCALE:-10}
+      TPCDS_TOOLKIT_PATH: /app/.cache/tpcds-kit
+    volumes:
+      - ./.data/tpcds:/app/.data/tpcds:ro
+      - ./.cache/tpcds-kit:/app/.cache/tpcds-kit:ro
+    depends_on:
+      postgres:
+        condition: service_healthy

@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import json
+import hashlib
+import os
 import subprocess
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
 
 import yaml
 
@@ -92,19 +95,25 @@ class Workspace:
         return result.stdout.strip()
 
     def write_text(self, relative: str, content: str) -> Path:
-        path = self.root / relative
+        path = self._safe_path(relative)
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
         return path
 
     def read_text(self, relative: str) -> str:
-        return (self.root / relative).read_text(encoding="utf-8")
+        return self._safe_path(relative).read_text(encoding="utf-8")
+
+    def _safe_path(self, relative: str) -> Path:
+        path = (self.root / relative).resolve()
+        if path != self.root and self.root not in path.parents:
+            raise WorkspaceError(f"path escapes workspace: {relative}")
+        return path
 
     def write_yaml(self, relative: str, value: Any) -> Path:
         return self.write_text(relative, yaml.safe_dump(value, allow_unicode=True, sort_keys=False))
 
     def read_yaml(self, relative: str, default: Any = None) -> Any:
-        path = self.root / relative
+        path = self._safe_path(relative)
         if not path.exists():
             return default
         return yaml.safe_load(path.read_text(encoding="utf-8"))
@@ -144,10 +153,100 @@ class Workspace:
     def branch_exists(self, branch: str) -> bool:
         return bool(self._git("show-ref", "--verify", f"refs/heads/{branch}", check=False))
 
+    def latest_candidate_branch(self) -> str | None:
+        output = self._git(
+            "for-each-ref",
+            "--no-merged=main",
+            "--sort=-creatordate",
+            "--format=%(refname:short)",
+            "refs/heads/evolution/*",
+            check=False,
+        )
+        return output.splitlines()[0] if output.strip() else None
+
     def promote(self, branch: str, tag: str, base: str = "main") -> None:
         self.checkout(base)
         self._git("merge", "--no-ff", branch, "-m", f"Promote {branch}")
-        self._git("tag", "-f", tag)
+        self._git("tag", tag)
+
+    def sha(self, ref: str = "HEAD") -> str:
+        self.ensure_git()
+        return self._git("rev-parse", ref)
+
+    def tree_hash(self, ref: str = "HEAD") -> str:
+        self.ensure_git()
+        return self._git("rev-parse", f"{ref}^{{tree}}")
+
+    def filesystem_state(self) -> str:
+        digest = hashlib.sha256()
+        for relative in self.files():
+            path = self.root / relative
+            stat = path.stat()
+            digest.update(relative.encode())
+            digest.update(b"\0")
+            digest.update(oct(stat.st_mode & 0o777).encode())
+            digest.update(b"\0")
+            digest.update(path.read_bytes())
+            digest.update(b"\0")
+        return digest.hexdigest()
+
+    def create_candidate_worktree(
+        self,
+        request_id: str,
+        surface: str,
+        worktrees_root: Path,
+        base: str = "main",
+    ) -> tuple[str, "Workspace"]:
+        """Create an isolated candidate without switching the shared checkout."""
+
+        self.ensure_git()
+        safe_surface = "".join(char if char.isalnum() or char in "-_" else "-" for char in surface)
+        branch = f"evolution/{request_id}-{safe_surface}"
+        target = (worktrees_root / f"{request_id}-{safe_surface}").resolve()
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.exists():
+            raise WorkspaceError(f"candidate worktree already exists: {target}")
+        self._git("worktree", "add", "-b", branch, str(target), base)
+        return branch, Workspace(target)
+
+    def create_detached_worktree(self, ref: str, target: Path) -> "Workspace":
+        self.ensure_git()
+        target = target.resolve()
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.exists():
+            raise WorkspaceError(f"evaluation worktree already exists: {target}")
+        self._git("worktree", "add", "--detach", str(target), ref)
+        return Workspace(target)
+
+    def remove_worktree(self, target: Path) -> None:
+        self._git("worktree", "remove", "--force", str(target.resolve()))
+
+    def worktree_for_branch(self, branch: str) -> "Workspace" | None:
+        current_path: Path | None = None
+        for line in self._git("worktree", "list", "--porcelain").splitlines():
+            if line.startswith("worktree "):
+                current_path = Path(line.removeprefix("worktree "))
+            elif line == f"branch refs/heads/{branch}" and current_path is not None:
+                return Workspace(current_path)
+        return None
+
+    @contextmanager
+    def promotion_lock(self) -> Iterator[None]:
+        """Serialize promotion across worker threads and processes."""
+
+        import fcntl
+
+        git_dir = Path(self._git("rev-parse", "--git-common-dir"))
+        if not git_dir.is_absolute():
+            git_dir = self.root / git_dir
+        lock_path = git_dir.resolve() / "sqlagent-promotion.lock"
+        descriptor = os.open(lock_path, os.O_RDWR | os.O_CREAT, 0o600)
+        try:
+            fcntl.flock(descriptor, fcntl.LOCK_EX)
+            yield
+        finally:
+            fcntl.flock(descriptor, fcntl.LOCK_UN)
+            os.close(descriptor)
 
     def files(self) -> list[str]:
         return sorted(
@@ -155,4 +254,3 @@ class Workspace:
             for path in self.root.rglob("*")
             if path.is_file() and ".git" not in path.parts
         )
-

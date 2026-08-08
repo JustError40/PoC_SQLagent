@@ -17,6 +17,11 @@ function renderTable(rows) {
 }
 
 function renderResult(data) {
+  if (data.status === 'pipeline_failed' || data.error) {
+    const error = data.error || {};
+    $('#resultShell').innerHTML = `<div class="clarification-result"><span class="empty-index">FAILED /</span><div><strong>${escapeHtml(error.type || 'internal_error')}</strong><p>${escapeHtml(error.message || 'Query failed')}</p><small>stage ${escapeHtml(error.stage || 'unknown')} · request ${escapeHtml(data.request_id || '—')} · learning job ${escapeHtml(error.learning_job_id || '—')}</small></div></div>`;
+    return;
+  }
   if (data.telemetry?.clarification_requested) {
     $('#resultShell').innerHTML = `<div class="clarification-result"><span class="empty-index">CLARIFY /</span><div><strong>Metric clarification required</strong><p>${escapeHtml(data.clarification || 'Please choose a metric.')}</p><small>telemetry recorded in the trajectory log</small></div></div>`;
     return;
@@ -46,7 +51,10 @@ function jobSummary(job) {
     if (result.status === 'insufficient_trajectories') return `needs ${result.required} trajectories, have ${result.count} — ask questions first`;
     return `${result.branch || ''} · ${(result.changed_files || []).join(', ')}`;
   }
-  if (job.name === 'evaluate') return `correctness ${(Number(result.correctness || 0) * 100).toFixed(0)}% · unsafe ${result.unsafe ?? 0} · p95 ${Number(result.p95_exec_ms || 0).toFixed(0)} ms`;
+  if (job.name === 'evaluate') {
+    const completion = result.completion || {};
+    return `${completion.answered ?? 0} answered · ${completion.clarified ?? 0} clarified · ${completion.pipeline_failed ?? 0} failed · unsafe ${result.unsafe ?? 0} · p95 ${Number(result.p95_exec_ms || 0).toFixed(0)} ms`;
+  }
   if (job.name === 'promote') return result.status === 'promoted' ? `promoted · tag ${result.tag}` : `rejected by gate${result.branch ? ` · ${result.branch}` : ''}`;
   return '';
 }
@@ -63,13 +71,13 @@ function renderJobs(items) {
 function updateActionStates(data) {
   const workspaceReady = data.workspace?.status === 'ready';
   const hasTrajectories = (data.trajectory_count || 0) > 0;
-  const onCandidate = (data.workspace?.branch || '').startsWith('evolution/');
+  const onCandidate = Boolean(data.workspace?.latest_candidate);
   const hints = {
     survey: workspaceReady ? 'workspace exists — re-running overwrites the generated skill' : '',
     explore: workspaceReady ? '' : 'requires a completed survey',
     evaluate: workspaceReady ? '' : 'requires a completed survey',
     evolve: !workspaceReady ? 'requires a completed survey' : (!hasTrajectories ? 'works on trajectories — ask at least one question first' : ''),
-    promote: !workspaceReady ? 'requires a completed survey' : (!onCandidate ? 'requires an evolution/* branch — run evolve first' : 'will gate and merge the current candidate'),
+    promote: !workspaceReady ? 'requires a completed survey' : (!onCandidate ? 'requires an evolution/* candidate — run evolve first' : `will gate ${data.workspace.latest_candidate} without switching main`),
   };
   Object.entries(hints).forEach(([action, hint]) => {
     const row = document.querySelector(`[data-action="${action}"]`);

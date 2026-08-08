@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any, TypedDict
 
@@ -10,7 +11,6 @@ from langgraph.graph import END, START, StateGraph
 from psycopg import sql
 
 from sqlagent.db import Database, json_safe
-from sqlagent.evaluator import rebuild_golden
 from sqlagent.llm import LLMUnavailable, OllamaClient
 from sqlagent.workspace import Workspace
 
@@ -45,7 +45,7 @@ def _slug(value: str) -> str:
 
 
 def inventory_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
-    with psycopg.connect(db.dsn) as conn:
+    with db._limited(), psycopg.connect(db.dsn) as conn:
         tables = _fetch_rows(
             conn,
             """
@@ -110,9 +110,9 @@ def inventory_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
 
 
 def profiling_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
-    profiles: dict[str, dict[str, Any]] = {}
-    with psycopg.connect(db.dsn) as conn:
-        for table, columns in state["columns"].items():
+    def profile_table(item: tuple[str, list[dict[str, Any]]]) -> tuple[str, dict[str, Any]]:
+        table, columns = item
+        with db._limited(), psycopg.connect(db.dsn) as conn:
             table_ident = sql.Identifier(table)
             table_profile: dict[str, Any] = {}
             for column in columns:
@@ -144,7 +144,11 @@ def profiling_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
                         ]
                 except psycopg.Error:
                     table_profile[name] = {"error": "profile query failed"}
-            profiles[table] = table_profile
+        return table, table_profile
+
+    items = list(state["columns"].items())
+    with ThreadPoolExecutor(max_workers=min(8, max(1, len(items))), thread_name_prefix="survey-profile") as pool:
+        profiles = dict(pool.map(profile_table, items))
     return {"profiles": profiles}
 
 
@@ -156,15 +160,13 @@ def joins_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
         for row in state["constraints"]
         if row["constraint_type"] == "FOREIGN KEY" and row.get("foreign_table_name") and row.get("column_name")
     ]
-    verified: list[dict[str, Any]] = []
-    dangerous: list[dict[str, Any]] = []
     known_tables = set(state["columns"])
-    with psycopg.connect(db.dsn) as conn:
-        for fk in foreign_keys:
+    def verify_fk(fk: dict[str, Any]) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+        with db._limited(), psycopg.connect(db.dsn) as conn:
             child, column = fk["table_name"], fk["column_name"]
             parent, parent_column = fk["foreign_table_name"], fk["foreign_column_name"]
             if child not in known_tables or parent not in known_tables:
-                continue
+                return None, None
             query = sql.SQL(
                 "SELECT count(*) AS total, count({col}) AS non_null, "
                 "count(DISTINCT {col}) AS distinct_refs FROM {table}"
@@ -172,29 +174,32 @@ def joins_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
             try:
                 total, non_null, distinct_refs = conn.execute(query).fetchone()
             except psycopg.Error:
-                continue
+                return None, None
             fanout = round(non_null / distinct_refs, 3) if distinct_refs else 0.0
             null_fraction = round((total - non_null) / total, 3) if total else 0.0
             cardinality = "one_to_one_expected" if 0 < fanout <= 1.05 else "many_to_one"
-            verified.append(
-                {
-                    "left": f"{child}.{column}",
-                    "right": f"{parent}.{parent_column}",
-                    "cardinality": cardinality,
-                    "verified": True,
-                    "avg_fanout": fanout,
-                    "null_fraction": null_fraction,
-                }
-            )
+            verified = {
+                "left": f"{child}.{column}",
+                "right": f"{parent}.{parent_column}",
+                "cardinality": cardinality,
+                "verified": True,
+                "avg_fanout": fanout,
+                "null_fraction": null_fraction,
+            }
+            dangerous = None
             if fanout > FANOUT_THRESHOLD:
-                dangerous.append(
-                    {
-                        "left": f"{parent}.{parent_column}",
-                        "right": f"{child}.{column}",
-                        "reason": f"one-to-many fanout: avg {fanout} {child} rows per {parent} row",
-                        "required_action": f"preaggregate {child} before joining {parent}-grain measures",
-                    }
-                )
+                dangerous = {
+                    "left": f"{parent}.{parent_column}",
+                    "right": f"{child}.{column}",
+                    "reason": f"one-to-many fanout: avg {fanout} {child} rows per {parent} row",
+                    "required_action": f"preaggregate {child} before joining {parent}-grain measures",
+                }
+            return verified, dangerous
+
+    with ThreadPoolExecutor(max_workers=min(8, max(1, len(foreign_keys))), thread_name_prefix="survey-join") as pool:
+        checked = list(pool.map(verify_fk, foreign_keys))
+    verified = [item[0] for item in checked if item[0] is not None]
+    dangerous = [item[1] for item in checked if item[1] is not None]
     return {"verified_joins": verified, "dangerous_joins": dangerous}
 
 
@@ -225,29 +230,36 @@ def semantics_node(state: SurveyState, *, llm: OllamaClient | None = None) -> di
     }
     used = False
     if llm:
-        brief = {
-            table: {
-                "columns": [f"{column['column_name']} {column['data_type']}" for column in columns][:40],
-                "hints": _profile_hints(state, table),
+        def describe(item: tuple[str, list[dict[str, Any]]]) -> tuple[str, dict[str, Any] | None]:
+            table, columns = item
+            brief = {
+                table: {
+                    "columns": [f"{column['column_name']} {column['data_type']}" for column in columns][:40],
+                    "hints": _profile_hints(state, table),
+                }
             }
-            for table, columns in state["columns"].items()
-        }
-        try:
-            answer = llm.chat_json(
-                "You document a PostgreSQL database for a SQL agent. For each table return a concise "
-                "description (one sentence, grounded in column names and sample values) and its grain "
-                "('one row per ...'). Return JSON object table -> {description, grain}. "
-                "Do not invent business facts that the columns do not support.",
-                json.dumps(brief, ensure_ascii=False),
-            )
-            for table, value in answer.items():
-                if table in semantics and isinstance(value, dict):
-                    semantics[table].update(
-                        {key: str(val) for key, val in value.items() if key in {"description", "grain"}}
-                    )
-            used = True
-        except LLMUnavailable:
-            pass
+            try:
+                answer = llm.chat_json(
+                    "You document a PostgreSQL database for a SQL agent. For each table return a concise "
+                    "description (one sentence, grounded in column names and sample values) and its grain "
+                    "('one row per ...'). Return JSON object table -> {description, grain}. "
+                    "Do not invent business facts that the columns do not support.",
+                    json.dumps(brief, ensure_ascii=False),
+                )
+            except LLMUnavailable:
+                return table, None
+            value = answer.get(table) if isinstance(answer, dict) else None
+            return table, value if isinstance(value, dict) else None
+
+        items = list(state["columns"].items())
+        with ThreadPoolExecutor(max_workers=min(8, max(1, len(items))), thread_name_prefix="survey-semantics") as pool:
+            descriptions = list(pool.map(describe, items))
+        for table, value in descriptions:
+            if value is not None:
+                semantics[table].update(
+                    {key: str(val) for key, val in value.items() if key in {"description", "grain"}}
+                )
+                used = True
     return {"semantics": semantics, "llm_used": used}
 
 
@@ -365,7 +377,6 @@ def save_node(state: SurveyState) -> dict[str, Any]:
     for index, join in enumerate(state["dangerous_joins"]):
         invariants.append({"id": f"no_fanout_{index}", "expression": join["required_action"]})
     workspace.write_yaml("evals/invariants.yaml", {"invariants": invariants})
-    rebuild_golden(workspace)  # deterministic golden corpus: an independent correctness yardstick
     workspace.write_text("experience/exploration.jsonl", "")
     workspace.write_text("experience/trajectories.jsonl", "")
     workspace.commit("survey: generate skill workspace")

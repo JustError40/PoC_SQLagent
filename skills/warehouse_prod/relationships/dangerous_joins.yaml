@@ -1,9 +1,0 @@
-joins:
-- left: orders.id
-  right: order_items.order_id
-  reason: line-item fanout
-  required_action: preaggregate or use item grain
-- left: orders.id
-  right: order_payments.order_id
-  reason: payment-event fanout
-  required_action: preaggregate before joining order measures

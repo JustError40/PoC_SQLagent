@@ -1,8 +1,0 @@
-rules:
-- rule: Daily net profit is sum of web sales net profit per day.
-  source: explorer
-  confidence: 0.7
-- rule: Aggregate dimension-based metrics using GROUP BY on the dimension key and
-    apply COUNT/COUNT(DISTINCT)/SUM accordingly.
-  source: explorer
-  confidence: 0.7

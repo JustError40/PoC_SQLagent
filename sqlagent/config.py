@@ -21,7 +21,9 @@ class Settings:
     litellm_base_url: str = "http://localhost:4000/v1"
     litellm_api_key: str = ""
     litellm_model: str = "hosted_vllm/gemma4-chat"
-    workspace_path: Path = PROJECT_ROOT / "skills" / "warehouse_prod"
+    run_id: str = "local"
+    runs_root: Path = PROJECT_ROOT / "runs"
+    workspace_path: Path = PROJECT_ROOT / "runs" / "local" / "skill"
     seed_orders: int = 50_000
     tpcds_scale: int = 10
     tpcds_data_path: Path = PROJECT_ROOT / ".data" / "tpcds" / "sf10"
@@ -32,10 +34,16 @@ class Settings:
     explorer_probes_per_round: int = 3
     bootstrap_on_start: bool = True
     verify_interval_hours: float = 24.0
+    llm_concurrency_initial: int = 4
+    db_concurrency_initial: int = 4
 
     @classmethod
     def from_env(cls) -> "Settings":
-        workspace = Path(os.getenv("WORKSPACE_PATH", "skills/warehouse_prod"))
+        run_id = os.getenv("RUN_ID", cls.run_id).strip() or cls.run_id
+        runs_root = Path(os.getenv("RUNS_ROOT", str(cls.runs_root)))
+        if not runs_root.is_absolute():
+            runs_root = PROJECT_ROOT / runs_root
+        workspace = Path(os.getenv("WORKSPACE_PATH", str(runs_root / run_id / "skill")))
         if not workspace.is_absolute():
             workspace = PROJECT_ROOT / workspace
         return cls(
@@ -49,6 +57,8 @@ class Settings:
             litellm_base_url=os.getenv("LITELLM_BASE_URL", cls.litellm_base_url).rstrip("/"),
             litellm_api_key=os.getenv("LITELLM_API_KEY", cls.litellm_api_key),
             litellm_model=os.getenv("LITELLM_MODEL", cls.litellm_model),
+            run_id=run_id,
+            runs_root=runs_root,
             workspace_path=workspace,
             seed_orders=int(os.getenv("SEED_ORDERS", str(cls.seed_orders))),
             tpcds_scale=int(os.getenv("TPCDS_SCALE", str(cls.tpcds_scale))),
@@ -60,7 +70,17 @@ class Settings:
             explorer_probes_per_round=int(os.getenv("EXPLORER_PROBES_PER_ROUND", str(cls.explorer_probes_per_round))),
             bootstrap_on_start=os.getenv("BOOTSTRAP_ON_START", "1").strip() not in {"0", "false", "no"},
             verify_interval_hours=float(os.getenv("VERIFY_INTERVAL_HOURS", str(cls.verify_interval_hours))),
+            llm_concurrency_initial=int(os.getenv("LLM_CONCURRENCY_INITIAL", str(cls.llm_concurrency_initial))),
+            db_concurrency_initial=int(os.getenv("DB_CONCURRENCY_INITIAL", str(cls.db_concurrency_initial))),
         )
+
+    @property
+    def run_path(self) -> Path:
+        return self.runs_root / self.run_id
+
+    @property
+    def failure_queue_path(self) -> Path:
+        return self.run_path / "telemetry" / "failures.sqlite3"
 
     @property
     def active_llm_model(self) -> str:

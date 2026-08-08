@@ -1,5 +1,0 @@
-domain: dimensions
-tables:
-- date_dim
-- dbgen_version
-- time_dim

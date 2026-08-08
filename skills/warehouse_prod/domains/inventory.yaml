@@ -1,6 +1,0 @@
-domain: inventory
-tables:
-- products
-- inventory_snapshots
-- suppliers
-- product_suppliers

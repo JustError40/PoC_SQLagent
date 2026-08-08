@@ -1,8 +1,0 @@
-{
-  "surface": "experience",
-  "reason": "failed trajectory needs a reusable correction",
-  "changed_files": [
-    "templates/revenue_by_month.sql",
-    "experience/example.md"
-  ]
-}

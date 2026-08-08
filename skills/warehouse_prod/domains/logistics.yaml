@@ -1,5 +1,0 @@
-domain: logistics
-tables:
-- shipments
-- stores
-- employees

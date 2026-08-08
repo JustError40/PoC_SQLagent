@@ -47,10 +47,10 @@ def test_rebuild_golden_writes_corpus_from_workspace_schema(tmp_path) -> None:
     assert all({"id", "question", "golden_sql"} <= set(json.loads(line)) for line in lines)
 
 
-def test_default_corpus_prefers_workspace_golden(tmp_path) -> None:
+def test_default_corpus_stays_external_to_workspace(tmp_path) -> None:
     workspace = Workspace(tmp_path / "skill")
     project_root = tmp_path / "project"
     assert default_corpus_path(workspace, project_root) == project_root / "evals" / "regression.jsonl"
 
     workspace.write_text("evals/golden.jsonl", "{}\n")
-    assert default_corpus_path(workspace, project_root) == workspace.root / "evals" / "golden.jsonl"
+    assert default_corpus_path(workspace, project_root) == project_root / "evals" / "regression.jsonl"

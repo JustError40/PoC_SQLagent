@@ -9,7 +9,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends git \
+    && apt-get install -y --no-install-recommends git postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
 COPY pyproject.toml README.md ./
@@ -18,7 +18,6 @@ COPY db_seed ./db_seed
 RUN pip install --no-cache-dir --no-build-isolation .
 
 COPY evals ./evals
-COPY skills ./skills
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh
 

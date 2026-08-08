@@ -1,7 +1,5 @@
 import json
 
-import pytest
-
 from sqlagent.db import QueryResult
 from sqlagent.explorer import run_exploration
 from sqlagent.workspace import Workspace

@@ -28,7 +28,7 @@ def test_assemble_grouped_measure_with_join() -> None:
     )
 
 
-def test_assemble_filters_and_limit_clamp() -> None:
+def test_assemble_filters_does_not_apply_ui_limit_to_sql() -> None:
     spec = {
         "from": "web_sales",
         "measure": {"agg": "count", "column": "*"},
@@ -38,7 +38,7 @@ def test_assemble_filters_and_limit_clamp() -> None:
     sql = assemble_spec(spec, SCHEMA)
     assert 'COUNT(*) AS "count"' in sql
     assert '"web_sales"."ws_net_paid" > 100' in sql
-    assert sql.endswith("LIMIT 500")
+    assert sql.endswith("LIMIT 99999")
 
 
 def test_assemble_escapes_string_literals() -> None:
@@ -206,7 +206,7 @@ def test_assemble_multiple_measures() -> None:
     assert 'SUM("store_sales"."ss_net_paid") AS "revenue"' in sql
     assert 'SUM("store_sales"."ss_net_profit") AS "profit"' in sql
     assert 'COUNT(DISTINCT "store_sales"."ss_ticket_number") AS "tickets"' in sql
-    assert sql.endswith('ORDER BY "profit" DESC LIMIT 100')
+    assert sql.endswith('ORDER BY "profit" DESC')
 
 
 def test_assemble_four_joins_allowed() -> None:

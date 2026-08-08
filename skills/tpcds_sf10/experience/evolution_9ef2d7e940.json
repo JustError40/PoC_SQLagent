@@ -1,7 +1,0 @@
-{
-  "surface": "experience",
-  "reason": "failed trajectory needs a reusable correction",
-  "changed_files": [
-    "experience/state_revenue_by_state.sql"
-  ]
-}

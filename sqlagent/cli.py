@@ -13,6 +13,8 @@ from sqlagent.config import Settings
 from sqlagent.db import Database
 from sqlagent.evaluator import default_corpus_path, evaluate_workspace, promote_candidate, rebuild_golden
 from sqlagent.evolution import run_evolution
+from sqlagent.errors import classify_error
+from sqlagent.failure_queue import FailureQueue
 from sqlagent.explorer import run_exploration
 from sqlagent.llm import OllamaClient, build_llm
 from sqlagent.query_agent import ask
@@ -34,7 +36,7 @@ def _runtime(settings: Settings) -> tuple[Database, Workspace, OllamaClient]:
         litellm_base_url=settings.litellm_base_url,
         litellm_api_key=settings.litellm_api_key,
         litellm_model=settings.litellm_model,
-        cache_dir=workspace.root / ".cache" / "llm",
+        cache_dir=settings.run_path / "cache" / "llm",
     )
     return db, workspace, llm
 
@@ -134,7 +136,20 @@ def main(argv: list[str] | None = None) -> int:
         if not (workspace.root / "manifest.yaml").exists():
             print("workspace is missing; run `python -m sqlagent survey` first", file=sys.stderr)
             return 2
-        print(json.dumps(ask(db, workspace, args.question, llm), ensure_ascii=False, indent=2, default=str))
+        response = ask(db, workspace, args.question, llm)
+        if response.get("error"):
+            error = dict(response.get("error_info") or classify_error(str(response["error"]), stage="internal").as_dict())
+            job_id = FailureQueue(settings.failure_queue_path).enqueue(
+                request_id=str(response.get("request_id")),
+                error_type=str(error["type"]),
+                stage=str(error["stage"]),
+                message=str(error["message"]),
+                payload={"question": args.question, "sql": response.get("sql"), "telemetry": response.get("telemetry")},
+            )
+            error["learning_job_id"] = job_id
+            response["error"] = error
+            response.pop("error_info", None)
+        print(json.dumps(response, ensure_ascii=False, indent=2, default=str))
         return 0
     if args.command == "evolve":
         print(json.dumps(run_evolution(workspace, args.min_trajectories, llm), ensure_ascii=False, indent=2))
@@ -168,7 +183,16 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "evaluate":
         selected_workspace = Workspace((args.workspace or settings.workspace_path).resolve())
         corpus = (args.corpus or default_corpus_path(selected_workspace, settings.project_root)).resolve()
-        report = evaluate_workspace(db, selected_workspace, corpus, llm)
+        external_corpus = settings.run_path / "evaluator" / "manual" / "corpus.jsonl"
+        external_corpus.parent.mkdir(parents=True, exist_ok=True)
+        external_corpus.write_bytes(corpus.read_bytes())
+        report = evaluate_workspace(
+            db,
+            selected_workspace,
+            external_corpus,
+            llm,
+            telemetry_dir=settings.run_path / "evaluator" / "manual",
+        )
         print(json.dumps(report.as_dict(), ensure_ascii=False, indent=2, default=str))
         return 0 if report.unsafe == 0 else 1
     if args.command == "promote":

@@ -1,117 +1,108 @@
-# SQLagent PoC
+# SQL Agent PoC
 
-End-to-end PoC самоадаптирующейся database-skill среды. Агент сам строит и
-улучшает свой skill для той БД, к которой подключён, — без подгонки кода под
-конкретную схему:
+Самоэволюционирующий SQL-agent: `Surveyor → Explorer → Query Agent → durable
+failure queue → Evolution → hermetic Evaluator → promotion`.
 
-`Surveyor → Explorer → Query Agent → trajectories → Evolution → Evaluator → promotion`
+Каждый запуск начинает только с credentials и создаёт новый skill в
+`runs/<run_id>/skill`. Старые database-specific skills не используются и готовые
+TPC-DS вопросы не передаются Surveyor/learner как знания или golden answers.
 
-Все знания о конкретной БД живут только в skill workspace (артефактах), а не в
-коде: Surveyor извлекает их детерминированными коллекторами и LLM из данных,
-Explorer итеративно исследует БД read-only probe-запросами и дозаписывает
-проверенные templates/правила, Evolution улучшает skill по trajectories.
-
-## Быстрый запуск
+## Кампания
 
 ```bash
 cp .env.example .env
 uv sync
-docker compose up -d postgres ollama
-python -m sqlagent seed
-python -m sqlagent demo-load
-python -m sqlagent survey
-python -m sqlagent explore
-python -m sqlagent ask "выручка новых клиентов по месяцам"
-python -m sqlagent evaluate
+scripts/run_test_campaign.sh
 ```
 
-Модель задаётся переменной `OLLAMA_MODEL`; текущий дефолт — `openbmb/minicpm5:fp16`.
-После загрузки модели в контейнер можно проверить её так:
+Preflight сначала генерирует TPC-DS, измеряет dataset, рассчитывает tmpfs с
+запасом и сверяет его с `MemAvailable`. PostgreSQL data directory монтируется
+только в Docker `tmpfs`; при нехватке RAM запуск останавливается, disk fallback
+отсутствует. Затем одноразовый `loader` загружает SF10 в свежий tmpfs, и только
+после этого запускаются API/Surveyor. `RUN_ID` по умолчанию создаётся из UTC
+timestamp.
+
+Ручной запуск требует результата preflight:
 
 ```bash
-docker exec -it sqlagent-ollama ollama list
-docker exec -it sqlagent-ollama ollama run openbmb/minicpm5:fp16
+export RUN_ID=manual-$(date -u +%Y%m%d-%H%M%S)
+campaign_env_file="$(mktemp)"
+UV_CACHE_DIR=/tmp/uv-cache uv run python scripts/campaign_preflight.py --env-file "$campaign_env_file"
+. "$campaign_env_file"
+rm -f "$campaign_env_file"
+export POSTGRES_TMPFS_SIZE_BYTES TPCDS_DATASET_BYTES
+docker compose up -d --build
 ```
 
-OpenBMB для Ollama документирует MiniCPM5 через GGUF и Modelfile с chat template,
-stop-токенами `<|im_end|>`/`</s>`, `num_ctx 8192`, `temperature 0.7` и `top_p 0.95`.
-В SQL Agent runtime-контекст расширен до `num_ctx 16384` для schema-aware ReAct repair.
-Если registry-tag отсутствует, используйте cookbook из репозитория: скачайте GGUF,
-создайте Modelfile и затем `ollama create` с тем именем, которое указано в
-`OLLAMA_MODEL`.
+## Runtime-контракты
 
-## Основной датасет PoC: TPC-DS SF10
+- `Database.explain_estimate()` делает только `EXPLAIN (FORMAT JSON)`.
+- `execute_preview()` исполняет выбранный SQL один раз и ограничивает только UI
+  preview переменной `MAX_RESULT_ROWS`.
+- `explain_analyze()` доступен отдельно для диагностики.
+- `compare_queries_full()` сравнивает полные мультимножества двусторонним
+  PostgreSQL `EXCEPT ALL`, включая строки после preview, дубликаты и `NULL`.
+- Сложные запросы компилируются из DAG стадий `scan`, `filter`, `join`,
+  `aggregate`, `union_all`, `window`, `rank`, `project`. Join cardinality и grain
+  валидируются детерминированно.
+- Scratch executor принимает только read-only stage SQL, материализует стадии в
+  автоматически названные `pg_temp` таблицы на одной connection и ограничивает
+  строки, bytes и timeout.
 
-TPC-DS генерируется официальным `dsdgen` из публичного toolkit и загружается в
-отдельную БД `tpcds`; текущий `warehouse` остаётся быстрым smoke-fixture.
+LiteLLM и PostgreSQL имеют отдельные priority-aware AIMD limiter'ы: старт 4,
+диапазон 1–8. 429, timeout и pool saturation уменьшают concurrency; стабильные
+окна постепенно восстанавливают его. Интерактивные запросы имеют приоритет над
+единственным background learner.
 
-```bash
-python -m sqlagent tpcds-bootstrap --scale 10
-export DATABASE_URL=postgresql://warehouse@localhost:5432/tpcds
-export WORKSPACE_PATH=skills/tpcds_sf10
-python -m sqlagent survey
-python -m sqlagent ask "total store sales by month"
-```
+## API ошибок и telemetry
 
-Генерация SF10 может занять заметное время и создать порядка 10 GB raw-файлов;
-данные находятся в `.data/` и не попадают в git. Для повторного запуска без
-перегенерации используется `tpcds-bootstrap` без `--force`; `--replace` пересоздаёт
-только отдельную БД `tpcds`.
-
-## Field Console и telemetry
-
-После `docker compose up -d --build api` UI доступен на `http://localhost:8000`.
-Статусная линия `ingest → reason → learn → promote` обновляется event hooks от
-реальных DB/Ollama/agent-ответов; `/api/status` не вызывает Ollama `api/tags`,
-Postgres или backend health probes. Skill workspace примонтирован в контейнер,
-поэтому trajectories и git-состояние сохраняются между перезапусками.
-
-Неоднозначные вопросы не получают SQL наугад: Query Agent сохраняет telemetry и
-возвращает запрос уточнения в trajectory:
+`POST /api/ask` возвращает `request_id`, один из статусов `answered`, `clarified`,
+`pipeline_failed`, telemetry spans и при ошибке:
 
 ```json
 {
-  "telemetry": {
-    "ambiguity_detected": true,
-    "possible_metrics": ["net_revenue", "net_profit", "customer_count", "year_over_year_growth"],
-    "clarification_requested": true
-  }
+  "type": "execution_timeout",
+  "stage": "execution",
+  "retryable": true,
+  "message": "...",
+  "sqlstate": null,
+  "learning_job_id": "..."
 }
 ```
 
-## Команды
+Каждая ошибка сразу попадает в run-local SQLite/WAL queue. Infra failures
+сохраняются как incidents и не мутируют skill. Skill failure создаёт отдельный
+`evolution/<request_id>-<surface>` Git worktree; shared main checkout не
+переключается. Артефакт promotion получает immutable provenance record в
+`runs/<run_id>/provenance/`.
 
-- `seed` пересоздаёт тестовую БД и наполняет её детерминированными данными. `SEED_ORDERS` управляет размером факта.
-- `demo-load` восстанавливает скачанный `db_seed/demo/dvdrental.sql` в отдельную БД `dvdrental`; `warehouse` при этом не меняется.
-- `survey` запускает LangGraph Surveyor: inventory, profiles, проверка FK-joins на реальных данных (verified/dangerous по измеренному fanout), семантика таблиц и домены через LLM. Ничего не знает о конкретной БД.
-- `explore` запускает Explorer: модель итеративно планирует read-only probe-запросы, выполняет их через те же safety-gates (validate → EXPLAIN → execute) и дозаписывает в skill только проверенные артефакты — templates, dangerous joins, learned rules. `EXPLORER_ROUNDS`/`EXPLORER_PROBES_PER_ROUND` ограничивают бюджет.
-- `bootstrap` = `survey` + `explore`, но только если workspace ещё не построен; используется при старте контейнера.
-- `ask` запускает read-only Query Agent: LLM-router по `manifest.yaml`, EXPLAIN gate, invariant check (правила читаются из `evals/invariants.yaml` skill'а) и JSONL trajectory.
-- `evaluate` переигрывает `evals/regression.jsonl` и выводит correctness, unsafe, p95 и tool calls.
-- `evolve` создаёт ветку `evolution/<id>`; мутацию предлагает LLM по trajectories (максимум 3 файла, только разрешённые поверхности), без LLM — детерминированный fallback.
-- `promote` сравнивает текущую evolution-ветку с `main`, применяет gate и при успехе делает merge + tag `promoted-<date>`.
+Spans фиксируют фактические LLM/DB/tool latency, attempts, cache hit,
+provider/model, finish reason, provider token usage, DB wait/execute time,
+rows/truncation и estimates. Не сообщённые provider usage-поля остаются `null`.
 
-## Адаптация к новой БД
+## Evaluation и отчёт
 
-Код агента DB-агностичен; адаптация задаётся двумя переменными:
+Evaluator запускает baseline/candidate из detached worktree на фиксированных SHA
+в `read_only_evaluation`: запрещены trajectories, manifest metrics, learned
+templates, commits и cache writes. Corpus/telemetry находятся вне skill; manifest
+фиксирует corpus checksum, DB snapshot, commit и tree hash. Изменение filesystem
+или Git tree считается ошибкой evaluator.
+
+Promotion gate не использует accuracy oracle. Он требует rescued target,
+`unsafe=0`, отсутствие превращения ранее отвечавших cases в pipeline failures,
+полную эквивалентность неизменяемых ответов и последовательное performance
+сравнение. Acceptance report показывает completion, useful outcomes, failure
+attribution, rescued retries, tokens/tool calls и latency — accuracy/correctness
+не вычисляется.
+
+## Команды разработки
 
 ```bash
-export DATABASE_URL=postgresql://warehouse@localhost:5432/dvdrental
-export WORKSPACE_PATH=skills/dvdrental
-python -m sqlagent bootstrap   # survey + explore строят новый skill с нуля
-python -m sqlagent ask "top rented film categories"
+UV_CACHE_DIR=/tmp/uv-cache uv run pytest -q
+python -m sqlagent survey
+python -m sqlagent explore
+python -m sqlagent ask "накопительная выручка по месяцам"
+python -m sqlagent evaluate
+python -m sqlagent evolve
+python -m sqlagent promote
 ```
-
-При старте docker-контейнера `docker-entrypoint.sh` автоматически запускает
-`python -m sqlagent bootstrap` (отключается `BOOTSTRAP_ON_START=0`): пустой
-`WORKSPACE_PATH` → агент сам исследует свою БД до старта API, существующий
-manifest → сразу API. «Второй агент для другой БД» — это второй контейнер с
-другими `DATABASE_URL`, `WORKSPACE_PATH` и volume под skill.
-
-## Безопасность и воспроизводимость
-
-Подключение Query Agent переводится в PostgreSQL read-only transaction, SQL пропускается
-через `sqlparse`, разрешён только один `SELECT`/`WITH`, а опасные one-to-many joins
-описаны отдельно от verified joins. LLM используется для семантики и неизвестных запросов;
-детерминированные collectors, templates и fallback позволяют запускать seed/survey/eval
-до завершения загрузки модели.

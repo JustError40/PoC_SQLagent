@@ -1,6 +1,0 @@
-read_only: true
-forbidden_tables:
-- pg_authid
-- pg_shadow
-max_result_rows: 500
-explain_required: true

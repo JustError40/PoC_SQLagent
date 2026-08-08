@@ -1,7 +1,0 @@
-domain: customer
-tables:
-- customer
-- customer_address
-- customer_demographics
-- household_demographics
-- income_band
