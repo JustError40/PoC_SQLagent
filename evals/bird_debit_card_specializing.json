@@ -1,0 +1,41 @@
+{
+  "description": "BIRD mini-dev: debit_card_specializing (30 questions)",
+  "blocks": [
+    {
+      "name": "debit_card_specializing",
+      "title": "BIRD mini-dev / debit_card_specializing",
+      "questions": [
+        "What is the ratio of customers who pay in EUR against customers who pay in CZK?\n(Hint: ratio of customers who pay in EUR against customers who pay in CZK = count(Currency = 'EUR') / count(Currency = 'CZK').)",
+        "In 2012, who had the least consumption in LAM?\n(Hint: Year 2012 can be presented as Between 201201 And 201212; The first 4 strings of the Date values in the yearmonth table can represent year.)",
+        "What was the average monthly consumption of customers in SME for the year 2013?\n(Hint: Average Monthly consumption = AVG(Consumption) / 12; Year 2013 can be presented as Between 201301 And 201312; The first 4 strings of the Date values in the yearmonth table can represent year.)",
+        "What was the difference in gas consumption between CZK-paying customers and EUR-paying customers in 2012?\n(Hint: cast the consumption into float when perform calculation; Year 2012 can be presented as Between 201201 And 201212; The first 4 strings of the Date values in the yearmonth table can represent year; Difference in Consumption = CZK customers consumption in 2012 - EUR customers consumption in 2012)",
+        "Which year recorded the most consumption of gas paid in CZK?\n(Hint: The first 4 strings of the Date values in the yearmonth table can represent year.)",
+        "What was the gas consumption peak month for SME customers in 2013?\n(Hint: Year 2013 can be presented as Between 201301 And 201312; The first 4 strings of the Date values in the yearmonth table can represent year; The 5th and 6th string of the date can refer to month.)",
+        "What is the difference in the annual average consumption of the customers with the least amount of consumption paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?\n(Hint: annual average consumption of customer with the lowest consumption in each segment = total consumption per year / the number of customer with lowest consumption in each segment; Difference in annual average = SME's annual average - LAM's annual average; Difference in annual average = LAM's annual average - KAM's annual average; Year 2013 can be presented as Between 201301 And 201312; The first 4 strings of the Date values in the yearmonth table can represent year.)",
+        "Which of the three segments—SME, LAM and KAM—has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?\n(Hint: Increase or Decrease = consumption for 2013 - consumption for 2012; Percentage of Increase = (Increase or Decrease / consumption for 2013) * 100%; The first 4 strings of the Date values in the yearmonth table can represent year)",
+        "How much did customer 6 consume in total between August and November 2013?\n(Hint: Between August And November 2013 refers to Between 201308 And 201311; The first 4 strings of the Date values in the yearmonth table can represent year; The 5th and 6th string of the date can refer to month.)",
+        "How many more \"discount\" gas stations does the Czech Republic have compared to Slovakia?\n(Hint: Czech Republic can be represented as the Country value in gasstations table is 'CZE'; Slovakia can be represented as the Country value in the gasstations table is 'SVK';  Computation of more \"discount\" gas stations= Total no. of discount gas stations in Czech Republic - Total no. of discount gas stations in Slovakia)",
+        "Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?\n(Hint: Amount of more SMEs = Total of SMEs pay using Currency CZK - Total of SMEs pay using Currency EUR)",
+        "How many percent of LAM customer consumed more than 46.73?\n(Hint: Percentage of LAM customer consumed more than 46.73 = (Total no. of LAM customers who consumed more than 46.73 / Total no. of LAM customers) * 100.)",
+        "In February 2012, what percentage of customers consumed more than 528.3?\n(Hint: February 2012 refers to '201202' in yearmonth.date; The first 4 strings of the Date values in the yearmonth table can represent year; The 5th and 6th string of the date can refer to month.)",
+        "What is the highest monthly consumption in the year 2012?\n(Hint: cast the consumption into float when perform calculation; The first 4 strings of the Date values in the yearmonth table can represent year; The 5th and 6th string of the date can refer to month.)",
+        "Please list the product description of the products consumed in September, 2013.\n(Hint: September 2013 refers to 201309; The first 4 strings of the Date values in the yearmonth table can represent year; The 5th and 6th string of the date can refer to month.)",
+        "Please list the countries of the gas stations with transactions taken place in June, 2013.\n(Hint: June 2013 refers to '201306'; The first 4 strings of the Date values in the yearmonth table can represent year; The 5th and 6th string of the date can refer to month;)",
+        "Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?\n(Hint: Pays in euro = Currency = 'EUR'.)",
+        "Please list the product descriptions of the transactions taken place in the gas stations in the Czech Republic.\n(Hint: Czech Republic can be represented as the Country value in the gasstations table is 'CZE';)",
+        "Please list the disparate time of the transactions taken place in the gas stations from chain no. 11.",
+        "Among the transactions made in the gas stations in the Czech Republic, how many of them are taken place after 2012/1/1?\n(Hint: Czech Republic can be represented as the Country value in the gasstations table is 'CZE')",
+        "What kind of currency did the customer paid at 16:25:00 in 2012/8/24?\n(Hint: '2012/8/24' can be represented by '2012-08-24';)",
+        "What segment did the customer have at 2012/8/23 21:20:00?\n(Hint: '2012/8/23' can be represented by '2012-08-23')",
+        "For all the transactions happened during 8:00-9:00 in 2012/8/26, how many happened in CZE?\n(Hint: Czech Republic can be represented as the Country value in the gasstations table is 'CZE'; '2012/8/26' can be represented by '2012-08-26'; during 8:00-9:00 can be represented as Time BETWEEN '08:00:00' AND '09:00:00')",
+        "What's the nationality of the customer who spent 548.4 in 2012/8/24?\n(Hint: '2012/8/24' can be represented by '2012-08-24'; spent 548.4 refers to price = '548.4')",
+        "What is the percentage of the customers who used EUR in 2012/8/25?\n(Hint: '2012/8/25' can be represented by '2012-08-25')",
+        "For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?\n(Hint: '2012/8/24' can be represented by '2012-08-24'; Consumption decrease rate = (consumption_2012 - consumption_2013) / consumption_2012; paid 634.8 refers to price = '634.8')",
+        "What is the percentage of \"premium\" against the overall segment in Country = \"SVK\"?",
+        "What is the amount spent by customer \"38508\" at the gas stations? How much had the customer spent in January 2012?\n(Hint: January 2012 refers to the Date value = '201201')",
+        "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?\n(Hint: average price per single item = Total(price) / Total(amount))",
+        "For all the people who paid more than 29.00 per unit of product id No.5. Give their consumption status in the August of 2012.\n(Hint: August of 2012 refers to the Date value = '201208' ; Price per unit of product = Price / Amount;)"
+      ]
+    }
+  ]
+}

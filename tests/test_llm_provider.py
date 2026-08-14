@@ -155,6 +155,16 @@ def test_chat_json_falls_back_to_reasoning_content(monkeypatch, tmp_path: Path) 
     assert client.chat_json("Return SQL", "question", retries=0) == {"sql": "SELECT 3"}
 
 
+def test_chat_json_falls_back_to_raw_vllm_reasoning(monkeypatch, tmp_path: Path) -> None:
+    client = _client_with_fake_response(
+        monkeypatch,
+        tmp_path,
+        {"content": None, "reasoning": '{"sql": "SELECT 4"}'},
+    )
+
+    assert client.chat_json("Return SQL", "question", retries=0) == {"sql": "SELECT 4"}
+
+
 def test_chat_json_still_fails_on_garbage(monkeypatch, tmp_path: Path) -> None:
     from sqlagent.llm import LLMUnavailable
 

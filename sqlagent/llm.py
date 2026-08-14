@@ -339,11 +339,14 @@ class OpenCodeGoClient(OllamaClient):
         content = message.get("content", "") if isinstance(message, dict) else ""
         if isinstance(content, str) and content.strip():
             return content
-        # Reasoning-style models (e.g. Qwen on vLLM) may put the whole answer
-        # into reasoning_content and leave content empty.
-        reasoning = message.get("reasoning_content", "") if isinstance(message, dict) else ""
-        if isinstance(reasoning, str) and reasoning.strip():
-            return reasoning
+        # Reasoning-style models may put the whole answer into a reasoning field
+        # and leave content empty: vLLM uses "reasoning", LiteLLM normalizes it
+        # to "reasoning_content" — accept both.
+        if isinstance(message, dict):
+            for key in ("reasoning_content", "reasoning"):
+                reasoning = message.get(key) or ""
+                if isinstance(reasoning, str) and reasoning.strip():
+                    return reasoning
         raise ValueError("LLM provider response did not contain message content")
 
     @staticmethod
