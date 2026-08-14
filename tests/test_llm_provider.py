@@ -113,6 +113,61 @@ def test_invalid_cache_is_discarded_and_request_continues(monkeypatch, tmp_path:
     assert cache_path.read_text(encoding="utf-8").strip() == '{\n  "sql": "SELECT 1"\n}'
 
 
+def _client_with_fake_response(monkeypatch, tmp_path: Path, message: dict[str, object]) -> OpenCodeGoClient:
+    class FakeResponse:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict[str, object]:
+            return {"choices": [{"message": message}]}
+
+    monkeypatch.setattr(httpx, "post", lambda url, **kwargs: FakeResponse())
+    return OpenCodeGoClient("https://opencode.ai/zen/go/v1", "secret-key", "deepseek-v4-flash", cache_dir=tmp_path)
+
+
+def test_chat_json_salvages_json_wrapped_in_prose_and_fence(monkeypatch, tmp_path: Path) -> None:
+    client = _client_with_fake_response(
+        monkeypatch,
+        tmp_path,
+        {"content": 'Sure! Here is the fix:\n```json\n{"sql": "SELECT 1"}\n```\nHope that helps.'},
+    )
+
+    assert client.chat_json("Return SQL", "question", retries=0) == {"sql": "SELECT 1"}
+
+
+def test_chat_json_salvages_bare_json_inside_text(monkeypatch, tmp_path: Path) -> None:
+    client = _client_with_fake_response(
+        monkeypatch,
+        tmp_path,
+        {"content": 'The corrected query is {"sql": "SELECT 2"} as shown.'},
+    )
+
+    assert client.chat_json("Return SQL", "question", retries=0) == {"sql": "SELECT 2"}
+
+
+def test_chat_json_falls_back_to_reasoning_content(monkeypatch, tmp_path: Path) -> None:
+    client = _client_with_fake_response(
+        monkeypatch,
+        tmp_path,
+        {"content": "", "reasoning_content": '{"sql": "SELECT 3"}'},
+    )
+
+    assert client.chat_json("Return SQL", "question", retries=0) == {"sql": "SELECT 3"}
+
+
+def test_chat_json_still_fails_on_garbage(monkeypatch, tmp_path: Path) -> None:
+    from sqlagent.llm import LLMUnavailable
+
+    client = _client_with_fake_response(monkeypatch, tmp_path, {"content": "no json here at all"})
+
+    try:
+        client.chat_json("Return SQL", "question", retries=0)
+    except LLMUnavailable as exc:
+        assert "did not return JSON" in str(exc)
+    else:
+        raise AssertionError("garbage content must still raise LLMUnavailable")
+
+
 def _build_kwargs(settings: Settings, tmp_path: Path) -> dict[str, object]:
     return {
         "provider": settings.llm_provider,

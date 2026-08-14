@@ -8,8 +8,11 @@ Runs fully unattended on the server:
    the 1-8 range) while preserving corpus order;
 4. queues every failure immediately and retries that exact question after a
    successful immutable promotion;
-5. stops asking new questions after the global time budget (default 6 h);
-6. writes a completion/useful-outcomes report without an accuracy oracle and
+5. optionally scores answered questions with a judge model (CAMPAIGN_JUDGE_*):
+   verdicts land in Results.md only, but a rejected answer triggers the
+   learning stages and a rerun of the whole block (up to CAMPAIGN_JUDGE_MAX_LOOPS);
+6. stops asking new questions after the global time budget (default 6 h);
+7. writes a completion/useful-outcomes report without an accuracy oracle and
    commits + pushes it to GitHub.
 
 Only stdlib is used, so the system python3 on the server is enough.
@@ -28,6 +31,11 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 
+try:
+    from scripts import judge  # imported as a package (tests)
+except ImportError:  # run directly as scripts/test_campaign.py on the server
+    import judge
+
 API_BASE = os.getenv("API_BASE", "http://localhost:8000")
 REPO_ROOT = Path(__file__).resolve().parents[1]
 QUESTIONS_PATH = Path(os.getenv("CAMPAIGN_QUESTIONS", REPO_ROOT / "evals" / "test_campaign.json"))
@@ -40,6 +48,12 @@ LEARNING_RETRY_WAIT_SEC = float(os.getenv("CAMPAIGN_LEARNING_RETRY_WAIT_SEC", "1
 GIT_PUSH = os.getenv("CAMPAIGN_GIT_PUSH", "1").strip() not in {"0", "false", "no"}
 # Comma-separated stage names to skip on resume (e.g. "survey,explore,optimize,evolve,verify").
 SKIP_STAGES = {name.strip() for name in os.getenv("CAMPAIGN_SKIP_STAGES", "").split(",") if name.strip()}
+# Judge mode: "report" only annotates Results.md; "enforce" marks answers the
+# judge rejects as judge_failed. Either way nothing is fed back to the agent.
+JUDGE_MODE = os.getenv("CAMPAIGN_JUDGE_MODE", "report").strip().lower()
+# How many improvement-loop + block-rerun cycles a judge rejection may trigger
+# per block (0 = judge never reruns blocks).
+JUDGE_MAX_LOOPS = max(0, int(os.getenv("CAMPAIGN_JUDGE_MAX_LOOPS", "1")))
 
 
 def log(message: str) -> None:
@@ -112,6 +126,10 @@ def learning_loop(rounds_note: str) -> dict:
     return outcomes
 
 
+def _json_safe(value: object) -> object:
+    return json.loads(json.dumps(value, default=str))
+
+
 def ask(question: str) -> dict:
     started = time.perf_counter()
     response = http("POST", "/api/ask", {"question": question}, timeout=ASK_TIMEOUT_SEC)
@@ -152,6 +170,8 @@ def ask(question: str) -> dict:
         "route": response.get("route", ""),
         "template": response.get("template") or "",
         "sql": (response.get("sql") or "")[:600],
+        "sql_full": (response.get("sql") or "")[:4000],
+        "row_sample": _json_safe((response.get("result") or {}).get("rows") or [])[:20],
         "clarification": response.get("clarification") or "",
         "tool_calls": len(spans),
         "prompt_tokens": prompt_tokens if spans else None,
@@ -168,6 +188,95 @@ def wait_for_promotion(job_id: str) -> bool:
             return status == "completed" and (job.get("result") or {}).get("status") == "promoted"
         time.sleep(2)
     return False
+
+
+def collect_background_results(blocks_report: list[dict]) -> list[dict]:
+    """Final statuses of the background learner jobs queued by failures."""
+    outcomes = []
+    for block in blocks_report:
+        for item in block["questions"]:
+            job_id = item.get("learning_job_id")
+            if not job_id:
+                continue
+            job = http("GET", f"/api/learning/{job_id}", timeout=15)
+            outcomes.append({
+                "job_id": job_id,
+                "question": item["question"],
+                "status": job.get("status") or "unknown",
+                "result": (job.get("result") or {}).get("status") or "",
+            })
+    return outcomes
+
+
+def judge_block(results: list[dict], agent_info: dict) -> int:
+    """Judge not-yet-judged answered items of a block; return the reject count.
+
+    Verdicts are never sent back to the agent — improvement runs through the
+    agent's own learning stages, not through judge feedback."""
+    base_url = judge.JUDGE_BASE_URL or (agent_info.get("base_url") or "")
+    incorrect = 0
+    for item in results:
+        if item.get("status") != "answered" or "judge" in item:
+            continue
+        verdict = judge.judge_answer(
+            item["question"],
+            item.get("sql_full", ""),
+            item.get("rows") or 0,
+            item.get("row_sample") or [],
+            base_url,
+        )
+        item["judge"] = verdict
+        if verdict["verdict"] == "incorrect":
+            incorrect += 1
+            if JUDGE_MODE == "enforce":
+                item["status"] = "judge_failed"
+                item["error"] = f"judge rejected: {verdict['reason']}"
+                item["error_type"] = item.get("error_type") or "judge_rejected"
+                item["error_stage"] = item.get("error_stage") or "judge"
+        log(f"judge: {verdict['verdict']} — {item['question'][:60]}")
+    return incorrect
+
+
+def recount(blocks_report: list[dict], totals: dict) -> None:
+    """Recompute per-block and total counts after judge verdicts flipped statuses."""
+    keys = ("answered", "clarified", "pipeline_failed", "skipped", "judge_failed", "answered_empty")
+    for key in keys:
+        totals[key] = 0
+    for block in blocks_report:
+        counts = {key: 0 for key in keys}
+        for item in block["questions"]:
+            status = item["status"] if item["status"] in counts else "pipeline_failed"
+            counts[status] += 1
+            if item["status"] == "answered" and not item.get("rows"):
+                counts["answered_empty"] += 1
+        block.update(counts)
+        for key in keys:
+            totals[key] += counts[key]
+
+
+def run_block(questions: list[str], eligible: list[bool], budget_deadline: float) -> tuple[list[dict], int]:
+    """Ask a block's questions, then retry failures the background learner rescued."""
+    runnable = [question for question, allowed in zip(questions, eligible) if allowed]
+    completed = iter(run_questions_ordered(runnable))
+    results = [
+        next(completed) if allowed else {"question": question, "status": "skipped", "error": "time budget exhausted"}
+        for question, allowed in zip(questions, eligible)
+    ]
+
+    rescued = 0
+    for index, item in enumerate(list(results)):
+        job_id = item.get("learning_job_id")
+        if item.get("status") != "pipeline_failed" or not job_id:
+            continue
+        if time.monotonic() > budget_deadline:
+            break
+        if wait_for_promotion(job_id):
+            retry = ask(item["question"])
+            retry["retried"] = True
+            if retry["status"] in {"answered", "clarified"}:
+                rescued += 1
+            results[index] = retry
+    return results, rescued
 
 
 def run_questions_ordered(
@@ -193,20 +302,23 @@ def render_results(report: dict) -> str:
         "",
         "## Summary",
         "",
-        "| Block | Questions | Answered | Clarified | Pipeline failed | Rescued | Block time |",
-        "|---|---|---|---|---|---|---|",
+        "| Block | Questions | Answered | Clarified | Pipeline failed | Empty answers | Judge failed | Rescued | Block time |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for block in report["blocks"]:
         lines.append(
             f"| {block['title']} | {len(block['questions'])} | {block['answered']} | "
-            f"{block['clarified']} | {block['pipeline_failed']} | {block['rescued_retries']} | {block['elapsed_min']} min |"
+            f"{block['clarified']} | {block['pipeline_failed']} | {block.get('answered_empty', 0)} | "
+            f"{block.get('judge_failed', 0)} | {block['rescued_retries']} | {block['elapsed_min']} min |"
         )
     lines += [
         "",
         f"**Total: {report['totals']['answered']} answered / {report['totals']['clarified']} clarified / "
-        f"{report['totals']['pipeline_failed']} pipeline failed / {report['totals']['skipped']} skipped out of {report['totals']['questions']}**",
+        f"{report['totals']['pipeline_failed']} pipeline failed / {report['totals'].get('judge_failed', 0)} judge failed / "
+        f"{report['totals']['skipped']} skipped out of {report['totals']['questions']}**",
         "",
         f"Useful outcomes: {report['totals']['answered'] + report['totals']['clarified']}; rescued retries: {report['totals']['rescued_retries']}; "
+        f"answered with 0 rows: {report['totals'].get('answered_empty', 0)}; "
         f"tool calls: {report['totals']['tool_calls']}; prompt/completion tokens: {report['totals']['prompt_tokens']}/{report['totals']['completion_tokens']}.",
         "",
         "## Learning stages",
@@ -215,23 +327,56 @@ def render_results(report: dict) -> str:
         json.dumps(report["stages"], ensure_ascii=False, indent=2, default=str)[:4000],
         "```",
         "",
+    ]
+    if report.get("judge"):
+        judge_info = report["judge"]
+        counts = judge_info["counts"]
+        lines += [
+            f"## Judge ({judge_info['model']}, mode={judge_info['mode']})",
+            "",
+            f"correct: {counts['correct']} / partially_correct: {counts['partially_correct']} / "
+            f"incorrect: {counts['incorrect']} / inconclusive: {counts['inconclusive']}; "
+            f"improvement reruns triggered: {judge_info.get('reruns', 0)}",
+            "",
+        ]
+    if report.get("background"):
+        lines += [
+            "## Background learning (post-failure repair)",
+            "",
+            "| Job | Question | Final status |",
+            "|---|---|---|",
+        ]
+        for entry in report["background"]:
+            final = entry["status"] + (f" ({entry['result']})" if entry.get("result") else "")
+            lines.append(f"| {entry['job_id'][:8]} | {entry['question']} | {final} |")
+        lines.append("")
+    lines += [
         "## Per-question detail",
         "",
     ]
+    judge_on = bool(report.get("judge"))
     for block in report["blocks"]:
-        lines += [
-            f"### {block['title']} (`{block['name']}`)",
-            "",
-            "| # | Question | Status | Time, s | Rows | Tools | Error type/stage |",
-            "|---|---|---|---|---|---|---|",
-        ]
+        lines.append(f"### {block['title']} (`{block['name']}`)")
+        lines.append("")
+        if judge_on:
+            lines.append("| # | Question | Status | Time, s | Rows | Tools | Judge | Error type/stage |")
+            lines.append("|---|---|---|---|---|---|---|---|")
+        else:
+            lines.append("| # | Question | Status | Time, s | Rows | Tools | Error type/stage |")
+            lines.append("|---|---|---|---|---|---|---|")
         for index, item in enumerate(block["questions"], 1):
             error = (item.get("error") or "").replace("|", "\\|")[:120]
-            lines.append(
-                f"| {index} | {item['question']} | {item['status']} | {item.get('elapsed_sec', '-')} | "
-                f"{item.get('rows', '-')} | {item.get('tool_calls', '-')} | "
-                f"{item.get('error_type') or ''}/{item.get('error_stage') or ''}: {error} |"
+            status = item["status"]
+            if status == "answered" and not item.get("rows"):
+                status = "answered (empty)"
+            row = (
+                f"| {index} | {item['question']} | {status} | {item.get('elapsed_sec', '-')} | "
+                f"{item.get('rows', '-')} | {item.get('tool_calls', '-')} |"
             )
+            if judge_on:
+                verdict = (item.get("judge") or {}).get("verdict", "-")
+                row += f" {verdict} |"
+            lines.append(f"{row} {item.get('error_type') or ''}/{item.get('error_stage') or ''}: {error} |")
         lines.append("")
     lines += [
         "## Environment",
@@ -299,6 +444,9 @@ def main() -> int:
 
     # The 6-hour budget covers the question blocks; bootstrap/stage time is excluded.
     campaign_started = time.monotonic()
+    budget_deadline = campaign_started + budget_sec
+    if judge.enabled():
+        agent_info["judge_model"] = f"{judge.JUDGE_MODEL} (mode={JUDGE_MODE}, max_loops={JUDGE_MAX_LOOPS})"
 
     pack = json.loads(QUESTIONS_PATH.read_text(encoding="utf-8"))
     blocks_report = []
@@ -306,55 +454,63 @@ def main() -> int:
         "questions": 0, "answered": 0, "clarified": 0, "pipeline_failed": 0, "skipped": 0,
         "rescued_retries": 0, "tool_calls": 0, "prompt_tokens": 0, "completion_tokens": 0,
     }
+    judge_reruns = 0
 
     for block in pack["blocks"]:
         block_started = time.monotonic()
         questions = list(block["questions"])
-        eligible = [time.monotonic() - campaign_started <= budget_sec for _ in questions]
-        runnable = [question for question, allowed in zip(questions, eligible) if allowed]
-        completed = iter(run_questions_ordered(runnable))
-        results = [
-            next(completed) if allowed else {"question": question, "status": "skipped", "error": "time budget exhausted"}
-            for question, allowed in zip(questions, eligible)
-        ]
+        eligible = [time.monotonic() <= budget_deadline for _ in questions]
+        results, rescued_retries = run_block(questions, eligible, budget_deadline)
 
-        rescued_retries = 0
-        for index, item in enumerate(list(results)):
-            job_id = item.get("learning_job_id")
-            if item.get("status") != "pipeline_failed" or not job_id:
-                continue
-            if time.monotonic() - campaign_started > budget_sec:
-                break
-            if wait_for_promotion(job_id):
-                retry = ask(item["question"])
-                retry["retried"] = True
-                if retry["status"] in {"answered", "clarified"}:
-                    rescued_retries += 1
-                results[index] = retry
+        if judge.enabled():
+            for rerun in range(JUDGE_MAX_LOOPS + 1):
+                incorrect = judge_block(results, agent_info)
+                if not incorrect or rerun >= JUDGE_MAX_LOOPS or time.monotonic() > budget_deadline:
+                    break
+                judge_reruns += 1
+                log(f"judge rejected {incorrect} answer(s) in {block['name']}; "
+                    "running improvement stages and re-asking the block")
+                for name, outcome in learning_loop(f"judge-triggered, {block['name']}").items():
+                    stages[f"{name}#judge{judge_reruns}"] = outcome
+                results, extra_rescued = run_block(questions, [True] * len(questions), budget_deadline)
+                rescued_retries += extra_rescued
 
-        counts = {"answered": 0, "clarified": 0, "pipeline_failed": 0, "skipped": 0}
-        for item in results:
-            counts[item["status"] if item["status"] in counts else "pipeline_failed"] += 1
         blocks_report.append({
             "name": block["name"],
             "title": block["title"],
             "questions": results,
-            "answered": counts["answered"],
-            "clarified": counts["clarified"],
-            "pipeline_failed": counts["pipeline_failed"],
-            "skipped": counts["skipped"],
+            "answered": 0,
+            "clarified": 0,
+            "pipeline_failed": 0,
+            "skipped": 0,
             "rescued_retries": rescued_retries,
             "elapsed_min": round((time.monotonic() - block_started) / 60, 1),
         })
         totals["questions"] += len(results)
-        for key in ("answered", "clarified", "pipeline_failed", "skipped"):
-            totals[key] += counts[key]
         totals["rescued_retries"] += rescued_retries
         for item in results:
             totals["tool_calls"] += item.get("tool_calls") or 0
             totals["prompt_tokens"] += item.get("prompt_tokens") or 0
             totals["completion_tokens"] += item.get("completion_tokens") or 0
-        log(f"block {block['name']} done: {counts}")
+        log(f"block {block['name']} done")
+
+    background = collect_background_results(blocks_report)
+    recount(blocks_report, totals)
+    judge_summary = None
+    if judge.enabled():
+        judge_counts = {verdict: 0 for verdict in judge.VERDICTS}
+        for block_report in blocks_report:
+            for item in block_report["questions"]:
+                verdict = (item.get("judge") or {}).get("verdict")
+                if verdict in judge_counts:
+                    judge_counts[verdict] += 1
+        judge_summary = {
+            "model": judge.JUDGE_MODEL,
+            "base_url": judge.JUDGE_BASE_URL or agent_info.get("base_url") or "",
+            "mode": JUDGE_MODE,
+            "counts": judge_counts,
+            "reruns": judge_reruns,
+        }
 
     report = {
         "started_at": started_at,
@@ -366,6 +522,8 @@ def main() -> int:
         "stages": {name: {"status": value.get("status"), "error": (value.get("error") or "")[:200]}
                    for name, value in stages.items()},
         "blocks": blocks_report,
+        "background": background,
+        "judge": judge_summary,
         "totals": totals,
     }
     RESULTS_PATH.write_text(render_results(report), encoding="utf-8")

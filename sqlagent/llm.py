@@ -265,10 +265,31 @@ class OllamaClient:
     @staticmethod
     def _parse_json(content: str) -> dict[str, Any]:
         cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", content.strip(), flags=re.IGNORECASE)
-        result = json.loads(cleaned)
+        try:
+            result = json.loads(cleaned)
+        except ValueError:
+            result = _extract_embedded_json(cleaned)
         if not isinstance(result, dict):
             raise ValueError("LLM JSON response must be an object")
         return result
+
+
+def _extract_embedded_json(text: str) -> Any:
+    """Salvage a JSON object embedded in prose, fences, or reasoning chatter.
+
+    Models without enforced structured output often wrap the payload in
+    explanation text; scan every ``{`` as a potential start and return the
+    first complete value that parses.
+    """
+    decoder = json.JSONDecoder()
+    for match in re.finditer(r"\{", text):
+        try:
+            result, _ = decoder.raw_decode(text, match.start())
+        except ValueError:
+            continue
+        if isinstance(result, dict):
+            return result
+    raise ValueError("no JSON object found in LLM response")
 
 
 class OpenCodeGoClient(OllamaClient):
@@ -316,9 +337,14 @@ class OpenCodeGoClient(OllamaClient):
             raise ValueError("LLM provider response did not contain choices")
         message = choices[0].get("message", {})
         content = message.get("content", "") if isinstance(message, dict) else ""
-        if not isinstance(content, str) or not content.strip():
-            raise ValueError("LLM provider response did not contain message content")
-        return content
+        if isinstance(content, str) and content.strip():
+            return content
+        # Reasoning-style models (e.g. Qwen on vLLM) may put the whole answer
+        # into reasoning_content and leave content empty.
+        reasoning = message.get("reasoning_content", "") if isinstance(message, dict) else ""
+        if isinstance(reasoning, str) and reasoning.strip():
+            return reasoning
+        raise ValueError("LLM provider response did not contain message content")
 
     @staticmethod
     def _http_error(exc: httpx.HTTPStatusError) -> RuntimeError:

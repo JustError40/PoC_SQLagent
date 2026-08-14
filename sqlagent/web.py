@@ -665,6 +665,16 @@ def promote_endpoint() -> dict[str, str]:
     corpus = default_corpus_path(workspace, settings.project_root)
     candidate = workspace.latest_candidate_branch()
     run_dir = settings.run_path / "evaluator" / f"promotion-{uuid.uuid4().hex}"
+    if candidate is None:
+        # Nothing to promote: evolve declined to create a candidate, or every
+        # candidate is already merged into main. That is a no-op, not a failure.
+        return _start_job(
+            "promote",
+            _tracked_operation(
+                "promote",
+                lambda: {"status": "skipped", "reason": "no evolution candidate"},
+            ),
+        )
     return _start_job(
         "promote",
         _tracked_operation(
