@@ -260,21 +260,13 @@ def git_publish() -> str:
     if not GIT_PUSH:
         return "\n".join(output)
 
-    # main may have moved since the campaign started: rebase the results commit onto
-    # it (Results.md is a fresh file, conflicts are unlikely), then push.
-    code, text = run(["git", "pull", "--rebase", "origin", "main"])
+    # Publish on the campaign's own branch: the exact code state plus Results.md.
+    # No rebase onto main — the branch is self-contained by design.
+    branch = "results/" + (os.getenv("RUN_ID") or datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S"))
+    code, text = run(["git", "push", "origin", f"HEAD:refs/heads/{branch}"])
     output.append(text)
-    if code:
-        output.append("!! rebase failed; aborting it and pushing a results branch instead")
-        run(["git", "rebase", "--abort"])
-    code, text = run(["git", "push", "origin", "main"])
-    output.append(text)
-    if code:
-        branch = "results/" + datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-        code2, text2 = run(["git", "push", "origin", f"HEAD:refs/heads/{branch}"])
-        output.append(text2)
-        output.append(f"!! push to main rejected; results were pushed to branch {branch!r}" if not code2
-                      else "!! push failed entirely; Results.md remains on the server only")
+    output.append(f"results published on branch {branch!r}" if not code
+                  else "!! push failed entirely; Results.md remains on the server only")
     return "\n".join(output)
 
 
