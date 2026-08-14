@@ -151,7 +151,14 @@ class AnalyticalPlanCompiler:
                 raise AnalyticalPlanError(f"unsupported stage type {kind!r}")
             sql, columns, grain = self._compile_stage(kind, stage, outputs, grains)
             for previous, previous_id in enumerate(stage_ids, 1):
-                sql = sql.replace(_ident(previous_id), f"{{{{stage_{previous}}}}}")
+                # Rewrite only table references (FROM/JOIN position). A column alias
+                # may legitimately reuse a previous stage id; rewriting every
+                # occurrence of the quoted identifier would corrupt such queries.
+                reference = re.compile(
+                    r"(\b(?:FROM|JOIN)\s+)" + re.escape(_ident(previous_id)),
+                    re.IGNORECASE,
+                )
+                sql = reference.sub(lambda match: match.group(1) + f"{{{{stage_{previous}}}}}", sql)
             stage_ids.append(stage_id)
             queries.append(sql)
             outputs[stage_id] = columns

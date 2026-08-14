@@ -16,3 +16,6 @@ __pycache__/
 runs/
 .data/
 .cache/tpcds-kit/
+
+# build metadata
+sqlagent_poc.egg-info/

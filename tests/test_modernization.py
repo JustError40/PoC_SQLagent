@@ -180,6 +180,64 @@ def test_failure_queue_deduplicates_skill_failures_and_separates_incidents(tmp_p
     assert claimed is not None and claimed.id == first
 
 
+def test_failure_fingerprint_ignores_numbers_and_literals(tmp_path: Path) -> None:
+    queue = FailureQueue(tmp_path / "failures.sqlite3")
+    first = queue.enqueue(
+        request_id="r1", error_type="plan_assembly_failed", stage="execution",
+        message="scratch row limit exceeded: 1000001 > 1000000",
+    )
+    second = queue.enqueue(
+        request_id="r2", error_type="plan_assembly_failed", stage="execution",
+        message="scratch row limit exceeded: 42 > 17",
+    )
+    assert first == second
+    assert queue.get(first)["occurrence_count"] == 2
+    # Numbers in different positions still collapse onto the same fingerprint.
+    third = queue.enqueue(
+        request_id="r3", error_type="sql_validation_failed", stage="validate",
+        message="column 'ss_sales_price' of relation \"store_sales\" at line 12 does not exist",
+    )
+    fourth = queue.enqueue(
+        request_id="r4", error_type="sql_validation_failed", stage="validate",
+        message="column 'ws_sales_price' of relation \"web_sales\" at line 99 does not exist",
+    )
+    assert third != first
+    assert third == fourth
+
+
+def test_failure_queue_requeues_stale_running_jobs(tmp_path: Path) -> None:
+    queue = FailureQueue(tmp_path / "failures.sqlite3", stale_after_s=0.0)
+    job_id = queue.enqueue(request_id="r1", error_type="critic_rejected", stage="critic", message="wrong metric")
+    first = queue.claim()
+    assert first is not None and first.id == job_id
+    # Simulate a dead learner: the job stays 'running'. The next claim must requeue it.
+    reclaimed = queue.claim()
+    assert reclaimed is not None and reclaimed.id == job_id
+    # A fresh queue with the default grace period must not touch a live running job.
+    queue = FailureQueue(tmp_path / "failures2.sqlite3")
+    job_id = queue.enqueue(request_id="r2", error_type="critic_rejected", stage="critic", message="wrong metric")
+    assert queue.claim() is not None
+    assert queue.claim() is None
+
+
+def test_scratch_placeholders_rewrite_only_table_references() -> None:
+    plan = {
+        "stages": [
+            {"id": "scan", "type": "scan", "table": "sales"},
+            {
+                "id": "agg", "type": "aggregate", "input": "scan",
+                "group_by": ["id"],
+                # The alias deliberately reuses the previous stage id.
+                "measures": [{"agg": "sum", "column": "amount", "alias": "scan"}],
+            },
+        ]
+    }
+    scratch = AnalyticalPlanCompiler({"sales": ["id", "amount"]}).compile_scratch(plan)
+    assert 'FROM {{stage_1}}' in scratch.final_sql
+    assert 'AS "scan"' in scratch.final_sql
+    assert "{{stage_1}}\"" not in scratch.final_sql.replace("FROM {{stage_1}}", "")
+
+
 def test_provenance_is_complete_and_immutable(tmp_path: Path) -> None:
     artifact = tmp_path / "metric.yaml"
     artifact.write_text("metric: revenue\n", encoding="utf-8")

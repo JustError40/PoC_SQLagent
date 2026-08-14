@@ -21,7 +21,9 @@ def available_memory_bytes() -> int:
 
 def required_tmpfs_bytes(dataset_bytes: int) -> int:
     # PostgreSQL heap/index/WAL overhead plus explicit operating-system reserve.
-    return int(math.ceil((dataset_bytes * 1.75 + GIB) / (256 * 1024**2))) * 256 * 1024**2
+    # Measured: SF10 (12 GiB raw .dat) overflowed a 20.75 GiB tmpfs (1.75x)
+    # while loading store_sales; 2.6x leaves headroom for WAL and indexes.
+    return int(math.ceil((dataset_bytes * 2.6 + GIB) / (256 * 1024**2))) * 256 * 1024**2
 
 
 def main() -> int:
@@ -37,6 +39,11 @@ def main() -> int:
     if not dataset_bytes:
         raise RuntimeError("TPC-DS generation produced an empty dataset")
     required = required_tmpfs_bytes(dataset_bytes)
+    # An explicit POSTGRES_TMPFS_SIZE_BYTES in the environment may raise
+    # (never lower) the computed size.
+    override = os.getenv("POSTGRES_TMPFS_SIZE_BYTES")
+    if override:
+        required = max(required, int(override))
     available = available_memory_bytes()
     reserve = max(2 * GIB, int(available * 0.15))
     if required + reserve > available:

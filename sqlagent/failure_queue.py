@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sqlite3
 import threading
 import time
@@ -34,15 +35,22 @@ class FailureJob:
 
 
 def failure_fingerprint(error_type: str, stage: str, message: str) -> str:
-    normalized = " ".join(message.lower().split())[:500]
+    # Strip volatile parts (numbers, quoted literals) so that recurrences of the
+    # same failure with different parameters deduplicate into one job.
+    normalized = " ".join(str(message).lower().split())
+    normalized = re.sub(r"'[^']*'", "?", normalized)
+    normalized = re.sub(r'"[^"]*"', "?", normalized)
+    normalized = re.sub(r"\b\d+(?:[.,]\d+)?\b", "#", normalized)
+    normalized = normalized[:500]
     return hashlib.sha256(f"{error_type}\0{stage}\0{normalized}".encode()).hexdigest()
 
 
 class FailureQueue:
     """Run-local durable queue. SQLite WAL allows one learner and many request writers."""
 
-    def __init__(self, path: Path) -> None:
+    def __init__(self, path: Path, stale_after_s: float = 1800.0) -> None:
         self.path = path
+        self.stale_after_s = stale_after_s
         path.parent.mkdir(parents=True, exist_ok=True)
         self._initialize()
 
@@ -130,6 +138,13 @@ class FailureQueue:
     def claim(self) -> FailureJob | None:
         with self._connect() as conn:
             conn.execute("BEGIN IMMEDIATE")
+            # A job stuck in 'running' means the learner process died mid-handler;
+            # requeue it so its fingerprint does not stay blocked forever.
+            conn.execute(
+                "UPDATE failure_jobs SET status = 'pending', updated_at = ? "
+                "WHERE status = 'running' AND updated_at < ?",
+                (time.time(), time.time() - self.stale_after_s),
+            )
             row = conn.execute(
                 "SELECT * FROM failure_jobs WHERE status = 'pending' ORDER BY created_at LIMIT 1"
             ).fetchone()
