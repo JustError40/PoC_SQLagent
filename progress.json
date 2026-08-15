@@ -1,7 +1,7 @@
 {
   "campaign_ts": "20260815-083648",
   "branch": "campaign/20260815-083648",
-  "status": "loading formula_1",
+  "status": "formula_1 aborted: restore failed for formula_1: time=\"2026-08-15T08:37:26Z\" level=warning msg=\"The \\\"RUN_ID\\\" variable is not set. Defaulting to a blank string.\"\nerror while interpolating services.api.environment.RUN_I",
   "db_total": 11,
   "db_index": 7,
   "runs_per_db": 11,
@@ -9,5 +9,5 @@
   "run_label": "-",
   "run_index": 0,
   "eta_min": null,
-  "updated_at": "2026-08-15T08:37:23.969657+00:00"
+  "updated_at": "2026-08-15T08:37:26.812253+00:00"
 }
