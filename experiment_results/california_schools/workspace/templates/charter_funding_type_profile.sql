@@ -1,0 +1,1 @@
+SELECT "Charter Funding Type" as charter_funding, COUNT(*) as school_count, COUNT(*)::DOUBLE PRECISION / COUNT(*)::DOUBLE PRECISION * 100 as percentage FROM frpm WHERE "Charter Funding Type" IS NOT NULL GROUP BY "Charter Funding Type" ORDER BY school_count DESC;

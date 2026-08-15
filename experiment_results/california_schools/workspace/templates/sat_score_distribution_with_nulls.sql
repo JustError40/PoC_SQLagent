@@ -1,0 +1,1 @@
+SELECT AVG(avgscrmath) as avg_math, AVG(avgscrwrite) as avg_write, AVG(avgscrread) as avg_read, COUNT(CASE WHEN avgscrmath IS NULL THEN 1 END) as null_math, COUNT(CASE WHEN avgscrwrite IS NULL THEN 1 END) as null_write, COUNT(CASE WHEN avgscrread IS NULL THEN 1 END) as null_read, COUNT(*) as total_records FROM satscores LIMIT 100;

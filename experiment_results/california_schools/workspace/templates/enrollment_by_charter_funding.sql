@@ -1,0 +1,1 @@
+WITH funding_join AS (SELECT f.cdscode, f."Charter Funding Type", s.cdscode, f."Enrollment (K-12)" as enrollment FROM frpm f JOIN schools s ON f.cdscode = s.cdscode) SELECT "Charter Funding Type", AVG(enrollment) as avg_enrollment, COUNT(*) as school_count FROM funding_join GROUP BY "Charter Funding Type" ORDER BY avg_enrollment DESC;

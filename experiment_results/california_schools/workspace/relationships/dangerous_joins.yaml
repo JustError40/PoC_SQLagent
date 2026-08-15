@@ -1,0 +1,12 @@
+joins:
+- left: frpm.cdscode
+  right: schools.cdscode
+  reason: 'One-to-many relationship confirmed: 9986 frpm records map to 17686 schools
+    (avg fanout ~1.77)'
+  required_action: Add explicit join limit or use EXISTS instead of JOIN for performance
+    optimization
+- left: schools.cdscode
+  right: frpm.cdscode
+  reason: Confirmed one-to-many fanout pattern with multiple frpm records per school,
+    potentially causing performance issues in large datasets
+  required_action: Add LIMIT, pagination, or caching strategy for fanout-heavy queries

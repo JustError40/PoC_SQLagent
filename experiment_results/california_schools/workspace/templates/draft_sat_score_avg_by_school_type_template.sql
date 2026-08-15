@@ -1,0 +1,1 @@
+WITH joined AS (SELECT st.cds, st.avgscrread, st.avgscrmath, st.avgscrwrite, s.soctype, s.charternum, s.fundingtype FROM satscores st JOIN schools s ON st.cds = s.cdscode WHERE s.soctype IS NOT NULL) SELECT soctype, AVG(avgscrread) AS avg_read, AVG(avgscrmath) AS avg_math, AVG(avgscrwrite) AS avg_write, COUNT(*) AS school_count FROM joined GROUP BY soctype ORDER BY soctype;

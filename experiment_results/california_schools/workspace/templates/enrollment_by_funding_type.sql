@@ -1,0 +1,1 @@
+SELECT s.fundingtype, COUNT(*) as school_count, AVG(f."Enrollment (K-12)") as avg_enrollment FROM frpm f INNER JOIN schools s ON f.cdscode = s.cdscode WHERE f."Enrollment (K-12)" IS NOT NULL GROUP BY s.fundingtype;

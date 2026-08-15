@@ -1,0 +1,1 @@
+SELECT s.soc AS school_type, s.fundingtype, AVG(sa.avgscrread) AS avg_read, AVG(sa.avgscrmath) AS avg_math, AVG(sa.avgscrwrite) AS avg_write FROM satscores sa JOIN schools s ON sa.cds = s.cdscode WHERE sa.cds IS NOT NULL GROUP BY s.soc, s.fundingtype ORDER BY s.soc, s.fundingtype;

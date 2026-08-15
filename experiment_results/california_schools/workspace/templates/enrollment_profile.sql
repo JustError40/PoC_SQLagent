@@ -1,0 +1,1 @@
+SELECT COUNT(*) as total_rows, COUNT("Enrollment (K-12)") as non_null_count, SUM(CASE WHEN "Enrollment (K-12)" IS NULL THEN 1 ELSE 0 END) as null_count, AVG("Enrollment (K-12)") as avg_enrollment FROM frpm WHERE "Academic Year" IS NOT NULL;

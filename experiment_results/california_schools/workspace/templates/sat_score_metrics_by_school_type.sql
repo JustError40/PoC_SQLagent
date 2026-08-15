@@ -1,0 +1,1 @@
+SELECT s.soc, s.virtual, ROUND(AVG(sc.avgscrread)::numeric, 2) as avg_read, ROUND(AVG(sc.avgscrmath)::numeric, 2) as avg_math, ROUND(AVG(sc.avgscrwrite)::numeric, 2) as avg_write, COUNT(*) as school_count FROM satscores sc JOIN schools s ON sc.cds = s.cdscode WHERE sc.rtype IS NOT NULL AND sc.cds IS NOT NULL GROUP BY s.soc, s.virtual ORDER BY avg_read DESC;

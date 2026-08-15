@@ -1,0 +1,1 @@
+SELECT s.soctype, s.fundingtype, AVG(sc.avgscrread) as avg_read, AVG(sc.avgscrmath) as avg_math, AVG(sc.avgscrwrite) as avg_write, COUNT(*) as school_count FROM satscores sc JOIN schools s ON sc.cds = s.cdscode WHERE s.soctype IS NOT NULL GROUP BY s.soctype, s.fundingtype ORDER BY s.soctype, s.fundingtype;

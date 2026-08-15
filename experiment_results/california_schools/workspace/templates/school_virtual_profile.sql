@@ -1,0 +1,1 @@
+SELECT COUNT(*) as total, SUM(CASE WHEN virtual = 'Y' THEN 1 ELSE 0 END) as virtual_count, SUM(CASE WHEN virtual = 'N' THEN 1 ELSE 0 END) as non_virtual_count, SUM(CASE WHEN virtual IS NULL THEN 1 ELSE 0 END) as null_count FROM schools;

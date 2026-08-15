@@ -1,0 +1,1 @@
+SELECT rtype, COUNT(*) as total_records, COUNT(rtype IS NOT NULL) as non_null_count, COUNT(rtype IS NULL) as null_count, (COUNT(rtype IS NOT NULL)::DOUBLE PRECISION / COUNT(*)::DOUBLE PRECISION) as null_percentage FROM satscores GROUP BY rtype ORDER BY null_percentage DESC;

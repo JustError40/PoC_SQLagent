@@ -1,0 +1,1 @@
+SELECT AVG("Enrollment (K-12)") as avg_enrollment, MIN("Enrollment (K-12)") as min_enrollment, MAX("Enrollment (K-12)") as max_enrollment, SUM("Enrollment (K-12)") as total_enrollment FROM frpm WHERE cdscode IS NOT NULL;

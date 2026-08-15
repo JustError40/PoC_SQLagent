@@ -1,0 +1,1 @@
+SELECT rtype, COUNT(*) FILTER (WHERE avgscrread IS NULL) as null_read, COUNT(*) FILTER (WHERE avgscrmath IS NULL) as null_math, COUNT(*) FILTER (WHERE avgscrwrite IS NULL) as null_write, COUNT(*) FILTER (WHERE avgscrread IS NOT NULL AND avgscrmath IS NOT NULL AND avgscrwrite IS NOT NULL) as valid_records FROM satscores GROUP BY rtype ORDER BY rtype;

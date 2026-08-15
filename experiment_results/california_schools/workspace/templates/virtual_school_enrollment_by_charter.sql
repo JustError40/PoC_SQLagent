@@ -1,0 +1,1 @@
+SELECT s.charter, s.fundingtype, COUNT(f.cdscode) as school_count, AVG(f."Enrollment (K-12)") as avg_enrollment, SUM(f."Enrollment (K-12)") as total_enrollment FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE s.virtual = 'Y' GROUP BY s.charter, s.fundingtype ORDER BY total_enrollment DESC;
