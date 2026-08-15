@@ -1,6 +1,6 @@
 {
-  "campaign_ts": "20260815-092123",
-  "branch": "campaign/20260815-092123",
+  "campaign_ts": "20260815-092327",
+  "branch": "campaign/20260815-092327",
   "status": "loading california_schools",
   "db_total": 11,
   "db_index": 1,
@@ -9,5 +9,5 @@
   "run_label": "-",
   "run_index": 0,
   "eta_min": null,
-  "updated_at": "2026-08-15T09:21:25.884074+00:00"
+  "updated_at": "2026-08-15T09:23:30.484331+00:00"
 }
