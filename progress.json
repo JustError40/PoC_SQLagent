@@ -1,13 +1,13 @@
 {
   "campaign_ts": "20260815-084043",
   "branch": "campaign/20260815-084043",
-  "status": "european_football_2 aborted: restore failed for european_football_2: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"european_football_2\" does not exist\n\n",
+  "status": "loading codebase_community",
   "db_total": 11,
-  "db_index": 10,
+  "db_index": 11,
   "runs_per_db": 11,
-  "current_db": "european_football_2",
+  "current_db": "codebase_community",
   "run_label": "-",
   "run_index": 0,
   "eta_min": null,
-  "updated_at": "2026-08-15T08:41:40.856640+00:00"
+  "updated_at": "2026-08-15T08:41:43.459900+00:00"
 }
