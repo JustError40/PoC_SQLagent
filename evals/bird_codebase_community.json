@@ -1,5 +1,5 @@
 {
-  "description": "BIRD mini-dev: codebase_community (47 questions)",
+  "description": "BIRD mini-dev: codebase_community (48 questions)",
   "blocks": [
     {
       "name": "codebase_community",
@@ -33,6 +33,7 @@
         "What is the percentage difference of student badges given during 2010 and 2011?\n(Hint: student badges refers to badge's name = 'Student'; during 2010 refers to Year(Date) = 2010; during 2011 refers to Year(Date) = 2011; percentage difference = Subtract (Divide(Count(Name where Year(Date) = 2010), Count (Name)) *100, Divide(Count(Name where Year(Date) = 2011), Count(Name)) * 100))",
         "What is the average of the up votes and the average user age for users creating more than 10 posts?\n(Hint: creating more than 10 post refers to Count (UserId) > 10; average of the up votes = Divide (Sum(UpVotes), Count (UserId)); average age = Divide (Sum(Age), Count(UserId)))",
         "Calculate the ratio of votes in 2010 and 2011.\n(Hint: DIVIDE(COUNT(Id where YEAR(CreationDate) = 2010), COUNT(Id where YEAR(CreationDate) = 2011)) FROM votes;)",
+        "Which post by slashnick has the most answers count? State the post ID.\n(Hint: most answers count refers to MAX(AnswerCount); post by slashnick refers to DisplayName = 'slashnick';)",
         "Among posts by Harvey Motulsky and Noah Snyder, which one has higher popularity?\n(Hint: Has higher popularity means the post has higher view count ; calculation = MAX(SUM(ViewCount)) where DisplayName = 'Harvey Motulsky' OR DisplayName = 'Noah Snyder';)",
         "State all the tags used by Mark Meckes in his posts that doesn't have comments.\n(Hint: used by Mark Meckes refers to DisplayName = 'Mark Meckes'; Doen't have comments refers to CommentCount = 0;)",
         "Based on posts posted by Community, calculate the percentage of posts that use the R language.\n(Hint: DIVIDE(COUNT(PostId WHERE TagName = 'r')), (COUNT(PostId WHERE DisplayName = 'Community')) as percentage; R language refers to tagname = 'r')",

@@ -545,6 +545,9 @@ def main() -> int:
 
     if args.config:
         dbs = json.loads(args.config.read_text(encoding="utf-8"))
+    elif (REPO_ROOT / "evals" / "server_dbs.json").exists():
+        dbs = json.loads((REPO_ROOT / "evals" / "server_dbs.json").read_text(encoding="utf-8"))
+        log(f"using evals/server_dbs.json ({len(dbs)} dbs)")
     else:
         dbs = list(DEFAULT_DBS)
     for cfg in dbs:
