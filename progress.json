@@ -1,13 +1,13 @@
 {
   "campaign_ts": "20260815-084043",
   "branch": "campaign/20260815-084043",
-  "status": "card_games aborted: restore failed for card_games: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"card_games\" does not exist\n\n",
+  "status": "loading european_football_2",
   "db_total": 11,
-  "db_index": 9,
+  "db_index": 10,
   "runs_per_db": 11,
-  "current_db": "card_games",
+  "current_db": "european_football_2",
   "run_label": "-",
   "run_index": 0,
   "eta_min": null,
-  "updated_at": "2026-08-15T08:41:35.042551+00:00"
+  "updated_at": "2026-08-15T08:41:37.644424+00:00"
 }
