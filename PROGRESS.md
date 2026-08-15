@@ -1,9 +1,9 @@
 # Campaign progress
 
-- Campaign: 20260815-092123 (branch `campaign/20260815-092123`)
-- Updated: 2026-08-15T16:49:41.652323+00:00
-- Status: debit_card_specializing control committed
-- Database: debit_card_specializing (2/11), run control (1/11)
-- Last counts: {"clarified": 1, "compare_error": 9, "correct": 4, "failed_llm": 0, "failed_other": 0, "failed_react": 3, "failed_schema": 3, "wrong_answer": 10}
-- Judge: {"correct": 19, "inconclusive": 1, "incorrect": 2, "partially_correct": 1}
-- ETA: ~1744.0 min
+- Campaign: 20260815-092327 (branch `campaign/20260815-092327`)
+- Updated: 2026-08-15T17:16:23.665798+00:00
+- Status: debit_card_specializing iteration 3 committed
+- Database: debit_card_specializing (2/11), run iteration 3 (4/11)
+- Last counts: {"clarified": 1, "compare_error": 6, "correct": 3, "failed_llm": 0, "failed_other": 0, "failed_react": 5, "failed_schema": 2, "wrong_answer": 13}
+- Judge: {"correct": 20, "inconclusive": 0, "incorrect": 2, "partially_correct": 0}
+- ETA: ~4528.8 min
