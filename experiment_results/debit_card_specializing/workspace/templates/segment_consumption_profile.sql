@@ -1,0 +1,1 @@
+SELECT c.segment, ym.date, AVG(ym.consumption) as avg_consumption, COUNT(*) as record_count FROM yearmonth ym JOIN customers c ON ym.customerid = c.customerid GROUP BY c.segment, ym.date ORDER BY c.segment, ym.date;

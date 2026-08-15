@@ -1,1 +1,0 @@
-SELECT c.segment, COUNT(t.transactionid) as transaction_count, MIN(t.date) as first_transaction_date, MAX(t.date) as last_transaction_date, COUNT(DISTINCT t.date) as unique_transaction_days FROM customers c JOIN transactions_1k t ON c.customerid = t.customerid GROUP BY c.segment ORDER BY transaction_count DESC;

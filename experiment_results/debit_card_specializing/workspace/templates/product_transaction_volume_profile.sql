@@ -1,1 +1,0 @@
-SELECT p.productid, COUNT(t.transactionid) as transaction_count, SUM(t.amount) as total_amount, AVG(t.amount) as avg_amount, MIN(t.date) as first_transaction, MAX(t.date) as last_transaction FROM transactions_1k t JOIN products p ON t.productid = p.productid GROUP BY p.productid ORDER BY transaction_count DESC LIMIT 100;

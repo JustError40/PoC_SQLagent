@@ -1,0 +1,1 @@
+SELECT segment, currency, COUNT(*) as customer_count, AVG(consumption) as avg_consumption FROM customers c JOIN yearmonth y ON c.customerid = y.customerid WHERE y.consumption IS NOT NULL GROUP BY segment, currency ORDER BY customer_count DESC LIMIT 10;

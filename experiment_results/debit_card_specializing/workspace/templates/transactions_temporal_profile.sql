@@ -1,1 +1,0 @@
-SELECT DATE_TRUNC('month', date) AS month, COUNT(*) AS transaction_count, DATE_TRUNC('year', date) AS year FROM transactions_1k GROUP BY DATE_TRUNC('month', date), DATE_TRUNC('year', date) ORDER BY year DESC, month DESC LIMIT 10;

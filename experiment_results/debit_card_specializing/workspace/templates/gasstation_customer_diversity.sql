@@ -1,1 +1,0 @@
-SELECT t.gasstationid, COUNT(DISTINCT t.customerid) AS unique_customers, COUNT(*) AS total_transactions, COUNT(DISTINCT t.customerid) * 1.0 / COUNT(*) AS customer_diversity_ratio FROM transactions_1k t GROUP BY t.gasstationid HAVING COUNT(DISTINCT t.customerid) > 1 LIMIT 50;

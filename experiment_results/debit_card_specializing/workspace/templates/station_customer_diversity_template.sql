@@ -1,1 +1,0 @@
-SELECT g.gasstationid, g.chainid, COUNT(DISTINCT t.customerid) as unique_customers, COUNT(*) as total_transactions, COUNT(DISTINCT t.productid) as product_variety FROM gasstations g JOIN transactions_1k t ON g.gasstationid = t.gasstationid GROUP BY g.gasstationid, g.chainid ORDER BY unique_customers DESC LIMIT 100;

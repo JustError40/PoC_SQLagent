@@ -1,1 +1,0 @@
-SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY amount) as median_amount, PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY amount) as q25_amount, PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY amount) as q75_amount, MIN(amount) as min_amount, MAX(amount) as max_amount, COUNT(DISTINCT amount) as distinct_amounts FROM transactions_1k;

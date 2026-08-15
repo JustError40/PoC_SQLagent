@@ -1,0 +1,1 @@
+SELECT g.country, COUNT(*) as tx_count FROM transactions_1k t JOIN gasstations g ON t.gasstationid = g.gasstationid WHERE t.gasstationid IS NOT NULL GROUP BY g.country ORDER BY tx_count DESC LIMIT 10;

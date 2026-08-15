@@ -1,1 +1,0 @@
-SELECT c.segment, COUNT(*) as transaction_count, SUM(t.amount) as total_spending FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY c.segment ORDER BY total_spending DESC LIMIT 20;

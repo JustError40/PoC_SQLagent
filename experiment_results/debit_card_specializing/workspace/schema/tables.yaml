@@ -1,7 +1,7 @@
 tables:
 - name: customers
-  description: This table stores customer records with a unique ID, segment (e.g.,
-    SME, LAM, KAM), and currency (e.g., CZK, EUR).
+  description: This table stores customer records with unique identifiers, market
+    segments (such as SME, LAM, or KAM), and currency (such as CZK or EUR).
   grain: one row per customer
   columns:
   - column_name: customerid
@@ -17,9 +17,8 @@ tables:
     is_nullable: 'YES'
     ordinal_position: 3
 - name: gasstations
-  description: This table stores individual gas station records containing a unique
-    identifier, fuel chain affiliation, country code (e.g., CZE, SVK), and market
-    segment classification.
+  description: This table stores gas station records identified by unique IDs, chain
+    affiliations, country codes, and market segments such as Premium or Discount.
   grain: one row per gas station
   columns:
   - column_name: gasstationid
@@ -39,8 +38,9 @@ tables:
     is_nullable: 'YES'
     ordinal_position: 4
 - name: products
-  description: Each row represents a unique product identified by a bigint ID ranging
-    from 1 to 630 with text descriptions such as '55 - Acquirer Simple Fee'.
+  description: This table stores unique product identifiers and text descriptions,
+    with productids ranging from 1 to 630 and descriptions including values like '55
+    - Acquirer Simple Fee'.
   grain: one row per product
   columns:
   - column_name: productid
@@ -52,10 +52,9 @@ tables:
     is_nullable: 'YES'
     ordinal_position: 2
 - name: transactions_1k
-  description: This table records individual transactions identified by unique transactionids
-    and timestamps, linking customer and card details to gas station locations, products,
-    and monetary amounts.
-  grain: one row per transaction
+  description: Records individual transaction events with unique identifiers, timestamps,
+    and monetary values associated with customers, cards, gas stations, and products.
+  grain: one row per transaction event
   columns:
   - column_name: transactionid
     data_type: bigint
@@ -94,8 +93,8 @@ tables:
     is_nullable: 'YES'
     ordinal_position: 9
 - name: yearmonth
-  description: This table records monthly consumption values for customers identified
-    by their unique ID across the date range 201112 to 201311.
+  description: This table stores consumption records for customers identified by customerid,
+    with dates formatted as YYYYMM strings ranging from 201112 to 201311.
   grain: one row per customer per month
   columns:
   - column_name: customerid

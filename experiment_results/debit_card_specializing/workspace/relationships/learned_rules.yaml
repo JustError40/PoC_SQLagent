@@ -1,164 +1,192 @@
 rules:
-- rule: For transaction distribution analysis, group by amount and calculate count/avg
-    with LIMIT
+- rule: Verify all customers have at least one transaction record
   source: explorer
   confidence: 0.7
-- rule: Verify product transaction relationships by checking productid matches in
-    products and transactions_1k tables
+- rule: SELECT COUNT(*) AS null_consumption_count FROM yearmonth WHERE yearmonth.consumption
+    IS NULL
   source: explorer
   confidence: 0.7
-- rule: SELECT * FROM customers c WHERE c.customerid IN (SELECT customerid FROM customer_transaction_counts
-    WHERE transaction_count > 1)
+- rule: For segment-based analytics, always cast customerid to BIGINT before joining
+    with customers table to ensure proper type matching
   source: explorer
   confidence: 0.7
-- rule: transaction_amount_median_19_max_264_check
+- rule: SELECT p.productid, p.description, COUNT(t.transactionid) as transaction_count
+    FROM transactions_1k t JOIN products p ON t.productid = p.productid GROUP BY p.productid,
+    p.description ORDER BY transaction_count DESC LIMIT 20
   source: explorer
   confidence: 0.7
-- rule: 'PERCENTILE_CONT median calculation: Use PERCENTILE_CONT(0.5) WITHIN GROUP
-    (ORDER BY amount) for median in aggregate queries'
+- rule: SELECT gs.segment, c.segment, COUNT(*) as mismatch_count FROM transactions_1k
+    t JOIN gasstations gs ON t.gasstationid = gs.gasstationid JOIN customers c ON
+    t.customerid = c.customerid WHERE gs.segment != c.segment GROUP BY gs.segment,
+    c.segment ORDER BY mismatch_count DESC
   source: explorer
   confidence: 0.7
-- rule: 'Station activity aggregation: Group by gasstationid with COUNT, COUNT(DISTINCT),
-    and SUM for metrics'
+- rule: Ensure transactions_1k table is indexed on productid and customerid columns
+    for efficient joins with products and customers tables
   source: explorer
   confidence: 0.7
-- rule: 'Customer volume filtering: Use HAVING COUNT(*) > 1 to filter customers with
-    multiple transactions'
+- rule: When analyzing segment activity, use transactions_1k with customers join to
+    get accurate segment counts
   source: explorer
   confidence: 0.7
-- rule: For transaction analysis, always filter by transaction date range when dealing
-    with historical data. Use COUNT(DISTINCT customerid) for unique customer metrics
-    instead of COUNT(customerid).
+- rule: Ensure gasstationid exists in gasstations table before joining for transaction
+    analysis
   source: explorer
   confidence: 0.7
-- rule: Validate consumption aggregation grain by confirming AVG and SUM produce consistent
-    customer-month level metrics
+- rule: USE EXTRACT(quarter FROM date) for quarterly grouping when analyzing time-based
+    metrics on date columns
   source: explorer
   confidence: 0.7
-- rule: Profile numeric columns using PERCENTILE_CONT(0.5) for median alongside AVG,
-    COUNT DISTINCT, MAX, MIN statistics
+- rule: SELECT p.productid, p.description, c.segment, COUNT(*) as transaction_count,
+    SUM(t.amount) as total_value FROM transactions_1k t JOIN products p ON t.productid
+    = p.productid JOIN customers c ON t.customerid = c.customerid GROUP BY p.productid,
+    p.description, c.segment ORDER BY total_value DESC
   source: explorer
   confidence: 0.7
-- rule: Validate products.productid join to transactions_1k.productid before analysis
-    by checking for duplicate transactionid per productid
+- rule: SELECT segment, COUNT(*) as transaction_count FROM transactions_1k t JOIN
+    customers c ON t.customerid = c.customerid GROUP BY c.segment ORDER BY transaction_count
+    DESC LIMIT 20
   source: explorer
   confidence: 0.7
-- rule: When joining customers to gasstations, always verify through transactions
-    table to avoid phantom relationships (e.g., c.customerid = t.customerid, t.gasstationid
-    = g.gasstationid)
+- rule: SELECT DISTINCT g.country, COUNT(t.transactionid) AS transaction_count FROM
+    transactions_1k t JOIN gasstations g ON t.gasstationid = g.gasstationid WHERE
+    t.gasstationid IS NOT NULL GROUP BY g.country ORDER BY transaction_count DESC
   source: explorer
   confidence: 0.7
-- rule: SELECT c.segment, COUNT(t.transactionid) as transaction_count, SUM(t.amount)
-    as total_spending, AVG(t.amount) as avg_transaction_amount FROM customers c JOIN
-    transactions_1k t ON c.customerid = t.customerid GROUP BY c.segment ORDER BY total_spending
+- rule: SELECT c.segment, COUNT(DISTINCT c.customerid) as customers_with_yearmonth,
+    COUNT(DISTINCT t.customerid) as customers_with_transactions FROM customers c LEFT
+    JOIN yearmonth y ON c.customerid = y.customerid LEFT JOIN transactions_1k t ON
+    c.customerid = t.customerid GROUP BY c.segment
+  source: explorer
+  confidence: 0.7
+- rule: Validate currency column against known values (CZK, EUR, USD) before segment
+    analysis to prevent invalid currency aggregation
+  source: explorer
+  confidence: 0.7
+- rule: SELECT * FROM transactions_1k WHERE amount IS NOT NULL
+  source: explorer
+  confidence: 0.7
+- rule: 'Use verified join pattern: transactions_1k.customerid = customers.customerid
+    for segment-based analysis queries'
+  source: explorer
+  confidence: 0.7
+- rule: transactions_1k.productid must match products.productid for join verification
+  source: explorer
+  confidence: 0.7
+- rule: Validate transactions_1k joins with dimension tables on foreign key columns
+    (gasstationid, customerid, productid) before profiling queries
+  source: explorer
+  confidence: 0.7
+- rule: JOIN transactions_1k.gasstationid to gasstations.gasstationid before aggregating
+    by country for transaction metrics
+  source: explorer
+  confidence: 0.7
+- rule: SELECT segment, currency FROM customers GROUP BY segment, currency HAVING
+    COUNT(*) > 0
+  source: explorer
+  confidence: 0.7
+- rule: SELECT MIN(amount) as min_amount, MAX(amount) as max_amount, PERCENTILE_CONT(0.50)
+    WITHIN GROUP (ORDER BY amount) as median_amount FROM transactions_1k WHERE amount
+    >= 0 AND amount <= 264
+  source: explorer
+  confidence: 0.7
+- rule: yearmonth.date column format is YYYYMM (e.g., 201112, 201201)
+  source: explorer
+  confidence: 0.7
+- rule: SELECT MIN(amount), MAX(amount), AVG(amount), SUM(amount), COUNT(*), COUNT(amount)
+    FROM transactions_1k
+  source: explorer
+  confidence: 0.7
+- rule: 'Check segment consistency between customers and gasstations for transactions:
+    SELECT c.segment, g.segment, COUNT(*) FROM transactions_1k t JOIN customers c
+    ON t.customerid = c.customerid JOIN gasstations g ON t.gasstationid = g.gasstationid
+    WHERE c.segment != g.segment GROUP BY c.segment, g.segment;'
+  source: explorer
+  confidence: 0.7
+- rule: SELECT segment, COUNT(*) as customer_count, COUNT(*) FILTER (WHERE segment
+    IS NOT NULL) as valid_count FROM customers GROUP BY segment ORDER BY customer_count
     DESC
   source: explorer
   confidence: 0.7
-- rule: 'IF SUM(CASE WHEN amount IS NULL THEN 1 ELSE 0 END) > 0 THEN ''ALERT: NULL
-    amounts detected in transactions'''
+- rule: Ensure transactions_1k.customerid matches customers.customerid before joining
+    transaction analysis queries
   source: explorer
   confidence: 0.7
-- rule: SELECT c.segment, COUNT(*) AS customer_count, COUNT(DISTINCT t.transactionid)
-    AS total_transactions FROM customers c LEFT JOIN transactions_1k t ON c.customerid
-    = t.customerid GROUP BY c.segment ORDER BY total_transactions DESC
+- rule: transactions_1k.customerid = customers.customerid is the primary key join
+    for customer segment analysis
   source: explorer
   confidence: 0.7
-- rule: SELECT PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY amount) AS p25, PERCENTILE_CONT(0.50)
-    WITHIN GROUP (ORDER BY amount) AS p50, PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER
-    BY amount) AS p75 FROM transactions_1k WHERE amount IS NOT NULL
+- rule: SELECT c.segment, c.currency, COUNT(*) as transaction_count FROM transactions_1k
+    t JOIN customers c ON t.customerid = c.customerid GROUP BY c.segment, c.currency
+    ORDER BY transaction_count DESC
   source: explorer
   confidence: 0.7
-- rule: Customer segment aggregations must join on customerid and compute spending
-    by segment
+- rule: Verify numeric columns have expected value ranges before aggregation
   source: explorer
   confidence: 0.7
-- rule: Gas station chain aggregations must join on gasstationid to compute volume
-    by chain
+- rule: Check if date columns are properly formatted before filtering
   source: explorer
   confidence: 0.7
-- rule: Ensure customers table has matching customerid references in yearmonth grain
-    before aggregating consumption data
+- rule: Always validate cross-table joins before using multi-table fanout queries
+    to ensure data integrity
   source: explorer
   confidence: 0.7
-- rule: SELECT c.segment, COUNT(*) as tx_count, SUM(t.amount) as total FROM customers
-    c JOIN transactions_1k t ON c.customerid = t.customerid GROUP BY c.segment HAVING
-    SUM(t.amount) > 0 ORDER BY total DESC
+- rule: Verify amount column is numeric and not NULL in transactions_1k using MIN/MAX/AVG/NULL_COUNT
+    aggregation checks
   source: explorer
   confidence: 0.7
-- rule: Validate join patterns between yearmonth and customers using customerid, products
-    and transactions_1k using productid, and gasstations and transactions_1k using
-    gasstationid before aggregating metrics
+- rule: Ensure yearmonth.consumption has no NULL values before performing aggregation
+    or range analysis
   source: explorer
   confidence: 0.7
-- rule: SELECT customerid, COUNT(*) as total_transactions FROM transactions_1k GROUP
-    BY customerid HAVING COUNT(*) > 10
+- rule: Ensure transactions_1k.gasstationid is not null before joining with gasstations
+    table
   source: explorer
   confidence: 0.7
-- rule: Validate consumption data quality by checking for null or negative values
-    in yearmonth.consumption column before aggregation
+- rule: Verify transactions_1k.gasstationid to gasstations.gasstationid join returns
+    valid country counts before aggregation queries
   source: explorer
   confidence: 0.7
-- rule: Use INNER JOIN for customer-segment revenue attribution to ensure only active
-    customers are counted in segment metrics
+- rule: SELECT c.segment, g.country, COUNT(*) as transaction_count, SUM(t.amount)
+    as total_volume, AVG(t.amount) as avg_amount FROM transactions_1k t JOIN customers
+    c ON t.customerid = c.customerid JOIN gasstations g ON t.gasstationid = g.gasstationid
+    GROUP BY c.segment, g.country
   source: explorer
   confidence: 0.7
-- rule: Validate product transactions by counting transactions per product using verified
-    join on productid
+- rule: Ensure amount and price columns in transactions table are numeric with consistent
+    distributions before aggregating
   source: explorer
   confidence: 0.7
-- rule: Always cast date columns before using EXTRACT() in PostgreSQL to avoid type
-    errors. Use CAST(date_col AS DATE) before date functions.
+- rule: SELECT COUNT(*) as null_count, COUNT(*) as total_count FROM products WHERE
+    description IS NULL; -- Check for missing product descriptions
   source: explorer
   confidence: 0.7
-- rule: All entity tables must INNER JOIN with transactions_1k using their respective
-    identifier columns (customerid, gasstationid, productid)
+- rule: SELECT COUNT(*) as valid_records, COUNT(*) as total_records FROM yearmonth
+    WHERE consumption IS NOT NULL; -- Check consumption data completeness
   source: explorer
   confidence: 0.7
-- rule: SELECT c.customerid, COUNT(DISTINCT ym.date) as months_with_records FROM customers
-    c LEFT JOIN yearmonth ym ON c.customerid = ym.customerid GROUP BY c.customerid
-    HAVING months_with_records = 0
+- rule: SELECT MIN(amount), MAX(amount), COUNT(*), AVG(amount), STDDEV(amount) FROM
+    transactions_1k
   source: explorer
   confidence: 0.7
-- rule: Always filter WHERE t.amount > 0 before aggregating transaction metrics to
-    exclude zero/negative transactions
+- rule: SELECT COUNT(*) FROM transactions_1k WHERE gasstationid IS NOT NULL AND EXISTS
+    (SELECT 1 FROM gasstations WHERE gasstationid = transactions_1k.gasstationid)
   source: explorer
   confidence: 0.7
-- rule: Always filter transactions WHERE amount > 0 to exclude zero-value or invalid
-    transactions
+- rule: SELECT c.segment, c.currency, SUM(t.amount) AS total_value, COUNT(*) AS transaction_count
+    FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY
+    c.segment, c.currency HAVING SUM(t.amount) > 1000 ORDER BY total_value DESC
   source: explorer
   confidence: 0.7
-- rule: SELECT COUNT(CASE WHEN consumption IS NULL THEN 1 END) as null_consumption_count,
-    SUM(consumption) as total_consumption FROM yearmonth;
+- rule: SELECT c.segment, COUNT(DISTINCT t.date) as unique_dates, COUNT(t.transactionid)
+    as transactions FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid
+    GROUP BY c.segment ORDER BY unique_dates DESC
   source: explorer
   confidence: 0.7
-- rule: SELECT EXTRACT(YEAR FROM date) as year, EXTRACT(MONTH FROM date) as month,
-    COUNT(*) as transaction_count FROM transactions_1k GROUP BY EXTRACT(YEAR FROM
-    date), EXTRACT(MONTH FROM date) ORDER BY year, month LIMIT 100
+- rule: 'CHECK_CONSUMPTION_RANGE: Ensure yearmonth.consumption values stay within
+    -582093 to 2052188 range'
   source: explorer
   confidence: 0.7
-- rule: SELECT COUNT(consumption) = 0 as has_nulls FROM table_name WHERE consumption
-    IS NOT NULL
-  source: explorer
-  confidence: 0.7
-- rule: SELECT c.customerid, COUNT(DISTINCT t.gasstationid) as gasstation_count FROM
-    customers c LEFT JOIN transactions_1k t ON c.customerid = t.customerid GROUP BY
-    c.customerid HAVING COUNT(DISTINCT t.gasstationid) > 10 LIMIT 50
-  source: explorer
-  confidence: 0.7
-- rule: SELECT productid, COUNT(*) as txn_count, SUM(amount) as total, PERCENTILE_CONT(0.5)
-    WITHIN GROUP (ORDER BY amount) as median FROM transactions_1k GROUP BY productid
-  source: explorer
-  confidence: 0.7
-- rule: For customer transaction analysis, always include COUNT(*) for transaction
-    frequency, SUM(amount) for total spending, and AVG(amount) for average transaction
-    size when grouping by customerid
-  source: explorer
-  confidence: 0.7
-- rule: When analyzing product engagement, include unique customer count alongside
-    transaction count to identify both breadth and depth of engagement
-  source: explorer
-  confidence: 0.7
-- rule: Use LEFT JOIN with customerid for customer-segment analysis to count transactions
-    per segment without losing segments with no transactions
+- rule: CZE/SVK transactions exist in gasstations table for country filtering
   source: explorer
   confidence: 0.7

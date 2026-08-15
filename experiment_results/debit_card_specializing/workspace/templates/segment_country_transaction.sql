@@ -1,0 +1,1 @@
+SELECT c.segment, g.country, COUNT(t.transactionid) as transaction_count FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid JOIN gasstations g ON t.gasstationid = g.gasstationid GROUP BY c.segment, g.country;

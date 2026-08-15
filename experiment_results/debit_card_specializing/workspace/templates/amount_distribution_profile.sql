@@ -1,0 +1,1 @@
+SELECT COUNT(*) as total_records, MIN(amount) as min_amount, MAX(amount) as max_amount, ROUND(AVG(amount), 2) as avg_amount, COUNT(DISTINCT amount) as unique_amounts FROM transactions_1k WHERE amount IS NOT NULL;

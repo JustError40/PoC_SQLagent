@@ -1,0 +1,1 @@
+SELECT EXTRACT(YEAR FROM date) as year, EXTRACT(MONTH FROM date) as month, COUNT(*) as transaction_count, MIN(date) as first_transaction, MAX(date) as last_transaction FROM transactions_1k GROUP BY EXTRACT(YEAR FROM date), EXTRACT(MONTH FROM date) ORDER BY year DESC, month DESC LIMIT 100;

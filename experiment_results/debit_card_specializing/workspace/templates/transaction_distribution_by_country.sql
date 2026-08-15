@@ -1,0 +1,1 @@
+SELECT g.country, COUNT(t.transactionid) as tx_count, SUM(t.amount) as total_volume FROM transactions_1k t JOIN gasstations g ON t.gasstationid = g.gasstationid WHERE g.country IS NOT NULL GROUP BY g.country ORDER BY tx_count DESC;

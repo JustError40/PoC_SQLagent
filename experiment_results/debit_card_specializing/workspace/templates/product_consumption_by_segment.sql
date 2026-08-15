@@ -1,0 +1,1 @@
+SELECT p.description, c.segment, COUNT(*) as purchase_count, SUM(t.amount) as total_value FROM transactions_1k t JOIN products p ON t.productid = p.productid JOIN customers c ON t.customerid = c.customerid GROUP BY p.description, c.segment ORDER BY total_value DESC;

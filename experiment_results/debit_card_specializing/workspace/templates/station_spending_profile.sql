@@ -1,1 +1,0 @@
-SELECT gasstationid, COUNT(*) as txns, AVG(amount) as avg_amount, MIN(amount) as min_amount, MAX(amount) as max_amount, SUM(amount) as total_spending FROM transactions_1k GROUP BY gasstationid ORDER BY total_spending DESC LIMIT 50;

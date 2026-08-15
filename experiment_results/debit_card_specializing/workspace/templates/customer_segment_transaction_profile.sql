@@ -1,1 +1,0 @@
-SELECT c.segment, COUNT(*) AS customer_count, COUNT(DISTINCT t.transactionid) AS total_transactions FROM customers c LEFT JOIN transactions_1k t ON c.customerid = t.customerid GROUP BY c.segment ORDER BY total_transactions DESC LIMIT 50;

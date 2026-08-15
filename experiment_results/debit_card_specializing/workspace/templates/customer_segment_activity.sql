@@ -1,1 +1,0 @@
-SELECT c.segment, COUNT(t.transactionid) as transaction_count, SUM(t.amount) as total_spending, AVG(t.amount) as avg_amount, MAX(t.date) as last_transaction_date FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY c.segment ORDER BY total_spending DESC;

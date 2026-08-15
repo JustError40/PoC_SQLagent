@@ -1,0 +1,1 @@
+SELECT date, time, COUNT(*) as transaction_count, EXTRACT(DAY FROM date) as day_of_week, COUNT(DISTINCT customerid) as unique_customers FROM transactions_1k WHERE date IS NOT NULL GROUP BY date, time ORDER BY transaction_count DESC LIMIT 100;

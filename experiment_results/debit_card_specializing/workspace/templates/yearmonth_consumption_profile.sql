@@ -1,1 +1,1 @@
-SELECT COUNT(*) as total_rows, COUNT(consumption) as non_null_count, SUM(consumption) as total_consumption, AVG(consumption) as avg_consumption, MIN(consumption) as min_consumption, MAX(consumption) as max_consumption, ROUND(AVG(consumption * 100)::numeric, 2) as avg_in_cents FROM yearmonth;
+SELECT consumption, COUNT(*) as customer_count, ROUND(AVG(consumption)::numeric, 2) as avg_consumption FROM yearmonth GROUP BY consumption ORDER BY avg_consumption DESC LIMIT 100;

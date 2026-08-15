@@ -11,11 +11,11 @@ Use `manifest.yaml` first, then load only the domain and artifact files selected
 - No one-to-many fanout joins detected during survey.
 
 ## Lessons from exploration
-- Explicitly define join intent (INNER vs LEFT) to ensure data integrity across multiple tables.
-- Avoid correlated subqueries in WHERE clauses in favor of explicit JOINs for predictable execution plans.
-- Fully qualify all table and column names with schema prefixes to eliminate ambiguity in multi-schema environments.
-- Ensure join columns are indexed to guarantee efficient execution plans on large datasets.
-- Use keyset pagination with a WHERE clause instead of OFFSET for large result sets to maintain consistent query plans.
-- Explicitly enumerate columns in SELECT clauses to minimize I/O and avoid loading unnecessary metadata.
-- Ensure all WHERE conditions on indexed columns are SARGABLE to preserve index usage efficiency.
-- Use ONLY table selection in inheritance hierarchies to prevent unintended parent table data inclusion.
+- Ensure join keys are primary or unique constraints rather than relying solely on indexes.
+- Ensure `ORDER BY` columns are indexed to guarantee efficient sorting performance.
+- Avoid `SELECT *` to minimize network overhead and improve cache locality.
+- Cap join result sets with `LIMIT` to prevent unbounded cartesian expansion.
+- Verify index coverage on `WHERE` predicates independently of `ORDER BY` column indexing.
+- Query Shapes: Enforce explicit casts to prevent implicit type conversions that alter execution plans.
+- Join Discipline: Filter on high-cardinality columns before joining to minimize intermediate row counts.
+- Identifier Habits: Enforce explicit table aliases to ensure unambiguous column references in complex joins.

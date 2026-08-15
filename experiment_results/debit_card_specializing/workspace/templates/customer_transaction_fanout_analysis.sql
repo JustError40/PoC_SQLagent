@@ -1,1 +1,0 @@
-SELECT c.customerid, c.segment, COUNT(t.transactionid) as transaction_count, COUNT(DISTINCT t.gasstationid) as unique_gasstations, COUNT(DISTINCT t.productid) as unique_products FROM customers c LEFT JOIN transactions_1k t ON c.customerid = t.customerid GROUP BY c.customerid, c.segment ORDER BY transaction_count DESC LIMIT 100;

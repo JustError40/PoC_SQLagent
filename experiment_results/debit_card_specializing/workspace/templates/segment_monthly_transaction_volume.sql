@@ -1,0 +1,1 @@
+SELECT DATE_TRUNC('month', t.date) as month, c.segment, COUNT(*) as transaction_count FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY c.segment, DATE_TRUNC('month', t.date) ORDER BY month DESC, segment;

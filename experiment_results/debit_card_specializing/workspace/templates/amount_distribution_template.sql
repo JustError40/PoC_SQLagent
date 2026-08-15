@@ -1,1 +1,1 @@
-WITH amount_stats AS (SELECT COUNT(*) as total_count, AVG(amount) as avg_amount, ROUND(AVG(amount), 2) as avg_amount_rounded, PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY amount) as median_amount, COUNT(DISTINCT amount) as distinct_amounts, MAX(amount) as max_amount, MIN(amount) as min_amount FROM transactions_1k) SELECT * FROM amount_stats LIMIT 1 OFFSET 0;
+SELECT COUNT(*) as total, ROUND(AVG(amount), 2) as avg_amount, ROUND(MIN(amount), 2) as min_amount, ROUND(MAX(amount), 2) as max_amount FROM transactions_1k WHERE amount IS NOT NULL;

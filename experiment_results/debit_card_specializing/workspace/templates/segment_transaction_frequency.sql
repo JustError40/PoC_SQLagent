@@ -1,0 +1,1 @@
+SELECT c.segment, COUNT(*) as transaction_count, COUNT(DISTINCT ym.customerid) as unique_customers FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid JOIN yearmonth ym ON c.customerid = ym.customerid GROUP BY c.segment ORDER BY transaction_count DESC LIMIT 50;

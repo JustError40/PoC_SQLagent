@@ -1,0 +1,7 @@
+SELECT c.segment, g.country, COUNT(*) as transaction_count, SUM(t.amount) as total_volume
+FROM transactions_1k t
+JOIN customers c ON t.customerid = c.customerid
+JOIN gasstations g ON t.gasstationid = g.gasstationid
+GROUP BY c.segment, g.country
+ORDER BY total_volume DESC
+LIMIT 20;

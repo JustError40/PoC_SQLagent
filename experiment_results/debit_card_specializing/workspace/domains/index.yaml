@@ -1,8 +1,9 @@
-customer_management:
+customer:
 - customers
 - yearmonth
-transaction_ledger:
-- products
-- transactions_1k
-station_registry:
+station:
 - gasstations
+product:
+- products
+transaction:
+- transactions_1k

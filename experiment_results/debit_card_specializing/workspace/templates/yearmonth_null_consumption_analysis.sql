@@ -1,1 +1,0 @@
-SELECT COUNT(*) as total_records, COUNT(CASE WHEN consumption IS NULL THEN 1 END) as null_consumption_count, SUM(CASE WHEN consumption IS NOT NULL THEN consumption ELSE 0 END) as total_consumption, AVG(consumption) as avg_consumption FROM yearmonth;

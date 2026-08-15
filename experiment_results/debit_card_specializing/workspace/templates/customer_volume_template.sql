@@ -1,1 +1,0 @@
-WITH customer_counts AS (SELECT customerid, COUNT(*) as transaction_count, SUM(amount) as total_spending, MAX(date) as last_transaction_date FROM transactions_1k WHERE customerid IS NOT NULL GROUP BY customerid HAVING COUNT(*) > 1) SELECT * FROM customer_counts LIMIT 50 OFFSET 0;

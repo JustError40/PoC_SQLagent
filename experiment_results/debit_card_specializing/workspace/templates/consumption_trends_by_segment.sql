@@ -1,0 +1,1 @@
+SELECT c.segment, ym.date, COUNT(*) as consumption_records, SUM(ym.consumption) as total_consumption FROM customers c JOIN yearmonth ym ON c.customerid = ym.customerid GROUP BY c.segment, ym.date ORDER BY c.segment, ym.date;

@@ -1,1 +1,0 @@
-SELECT g.gasstationid, COUNT(t.transactionid) as transaction_count, COUNT(DISTINCT t.customerid) as unique_customers, SUM(t.amount) as total_spending FROM gasstations g INNER JOIN transactions_1k t ON g.gasstationid = t.gasstationid GROUP BY g.gasstationid ORDER BY transaction_count DESC LIMIT 20;
