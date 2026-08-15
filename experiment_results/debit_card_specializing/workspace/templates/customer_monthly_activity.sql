@@ -1,0 +1,1 @@
+SELECT c.customerid, COUNT(DISTINCT ym.date) as months_active, COUNT(*) as total_monthly_rows FROM yearmonth ym JOIN customers c ON ym.customerid = c.customerid GROUP BY c.customerid ORDER BY months_active DESC LIMIT 10;

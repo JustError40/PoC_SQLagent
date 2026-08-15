@@ -1,0 +1,1 @@
+SELECT c.customerid, COUNT(t.transactionid) as transaction_count, SUM(t.amount) as total_amount FROM customers c INNER JOIN transactions_1k t ON c.customerid = t.customerid GROUP BY c.customerid ORDER BY transaction_count DESC LIMIT 10;

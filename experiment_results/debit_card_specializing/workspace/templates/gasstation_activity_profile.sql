@@ -1,0 +1,1 @@
+SELECT g.gasstationid, g.country, COUNT(*) as transaction_count, MIN(t.date) as first_activity_date, MAX(t.date) as last_activity_date FROM gasstations g JOIN transactions_1k t ON g.gasstationid = t.gasstationid GROUP BY g.gasstationid, g.country ORDER BY transaction_count DESC LIMIT 50;

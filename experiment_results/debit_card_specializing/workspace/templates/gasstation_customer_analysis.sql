@@ -1,0 +1,1 @@
+SELECT g.gasstationid, COUNT(DISTINCT t.customerid) as unique_customers, COUNT(*) as transaction_count, SUM(t.amount) as total_spending FROM gasstations g JOIN transactions_1k t ON g.gasstationid = t.gasstationid WHERE t.customerid IS NOT NULL GROUP BY g.gasstationid;

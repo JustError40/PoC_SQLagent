@@ -1,0 +1,12 @@
+joins:
+- left: customers.customerid
+  right: transactions_1k.gasstationid
+  reason: Fanout pattern confirmed - customer data can fan out to multiple transaction
+    records and gasstation dimensions
+  required_action: Document this fanout pattern for data lineage and query planning
+- left: customers.customerid
+  right: transactions_1k.customerid
+  reason: Fanout pattern detected - customers can have multiple gasstations through
+    transactions
+  required_action: Review transaction volume and verify data integrity for affected
+    customer segments

@@ -1,0 +1,1 @@
+SELECT c.customerid, COUNT(DISTINCT ym.date) as months_with_records, SUM(ym.consumption) as total_consumption FROM customers c LEFT JOIN yearmonth ym ON c.customerid = ym.customerid GROUP BY c.customerid ORDER BY months_with_records ASC LIMIT 100;

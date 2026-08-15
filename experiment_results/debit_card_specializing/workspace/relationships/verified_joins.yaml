@@ -1,0 +1,21 @@
+joins:
+- left: customers.customerid
+  right: transactions_1k.customerid
+  cardinality: unknown
+  verified: true
+  verified_by: explorer
+- left: products.productid
+  right: transactions_1k.productid
+  cardinality: unknown
+  verified: true
+  verified_by: explorer
+- left: gasstations.gasstationid
+  right: transactions_1k.gasstationid
+  cardinality: unknown
+  verified: true
+  verified_by: explorer
+- left: yearmonth.customerid
+  right: customers.customerid
+  cardinality: unknown
+  verified: true
+  verified_by: explorer

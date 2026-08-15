@@ -1,0 +1,1 @@
+SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY t.amount) AS median_amount, AVG(t.amount) AS avg_amount, COUNT(DISTINCT t.amount) AS distinct_amounts, MAX(t.amount) AS max_amount FROM transactions_1k t WHERE t.amount >= 0 LIMIT 1;

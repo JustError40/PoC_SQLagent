@@ -1,0 +1,1 @@
+SELECT COUNT(*) as total_rows, COUNT(DISTINCT cardid) as unique_cards, AVG(amount) as avg_amount, SUM(amount) as total_amount, MIN(amount) as min_amount, MAX(amount) as max_amount FROM transactions_1k;

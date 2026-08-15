@@ -1,0 +1,1 @@
+SELECT customerid, COUNT(*) as total_transactions, MIN(date) as first_transaction_date, MAX(date) as last_transaction_date, COUNT(DISTINCT productid) as unique_products FROM transactions_1k GROUP BY customerid ORDER BY total_transactions DESC LIMIT 50;

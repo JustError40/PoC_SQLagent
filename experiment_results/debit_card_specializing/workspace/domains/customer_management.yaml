@@ -1,0 +1,4 @@
+domain: customer_management
+tables:
+- customers
+- yearmonth

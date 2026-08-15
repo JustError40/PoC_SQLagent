@@ -1,0 +1,1 @@
+SELECT g.chainid, COUNT(*) as transaction_count, SUM(t.amount) as total_spending, COUNT(DISTINCT t.customerid) as unique_customers, COUNT(DISTINCT g.gasstationid) as station_count FROM gasstations g LEFT JOIN transactions_1k t ON t.gasstationid = g.gasstationid GROUP BY g.chainid, g.gasstationid ORDER BY total_spending DESC LIMIT 50;

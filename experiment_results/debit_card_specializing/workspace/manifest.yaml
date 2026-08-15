@@ -1,0 +1,725 @@
+version: 1
+workspace: skill
+generated_by: surveyor
+tables:
+- customers
+- gasstations
+- products
+- transactions_1k
+- yearmonth
+domains:
+  customer_management:
+  - customers
+  - yearmonth
+  transaction_ledger:
+  - products
+  - transactions_1k
+  station_registry:
+  - gasstations
+artifacts:
+  schema: schema/tables.yaml
+  relationships: relationships/verified_joins.yaml
+  dangerous_joins: relationships/dangerous_joins.yaml
+  policies: policies/forbidden_operations.yaml
+  invariants: evals/invariants.yaml
+  templates: templates/
+templates:
+  yearmonth_consumption_template:
+    path: templates/yearmonth_consumption_template.sql
+    description: Reusable metric template for customer consumption by month using
+      yearmonth table structure
+    grain: customer_monthly
+    metrics:
+      uses: 31
+      avg_elapsed_ms: 89.357
+      last_rows: 153
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: f2b14b917f3a8ee2
+    last_rows: 100
+    last_elapsed_ms: 31.171695329248905
+  gas_station_activity_metrics:
+    path: templates/gas_station_activity_metrics.sql
+    description: Calculate transaction counts and activity levels per gas station
+      for operational monitoring
+    grain: gasstationid
+    metrics:
+      uses: 17
+      avg_elapsed_ms: 12.111
+      last_rows: 0
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 73f26394ecd846d2
+    last_rows: 20
+    last_elapsed_ms: 9.996340610086918
+  product_transaction_summary:
+    path: templates/product_transaction_summary.sql
+    description: Generate product-level transaction summary with counts and totals
+    grain: productid
+    metrics:
+      uses: 14
+      avg_elapsed_ms: 27.478
+      last_rows: 0
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 33d68af8a28ad515
+    last_rows: 15
+    last_elapsed_ms: 11.396829970180988
+  customer_transaction_count_template:
+    path: templates/customer_transaction_count_template.sql
+    description: Reusable query to validate transaction counts per customer, filtering
+      for customers with multiple transactions
+    grain: customerid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 7e56fc20f71b91dc
+    last_rows: 170
+    last_elapsed_ms: 29.258939437568188
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 55.747
+      last_rows: 1
+  transaction_amount_distribution_template:
+    path: templates/transaction_amount_distribution_template.sql
+    description: Reusable query to analyze transaction amount distribution metrics
+      including median, average, and distinct values
+    grain: table
+    metrics:
+      uses: 4
+      avg_elapsed_ms: 75.111
+      last_rows: 3
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 875ecfd7e61a7b72
+    last_rows: 1
+    last_elapsed_ms: 8.772408589720726
+  amount_column_distribution_template:
+    path: templates/amount_column_distribution_template.sql
+    description: Profile numeric column statistics (median, avg, distinct values,
+      max) for transactions_1k without joins
+    grain: single_table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: a79adb2794abd473
+    last_rows: 1
+    last_elapsed_ms: 9.441506117582321
+  product_transaction_metrics:
+    path: templates/product_transaction_metrics.sql
+    description: Reusable metric for product transaction frequency and total amounts
+      per product
+    grain: productid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 0fa1c91de820df2f
+    last_rows: 28
+    last_elapsed_ms: 10.590274818241596
+  customer_gasstation_analysis:
+    path: templates/customer_gasstation_analysis.sql
+    description: Reusable metric for customer-gasstation relationship and spending
+      patterns
+    grain: customer_segment, gasstation_chain
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: fbfd696f9bdf4a1f
+    last_rows: 82
+    last_elapsed_ms: 20.185085013508797
+  monthly_consumption_trend:
+    path: templates/monthly_consumption_trend.sql
+    description: Reusable metric for customer consumption trend analysis with month-over-month
+      change calculation
+    grain: customer, date
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: e3b0c44298fc1c14
+    last_rows: 0
+    last_elapsed_ms: 378.32596339285374
+  amount_distribution_template:
+    path: templates/amount_distribution_template.sql
+    description: Analyze amount column statistics including median, average, distinct
+      count, min/max
+    grain: row-level aggregation
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 5a1254cda55c138f
+    last_rows: 1
+    last_elapsed_ms: 12.025837786495686
+  station_activity_template:
+    path: templates/station_activity_template.sql
+    description: Group by gasstationid with transaction counts, unique customers,
+      total spending
+    grain: station-level
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: d482ec453bd479ec
+    last_rows: 100
+    last_elapsed_ms: 10.259526781737804
+  customer_volume_template:
+    path: templates/customer_volume_template.sql
+    description: Filter customers with multiple transactions and aggregate spending
+      with last transaction date
+    grain: customer-level
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: bd2a2cd3b67bb29a
+    last_rows: 50
+    last_elapsed_ms: 9.221660904586315
+  customer_segment_activity:
+    path: templates/customer_segment_activity.sql
+    description: Calculate customer segment spending patterns with transaction counts
+      and last transaction date
+    grain: segment
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 5f91f6cd63ee0eda
+    last_rows: 3
+    last_elapsed_ms: 15.986420214176178
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 16.184
+      last_rows: 1
+  consumption_monthly_aggregation:
+    path: templates/consumption_monthly_aggregation.sql
+    description: Monthly consumption aggregation by customer with average and total
+      metrics
+    grain: customer-month
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 7e3c6e1e2277d366
+    last_rows: 100
+    last_elapsed_ms: 276.92590467631817
+  numeric_column_profile:
+    path: templates/numeric_column_profile.sql
+    description: Profile numeric column statistics including percentiles, average,
+      distinct count, and range
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: e774b3db7c195779
+    last_rows: 1
+    last_elapsed_ms: 15.135959722101688
+  station_spending_profile:
+    path: templates/station_spending_profile.sql
+    description: Profile transaction amounts by gasstation to understand spending
+      distribution
+    grain: gasstationid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: f6ce3493d38bf98b
+    last_rows: 50
+    last_elapsed_ms: 11.360161006450653
+  station_customer_diversity_template:
+    path: templates/station_customer_diversity_template.sql
+    description: Measures customer diversity per gasstation by counting unique customers,
+      total transactions, and product variety
+    grain: gasstation
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 86e27e1be590642f
+    last_rows: 100
+    last_elapsed_ms: 12.049486860632896
+  customer_segment_transaction_metrics:
+    path: templates/customer_segment_transaction_metrics.sql
+    description: Reusable metric query for customer-segment join pattern with transaction
+      count and spending aggregations by segment
+    grain: customer_segment
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: b774fe9c77b13113
+    last_rows: 3
+    last_elapsed_ms: 15.840603038668633
+  customer_transaction_frequency_template:
+    path: templates/customer_transaction_frequency_template.sql
+    description: Reusable metric template for customer transaction frequency by segment
+      with transaction count and days since first transaction
+    grain: customer_segment
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 4b30401923a82058
+    last_rows: 3
+    last_elapsed_ms: 16.14772528409958
+  transaction_amount_quality_check:
+    path: templates/transaction_amount_quality_check.sql
+    description: Template to validate NULL and zero amount values in transaction tables
+      for data quality monitoring
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: d70a38b87f357fcd
+    last_rows: 1
+    last_elapsed_ms: 8.135839365422726
+  profile_transaction_amounts:
+    path: templates/profile_transaction_amounts.sql
+    description: Profile the amount column in transactions to understand spending
+      distribution including min, max, average, and distinct count
+    grain: transactions_1k
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: f027f0614f1e9ba9
+    last_rows: 1
+    last_elapsed_ms: 9.26649384200573
+  customer_monthly_consumption_template:
+    path: templates/customer_monthly_consumption_template.sql
+    description: Reusable metric template for customer monthly consumption with average
+      and total metrics using yearmonth grain
+    grain: yearmonth
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 06287799f0471fcf
+    last_rows: 50
+    last_elapsed_ms: 189.42293897271156
+    metrics:
+      uses: 12
+      avg_elapsed_ms: 68.912
+      last_rows: 1
+  customer_segment_transaction_profile:
+    path: templates/customer_segment_transaction_profile.sql
+    description: Query to profile customer segment transaction patterns by segmenting
+      customers and joining with transaction counts
+    grain: segment-level
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 59b13c0587dacf61
+    last_rows: 3
+    last_elapsed_ms: 27.40954328328371
+  gasstation_customer_diversity:
+    path: templates/gasstation_customer_diversity.sql
+    description: Query to calculate customer diversity ratio per gasstation for analyzing
+      customer base composition
+    grain: gasstation-level
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: cf0b6d77a4a71ad0
+    last_rows: 50
+    last_elapsed_ms: 11.18121575564146
+  transaction_amount_percentile_analysis:
+    path: templates/transaction_amount_percentile_analysis.sql
+    description: Calculate percentile distribution and basic stats for transaction
+      amounts
+    grain: transactions_1k
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 574adcebf5f48563
+    last_rows: 1
+    last_elapsed_ms: 9.153631515800953
+  consumption_trend_window:
+    path: templates/consumption_trend_window.sql
+    description: Calculate month-over-month consumption changes using window functions
+      on yearmonth grain
+    grain: yearmonth
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 49c18f763c818525
+    last_rows: 500
+    last_elapsed_ms: 497.2901763394475
+  customer_segment_spending_analysis:
+    path: templates/customer_segment_spending_analysis.sql
+    description: Aggregates customer spending by segment using customer and transaction
+      tables
+    grain: segment
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 7fc8cd64d17997f5
+    last_rows: 3
+    last_elapsed_ms: 19.25279200077057
+    metrics:
+      uses: 2
+      avg_elapsed_ms: 17.421
+      last_rows: 1
+  gasstation_chain_distribution:
+    path: templates/gasstation_chain_distribution.sql
+    description: Analyzes transaction patterns at the gas station chain level
+    grain: chainid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: ef690f371c8b558c
+    last_rows: 33
+    last_elapsed_ms: 13.873257674276829
+  customer_transaction_frequency_profile:
+    path: templates/customer_transaction_frequency_profile.sql
+    description: Query to profile transaction frequency distribution across customers,
+      identifying high-frequency users
+    grain: customer
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 330631a53a0d50c2
+    last_rows: 100
+    last_elapsed_ms: 10.817835107445717
+  customer_segment_spending_distribution:
+    path: templates/customer_segment_spending_distribution.sql
+    description: Query to analyze spending patterns by customer segment with transaction
+      aggregations
+    grain: customer_segment
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 8c881f55a5784fb7
+    last_rows: 3
+    last_elapsed_ms: 15.844330191612244
+  customer_monthly_activity:
+    path: templates/customer_monthly_activity.sql
+    description: Reusable metric query for analyzing customer monthly activity patterns
+      across yearmonth table
+    grain: customerid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 2b82597a8d227f5d
+    last_rows: 10
+    last_elapsed_ms: 258.90224426984787
+  product_transaction_profile:
+    path: templates/product_transaction_profile.sql
+    description: Reusable metric query for product transaction frequency and amount
+      distribution
+    grain: productid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 14d313cdf54d1b3c
+    last_rows: 20
+    last_elapsed_ms: 11.890165507793427
+  temporal_transaction_profile:
+    path: templates/temporal_transaction_profile.sql
+    description: Profile date and time distribution patterns in transactions_1k to
+      understand transaction frequency and temporal patterns
+    grain: date
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 775c4b237d8e7bed
+    last_rows: 4
+    last_elapsed_ms: 10.800212621688843
+  customer_engagement_profile:
+    path: templates/customer_engagement_profile.sql
+    description: Profile customer transaction engagement patterns including first/last
+      transaction dates and transaction frequency per customer
+    grain: customerid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 198892923933c7ae
+    last_rows: 50
+    last_elapsed_ms: 11.15269586443901
+  gasstation_activity_profile:
+    path: templates/gasstation_activity_profile.sql
+    description: Profile transaction date distribution per gasstation to understand
+      activity patterns and station-level temporal behavior
+    grain: gasstationid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: f91d446398e251a1
+    last_rows: 50
+    last_elapsed_ms: 10.954118333756924
+  customer_spending_analysis:
+    path: templates/customer_spending_analysis.sql
+    description: Reusable query to analyze customer spending patterns by joining customer
+      segments with transaction data
+    grain: customer
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 4dc3792bf1067a14
+    last_rows: 500
+    last_elapsed_ms: 20.433598197996616
+  gasstation_chain_spend_profile:
+    path: templates/gasstation_chain_spend_profile.sql
+    description: Analyzes spending patterns grouped by gas station chain with station
+      counts
+    grain: chainid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: bdb5016478c384c4
+    last_rows: 50
+    last_elapsed_ms: 19.112123176455498
+  transaction_daily_pattern_analysis:
+    path: templates/transaction_daily_pattern_analysis.sql
+    description: Reusable metric query for analyzing daily transaction patterns in
+      transactions_1k without joins
+    grain: day
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: f3fe731f4b8076d0
+    last_rows: 4
+    last_elapsed_ms: 9.927588514983654
+  transaction_count_per_product:
+    path: templates/transaction_count_per_product.sql
+    description: Count transactions grouped by product ID to analyze product transaction
+      volume
+    grain: productid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: d6b93da07c97c63a
+    last_rows: 20
+    last_elapsed_ms: 10.759285651147366
+  amount_percentile_profile:
+    path: templates/amount_percentile_profile.sql
+    description: Profile spending distribution with percentiles, min/max and distinct
+      count
+    grain: transactions_1k
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 6585a77a2e3c1927
+    last_rows: 1
+    last_elapsed_ms: 11.161391623318195
+  customer_segment_spend_by_segment:
+    path: templates/customer_segment_spend_by_segment.sql
+    description: Reusable metric query for validating customer segment spending patterns
+      by joining customers with transactions table
+    grain: segment
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: cddfe55b2348b8b3
+    last_rows: 3
+    last_elapsed_ms: 16.7306000366807
+  customer_monthly_profile_with_cast:
+    path: templates/customer_monthly_profile_with_cast.sql
+    description: Reusable metric query for profiling customer activity by month with
+      proper date casting to prevent EXTRACT type errors
+    grain: customer
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 14e9043a030a6ef9
+    last_rows: 50
+    last_elapsed_ms: 106.77430871874094
+  customer_transaction_metrics:
+    path: templates/customer_transaction_metrics.sql
+    description: Reusable metric query for customer transaction analysis with count
+      and amount aggregation
+    grain: customer
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 6bcdb37dd8dfc7ec
+    last_rows: 10
+    last_elapsed_ms: 15.424204990267754
+  gasstation_transaction_metrics:
+    path: templates/gasstation_transaction_metrics.sql
+    description: Reusable metric query for gas station transaction analysis with activity
+      and spending metrics
+    grain: gasstation
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: c3fa95c32307cd67
+    last_rows: 20
+    last_elapsed_ms: 11.557074263691902
+  customer_monthly_consumption_analysis:
+    path: templates/customer_monthly_consumption_analysis.sql
+    description: Identifies customers without monthly consumption records and their
+      total consumption
+    grain: customerid + yearmonth
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: a14d1966b8ae2d49
+    last_rows: 100
+    last_elapsed_ms: 324.5586548000574
+  product_transaction_volume_profile:
+    path: templates/product_transaction_volume_profile.sql
+    description: Profiles transaction volume distribution across products with adoption
+      metrics
+    grain: productid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 7ecce2b372cc9f00
+    last_rows: 28
+    last_elapsed_ms: 13.194119557738304
+  yearmonth_consumption_profile:
+    path: templates/yearmonth_consumption_profile.sql
+    description: Profile the consumption column in yearmonth table to understand distribution
+      patterns, null values, and calculate aggregate stats for consumption metrics
+    grain: yearmonth
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 8810d5b00df4068d
+    last_rows: 1
+    last_elapsed_ms: 40.73128383606672
+  customer_consumption_by_segment:
+    path: templates/customer_consumption_by_segment.sql
+    description: Validate and aggregate customer consumption by segment with monthly
+      data
+    grain: customerid, segment, month
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 70febd9b52350622
+    last_rows: 100
+    last_elapsed_ms: 94.72325723618269
+  transaction_volume_by_segment:
+    path: templates/transaction_volume_by_segment.sql
+    description: Profile transaction volume by customer segment using verified customers
+    grain: segment
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 40fef900b4625409
+    last_rows: 3
+    last_elapsed_ms: 20.319526083767414
+  yearmonth_null_consumption_analysis:
+    path: templates/yearmonth_null_consumption_analysis.sql
+    description: Data quality check for null consumption values in yearmonth table
+    grain: yearmonth
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 68eac4cad4e91d16
+    last_rows: 1
+    last_elapsed_ms: 33.19366276264191
+  gasstation_chain_activity_template:
+    path: templates/gasstation_chain_activity_template.sql
+    description: Reusable metric template for gas station chain activity with transaction
+      counts, unique customers, and total spending
+    grain: gasstation chain level
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: b79b9b4bc3c16bfa
+    last_rows: 33
+    last_elapsed_ms: 12.061867862939835
+  cardid_distribution_profile:
+    path: templates/cardid_distribution_profile.sql
+    description: Profile the cardid column to understand payment card distribution
+      patterns and detect anomalies
+    grain: transactions_1k table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 51152af2286dd885
+    last_rows: 1
+    last_elapsed_ms: 9.865868836641312
+  segment_transaction_volume_profile:
+    path: templates/segment_transaction_volume_profile.sql
+    description: Profile transaction volume per customer segment to validate segment-transaction
+      relationships
+    grain: customer segment
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 67493c87d60e93c2
+    last_rows: 3
+    last_elapsed_ms: 16.787477768957615
+  product_spending_by_customer:
+    path: templates/product_spending_by_customer.sql
+    description: Verify product-spending relationship by aggregating transaction amounts
+      per product
+    grain: product
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: cc015f2171320789
+    last_rows: 20
+    last_elapsed_ms: 9.998442605137825
+  consumption_data_quality_check:
+    path: templates/consumption_data_quality_check.sql
+    description: Reusable data quality check for consumption columns in yearmonth-type
+      tables, verifying NULL values and calculating aggregate statistics
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 5022250e57372369
+    last_rows: 1
+    last_elapsed_ms: 35.25180276483297
+  gasstation_customer_analysis:
+    path: templates/gasstation_customer_analysis.sql
+    description: Reusable query pattern for analyzing customer diversity and spending
+      patterns per gasstation
+    grain: gasstation
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: c8da9b2a828f7c56
+    last_rows: 437
+    last_elapsed_ms: 12.401413172483444
+  customer_transaction_fanout_analysis:
+    path: templates/customer_transaction_fanout_analysis.sql
+    description: Analyzes customer transaction patterns across gasstations and products
+      to understand customer behavior and segment distribution
+    grain: customer
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: a1647fcf28abd08f
+    last_rows: 100
+    last_elapsed_ms: 64.8255730047822
+  consumption_distribution_profile:
+    path: templates/consumption_distribution_profile.sql
+    description: Profiles consumption data distribution including percentiles, range,
+      and null handling for yearmonth data
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: 0abd75bc17c74e66
+    last_rows: 1
+    last_elapsed_ms: 285.06524208933115
+  product_transaction_distribution_profile:
+    path: templates/product_transaction_distribution_profile.sql
+    description: Product-level spending pattern analysis with percentiles, distinct
+      counts, and range metrics
+    grain: productid
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: ff5ca7212b419712
+    last_rows: 28
+    last_elapsed_ms: 11.507969349622726
+  product_customer_engagement:
+    path: templates/product_customer_engagement.sql
+    description: Draft reusable metric template for product engagement analysis measuring
+      unique customers and transaction frequency per product
+    grain: product-level with customer engagement metrics
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: bb77c3987003d7bc
+    last_rows: 28
+    last_elapsed_ms: 40.289485827088356
+  transactions_temporal_profile:
+    path: templates/transactions_temporal_profile.sql
+    description: Profile transaction date column to understand temporal transaction
+      patterns and distribution across months
+    grain: transactions_1k
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-15T16:27:49.588554+00:00'
+    result_hash: de5a0b02976c6dbf
+    last_rows: 1
+    last_elapsed_ms: 11.988038197159767

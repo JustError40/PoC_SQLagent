@@ -1,0 +1,1 @@
+SELECT c.segment, COALESCE(y.consumption, 0) as monthly_consumption, COUNT(*) as months_with_data FROM customers c LEFT JOIN yearmonth y ON c.customerid = y.customerid GROUP BY c.customerid, c.segment, y.consumption ORDER BY c.customerid LIMIT 100;

@@ -1,0 +1,1 @@
+SELECT c.segment, COUNT(DISTINCT t.customerid) as unique_customers, COUNT(*) as total_transactions, SUM(t.amount) as total_spending FROM customers c JOIN transactions_1k t ON c.customerid = t.customerid WHERE t.amount > 0 GROUP BY c.segment ORDER BY total_spending DESC;

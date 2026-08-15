@@ -1,0 +1,1 @@
+SELECT t.productid, COUNT(DISTINCT t.customerid) as unique_customers, COUNT(*) as transaction_count, SUM(t.amount) as total_revenue, AVG(t.amount) as avg_transaction_amount FROM transactions_1k t GROUP BY t.productid ORDER BY transaction_count DESC LIMIT 100;

@@ -1,0 +1,1 @@
+SELECT COUNT(*) as total_rows, COUNT(consumption) as non_null_count, COUNT(consumption) = 0 as has_nulls, AVG(consumption) as avg_consumption, SUM(consumption) as total_consumption FROM yearmonth WHERE consumption IS NOT NULL;

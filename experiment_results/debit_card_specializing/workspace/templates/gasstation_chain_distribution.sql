@@ -1,0 +1,1 @@
+SELECT g.chainid, COUNT(DISTINCT t.gasstationid) as unique_stations, SUM(t.amount) as total_volume, COUNT(*) as transactions FROM gasstations g JOIN transactions_1k t ON g.gasstationid = t.gasstationid GROUP BY g.chainid ORDER BY total_volume DESC;

@@ -1,0 +1,202 @@
+customers:
+  customerid:
+    total: 32461
+    nulls: 0
+    distinct: 32461
+    min: '3'
+    max: '53314'
+  segment:
+    total: 32461
+    nulls: 0
+    distinct: 3
+    min: KAM
+    max: SME
+    top_values:
+    - value: SME
+      count: 26763
+    - value: LAM
+      count: 3658
+    - value: KAM
+      count: 2040
+  currency:
+    total: 32461
+    nulls: 0
+    distinct: 2
+    min: CZK
+    max: EUR
+    top_values:
+    - value: CZK
+      count: 30459
+    - value: EUR
+      count: 2002
+gasstations:
+  gasstationid:
+    total: 5716
+    nulls: 0
+    distinct: 5716
+    min: '44'
+    max: '5772'
+  chainid:
+    total: 5716
+    nulls: 0
+    distinct: 233
+    min: '1'
+    max: '290'
+  country:
+    total: 5716
+    nulls: 0
+    distinct: 2
+    min: CZE
+    max: SVK
+    top_values:
+    - value: CZE
+      count: 4836
+    - value: SVK
+      count: 880
+  segment:
+    total: 5716
+    nulls: 0
+    distinct: 5
+    min: Discount
+    max: Value for money
+    top_values:
+    - value: Other
+      count: 2392
+    - value: Premium
+      count: 1428
+    - value: Noname
+      count: 1005
+    - value: Value for money
+      count: 597
+    - value: Discount
+      count: 294
+products:
+  productid:
+    total: 591
+    nulls: 0
+    distinct: 591
+    min: '1'
+    max: '630'
+  description:
+    total: 591
+    nulls: 0
+    distinct: 529
+    min: 55 - Acquirer Simple Fee
+    max: Zprostredk.p
+transactions_1k:
+  transactionid:
+    total: 1000
+    nulls: 0
+    distinct: 1000
+    min: '1'
+    max: '1000'
+  date:
+    total: 1000
+    nulls: 0
+    distinct: 4
+    min: '2012-08-23'
+    max: '2012-08-26'
+  time:
+    total: 1000
+    nulls: 0
+    distinct: 599
+    min: 00:07:00
+    max: '23:20:00'
+  customerid:
+    total: 1000
+    nulls: 0
+    distinct: 517
+    min: '96'
+    max: '49838'
+  cardid:
+    total: 1000
+    nulls: 0
+    distinct: 902
+    min: '26228'
+    max: '775970'
+  gasstationid:
+    total: 1000
+    nulls: 0
+    distinct: 437
+    min: '48'
+    max: '5481'
+  productid:
+    total: 1000
+    nulls: 0
+    distinct: 28
+    min: '2'
+    max: '352'
+  amount:
+    total: 1000
+    nulls: 0
+    distinct: 83
+    min: '0'
+    max: '264'
+  price:
+    total: 1000
+    nulls: 0
+    distinct: 930
+    min: '1.76'
+    max: '5762.49'
+yearmonth:
+  customerid:
+    total: 383282
+    nulls: 0
+    distinct: 30566
+    min: '5'
+    max: '52353'
+  date:
+    total: 383282
+    nulls: 0
+    distinct: 21
+    min: '201112'
+    max: '201311'
+    top_values:
+    - value: '201305'
+      count: 25506
+    - value: '201304'
+      count: 25487
+    - value: '201306'
+      count: 25378
+    - value: '201307'
+      count: 25239
+    - value: '201303'
+      count: 25054
+    - value: '201308'
+      count: 25052
+    - value: '201309'
+      count: 24985
+    - value: '201310'
+      count: 24488
+    - value: '201311'
+      count: 20723
+    - value: '201203'
+      count: 18866
+    - value: '201206'
+      count: 18588
+    - value: '201205'
+      count: 18347
+    - value: '201202'
+      count: 18324
+    - value: '201204'
+      count: 18253
+    - value: '201208'
+      count: 18048
+    - value: '201201'
+      count: 17848
+    - value: '201207'
+      count: 17640
+    - value: '201209'
+      count: 12894
+    - value: '201302'
+      count: 2415
+    - value: '201301'
+      count: 139
+    - value: '201112'
+      count: 8
+  consumption:
+    total: 383282
+    nulls: 0
+    distinct: 279091
+    min: '-582092.9'
+    max: '2.0521871e+06'

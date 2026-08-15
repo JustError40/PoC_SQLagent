@@ -1,0 +1,197 @@
+{
+  "tables": [
+    {
+      "table_name": "customers",
+      "table_type": "BASE TABLE"
+    },
+    {
+      "table_name": "gasstations",
+      "table_type": "BASE TABLE"
+    },
+    {
+      "table_name": "products",
+      "table_type": "BASE TABLE"
+    },
+    {
+      "table_name": "transactions_1k",
+      "table_type": "BASE TABLE"
+    },
+    {
+      "table_name": "yearmonth",
+      "table_type": "BASE TABLE"
+    }
+  ],
+  "columns": {
+    "customers": [
+      {
+        "column_name": "customerid",
+        "data_type": "bigint",
+        "is_nullable": "NO",
+        "ordinal_position": 1
+      },
+      {
+        "column_name": "segment",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "ordinal_position": 2
+      },
+      {
+        "column_name": "currency",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "ordinal_position": 3
+      }
+    ],
+    "gasstations": [
+      {
+        "column_name": "gasstationid",
+        "data_type": "bigint",
+        "is_nullable": "NO",
+        "ordinal_position": 1
+      },
+      {
+        "column_name": "chainid",
+        "data_type": "bigint",
+        "is_nullable": "YES",
+        "ordinal_position": 2
+      },
+      {
+        "column_name": "country",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "ordinal_position": 3
+      },
+      {
+        "column_name": "segment",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "ordinal_position": 4
+      }
+    ],
+    "products": [
+      {
+        "column_name": "productid",
+        "data_type": "bigint",
+        "is_nullable": "NO",
+        "ordinal_position": 1
+      },
+      {
+        "column_name": "description",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "ordinal_position": 2
+      }
+    ],
+    "transactions_1k": [
+      {
+        "column_name": "transactionid",
+        "data_type": "bigint",
+        "is_nullable": "NO",
+        "ordinal_position": 1
+      },
+      {
+        "column_name": "date",
+        "data_type": "date",
+        "is_nullable": "YES",
+        "ordinal_position": 2
+      },
+      {
+        "column_name": "time",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "ordinal_position": 3
+      },
+      {
+        "column_name": "customerid",
+        "data_type": "bigint",
+        "is_nullable": "YES",
+        "ordinal_position": 4
+      },
+      {
+        "column_name": "cardid",
+        "data_type": "bigint",
+        "is_nullable": "YES",
+        "ordinal_position": 5
+      },
+      {
+        "column_name": "gasstationid",
+        "data_type": "bigint",
+        "is_nullable": "YES",
+        "ordinal_position": 6
+      },
+      {
+        "column_name": "productid",
+        "data_type": "bigint",
+        "is_nullable": "YES",
+        "ordinal_position": 7
+      },
+      {
+        "column_name": "amount",
+        "data_type": "bigint",
+        "is_nullable": "YES",
+        "ordinal_position": 8
+      },
+      {
+        "column_name": "price",
+        "data_type": "real",
+        "is_nullable": "YES",
+        "ordinal_position": 9
+      }
+    ],
+    "yearmonth": [
+      {
+        "column_name": "customerid",
+        "data_type": "bigint",
+        "is_nullable": "YES",
+        "ordinal_position": 1
+      },
+      {
+        "column_name": "date",
+        "data_type": "text",
+        "is_nullable": "YES",
+        "ordinal_position": 2
+      },
+      {
+        "column_name": "consumption",
+        "data_type": "real",
+        "is_nullable": "YES",
+        "ordinal_position": 3
+      }
+    ]
+  },
+  "constraints": [
+    {
+      "table_name": "customers",
+      "constraint_name": "2200_16589_1_not_null",
+      "constraint_type": "CHECK",
+      "column_name": null,
+      "foreign_table_name": null,
+      "foreign_column_name": null
+    },
+    {
+      "table_name": "gasstations",
+      "constraint_name": "2200_16594_1_not_null",
+      "constraint_type": "CHECK",
+      "column_name": null,
+      "foreign_table_name": null,
+      "foreign_column_name": null
+    },
+    {
+      "table_name": "products",
+      "constraint_name": "2200_16599_1_not_null",
+      "constraint_type": "CHECK",
+      "column_name": null,
+      "foreign_table_name": null,
+      "foreign_column_name": null
+    },
+    {
+      "table_name": "transactions_1k",
+      "constraint_name": "2200_16604_1_not_null",
+      "constraint_type": "CHECK",
+      "column_name": null,
+      "foreign_table_name": null,
+      "foreign_column_name": null
+    }
+  ],
+  "indexes": []
+}

@@ -1,0 +1,3 @@
+invariants:
+- id: bounded_result
+  expression: rows <= 500

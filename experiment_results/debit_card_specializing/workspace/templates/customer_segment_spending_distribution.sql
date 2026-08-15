@@ -1,0 +1,1 @@
+SELECT c.segment, COUNT(*) as transaction_count, SUM(t.amount) as total_spending, AVG(t.amount) as avg_transaction FROM customers c JOIN transactions_1k t ON c.customerid = t.customerid GROUP BY c.segment ORDER BY total_spending DESC;

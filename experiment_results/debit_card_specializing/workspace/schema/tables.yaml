@@ -1,0 +1,112 @@
+tables:
+- name: customers
+  description: This table stores customer records with a unique ID, segment (e.g.,
+    SME, LAM, KAM), and currency (e.g., CZK, EUR).
+  grain: one row per customer
+  columns:
+  - column_name: customerid
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: segment
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: currency
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 3
+- name: gasstations
+  description: This table stores individual gas station records containing a unique
+    identifier, fuel chain affiliation, country code (e.g., CZE, SVK), and market
+    segment classification.
+  grain: one row per gas station
+  columns:
+  - column_name: gasstationid
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: chainid
+    data_type: bigint
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: country
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 3
+  - column_name: segment
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 4
+- name: products
+  description: Each row represents a unique product identified by a bigint ID ranging
+    from 1 to 630 with text descriptions such as '55 - Acquirer Simple Fee'.
+  grain: one row per product
+  columns:
+  - column_name: productid
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: description
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 2
+- name: transactions_1k
+  description: This table records individual transactions identified by unique transactionids
+    and timestamps, linking customer and card details to gas station locations, products,
+    and monetary amounts.
+  grain: one row per transaction
+  columns:
+  - column_name: transactionid
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: date
+    data_type: date
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: time
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 3
+  - column_name: customerid
+    data_type: bigint
+    is_nullable: 'YES'
+    ordinal_position: 4
+  - column_name: cardid
+    data_type: bigint
+    is_nullable: 'YES'
+    ordinal_position: 5
+  - column_name: gasstationid
+    data_type: bigint
+    is_nullable: 'YES'
+    ordinal_position: 6
+  - column_name: productid
+    data_type: bigint
+    is_nullable: 'YES'
+    ordinal_position: 7
+  - column_name: amount
+    data_type: bigint
+    is_nullable: 'YES'
+    ordinal_position: 8
+  - column_name: price
+    data_type: real
+    is_nullable: 'YES'
+    ordinal_position: 9
+- name: yearmonth
+  description: This table records monthly consumption values for customers identified
+    by their unique ID across the date range 201112 to 201311.
+  grain: one row per customer per month
+  columns:
+  - column_name: customerid
+    data_type: bigint
+    is_nullable: 'YES'
+    ordinal_position: 1
+  - column_name: date
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: consumption
+    data_type: real
+    is_nullable: 'YES'
+    ordinal_position: 3

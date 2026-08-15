@@ -1,0 +1,1 @@
+SELECT p.productid, COUNT(*) as transaction_count, SUM(t.amount) as total_amount FROM products p JOIN transactions_1k t ON p.productid = t.productid GROUP BY p.productid ORDER BY transaction_count DESC LIMIT 20;

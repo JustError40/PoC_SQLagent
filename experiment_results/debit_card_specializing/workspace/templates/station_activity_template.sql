@@ -1,0 +1,1 @@
+WITH station_activity AS (SELECT gasstationid, COUNT(*) as transaction_count, COUNT(DISTINCT customerid) as unique_customers, SUM(amount) as total_spending FROM transactions_1k GROUP BY gasstationid) SELECT * FROM station_activity LIMIT 100 OFFSET 0;
