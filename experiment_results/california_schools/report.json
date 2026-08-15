@@ -1,0 +1,334 @@
+{
+  "db_id": "california_schools",
+  "run_id": "server-california_schools-20260815-092123",
+  "corpus": "evals/bird_california_schools.golden.jsonl",
+  "questions": 30,
+  "judge_model": "hosted_vllm/gemma4-chat",
+  "rows": [
+    {
+      "run": "control",
+      "elapsed_min": 23.2,
+      "stages": {},
+      "counts": {
+        "correct": 2,
+        "wrong_answer": 10,
+        "compare_error": 6,
+        "clarified": 0,
+        "failed_schema": 2,
+        "failed_react": 10,
+        "failed_llm": 0,
+        "failed_other": 0
+      },
+      "details": [
+        {
+          "id": "california_schools_5",
+          "question": "How many schools with an average score in Math greater than 400 in the SAT test are exclusively virtual?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COUNT(\"satscores\".\"cds\") AS \"school_count\" FROM \"satscores\" WHERE \"satscores\".\"avgscrmath\" > 400 AND \"satscores\".\"rtype\" = 'virtual' ORDER BY \"school_count\" DESC"
+        },
+        {
+          "id": "california_schools_11",
+          "question": "Please list the codes of the schools with a total enrollment of over 500.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT \"School Code\" FROM frpm GROUP BY \"School Code\" HAVING SUM(\"Enrollment (K-12)\") > 500"
+        },
+        {
+          "id": "california_schools_12",
+          "question": "Among the schools with an SAT excellence rate of over 0.3, what is the highest eligible free rate for students aged 5-17?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "WITH eligible_schools AS (\n    SELECT f.cdscode\n    FROM frpm f\n    INNER JOIN satscores sc ON f.cdscode = sc.cds\n    WHERE sc.enroll12 IS NOT NULL\n      AND sc.numge1500 IS NOT NULL\n      AND ((sc.numge1500 * 1.0 / sc.enroll12) > 0.3)\n)\nSELECT MAX(f.\"Percent (%) Eligible Free (Ages 5-17)\" AS pct_eligible_free)\nFROM frpm f\nINNER JOIN eligible_schools es ON f.cdscode = es.cdscode"
+        },
+        {
+          "id": "california_schools_17",
+          "question": "Rank schools by their average score in Writing where the score is greater than 499, showing their charter numbers.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT \"satscores\".\"cds\" AS \"cds\", AVG(\"satscores\".\"avgscrwrite\") AS \"avg_write_score\" FROM \"satscores\" WHERE \"satscores\".\"avgscrwrite\" > 499 GROUP BY \"satscores\".\"cds\" ORDER BY \"avg_write_score\" DESC"
+        },
+        {
+          "id": "california_schools_23",
+          "question": "List the names of schools with more than 30 difference in enrollements between K-12 and ages 5-17? Please also give the full street adress of the schools.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT s.school AS school_name, CONCAT(s.street, ' ', s.city, ' ', s.state) AS full_address FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE ABS(f.\"Enrollment (K-12)\" - f.\"Enrollment (Ages 5-17)\") > 30"
+        },
+        {
+          "id": "california_schools_24",
+          "question": "Give the names of the schools with the percent eligible for free meals in K-12 is more than 0.1 and test takers whose test score is greater than or equal to 1500?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT DISTINCT s.school FROM frpm f JOIN schools s ON f.cdscode = s.cdscode JOIN satscores st ON f.cdscode = st.cds WHERE f.\"Percent (%%) Eligible Free (K-12)\" > 0.1 AND st.numge1500 >= 1"
+        },
+        {
+          "id": "california_schools_25",
+          "question": "Name schools in Riverside which the average of average math score for SAT is grater than 400, what is the funding type of these schools?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT \"schools\".\"school\" AS \"school\", \"schools\".\"fundingtype\" AS \"fundingtype\", AVG(\"satscores\".\"avgscrmath\") AS \"avg_math_score\" FROM \"satscores\" JOIN \"schools\" ON \"satscores\".\"cds\" = \"schools\".\"cdscode\" WHERE \"schools\".\"city\" = 'Riverside' GROUP BY \"schools\".\"school\", \"schools\".\"fundingtype\" ORDER BY \"avg_math_score\" DESC LIMIT 100"
+        },
+        {
+          "id": "california_schools_26",
+          "question": "State the names and full communication address of high schools in Monterey which has more than 800 free or reduced price meals for ages 15-17?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT f.\"School Name\", s.mailstreet, s.mailstrabr, s.mailcity, s.mailzip, s.mailstate FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE f.\"FRPM Count (Ages 15-17)\" > 800 AND s.soctype = 'High School' AND s.city = 'Monterey'"
+        },
+        {
+          "id": "california_schools_27",
+          "question": "What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school names along with the score. Also, list the communication number of the schools if there is any.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT s.school, s.phone, AVG(sa.avgscrwrite) as avg_score FROM schools s JOIN satscores sa ON s.school = sa.sname WHERE s.opendate > '1991-01-01' OR s.closeddate < '2000-01-01' GROUP BY s.school, s.phone"
+        },
+        {
+          "id": "california_schools_28",
+          "question": "Consider the average difference between K-12 enrollment and 15-17 enrollment of schools that are locally funded, list the names and DOC type of schools which has a difference above this average.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "WITH school_diffs AS (\n    SELECT\n        s.school,\n        s.doctype,\n        f.\"Enrollment (K-12)\" - f.\"Enrollment (Ages 5-17)\" as diff\n    FROM schools s\n    INNER JOIN frpm f ON s.cdscode = f.cdscode\n    WHERE s.fundingtype = 'Local'\n),\navg_diff AS (\n    SELECT AVG(diff) as avg_difference FROM school_diffs\n)\nSELECT\n    sd.school,\n    sd.doctype\nFROM school_diffs sd\nCROSS JOIN avg_diff ad\nWHERE sd.diff > ad.avg_difference"
+        },
+        {
+          "id": "california_schools_31",
+          "question": "What is the eligible free rate of the 10th and 11th schools with the highest enrolment for students in grades 1 through 12?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "WITH ranked_schools AS (\n    SELECT \"Percent (%) Eligible Free (K-12)\" as eligible_free_rate,\n           \"Enrollment (K-12)\" as enrollment,\n           ROW_NUMBER() OVER (ORDER BY \"Enrollment (K-12)\" DESC) as rn\n    FROM frpm\n    WHERE \"Low Grade\" >= 1 AND \"High Grade\" <= 12 AND \"Enrollment (K-12)\" > 0\n) SELECT eligible_free_rate FROM ranked_schools WHERE rn BETWEEN 10 AND 11"
+        },
+        {
+          "id": "california_schools_32",
+          "question": "What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools with the ownership code 66?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT f.\"Percent (%%) Eligible FRPM (K-12)\" FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE s.soctype = '66' AND f.\"Low Grade\"::integer = 1 AND f.\"High Grade\"::integer = 12 ORDER BY f.\"FRPM Count (K-12)\" DESC LIMIT 5"
+        },
+        {
+          "id": "california_schools_37",
+          "question": "What is the complete address of the school with the lowest excellence rate? Indicate the Street, City, Zip and State.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "WITH min_school AS (SELECT cdscode FROM frpm ORDER BY \"Percent (%) Eligible FRPM (K-12)\" ASC LIMIT 1) SELECT s.street, s.city, s.zip, s.state FROM schools s JOIN min_school m ON s.cdscode = m.cdscode"
+        },
+        {
+          "id": "california_schools_36",
+          "question": "Under whose administration is the school with the highest number of students scoring 1500 or more on the SAT? Indicate their full names.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT s.admfname1, s.admlname1 FROM satscores sat JOIN schools s ON sat.cds = s.cdscode GROUP BY sat.cds, s.admfname1, s.admlname1 ORDER BY SUM(sat.numge1500) DESC LIMIT 1"
+        },
+        {
+          "id": "california_schools_39",
+          "question": "What is the average number of test takers from Fresno schools that opened between 1/1/1980 and 12/31/1980?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT AVG(s.numtsttakr) as avg_test_takers FROM satscores s JOIN schools sch ON s.cds = sch.cdscode WHERE sch.county = 'Fresno' AND sch.opendate >= '1980-01-01' AND sch.opendate <= '1980-12-31'"
+        },
+        {
+          "id": "california_schools_40",
+          "question": "What is the telephone number for the school with the lowest average score in reading in Fresno Unified?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT\n    s.school,\n    AVG(sc.avgscrread) as avg_score,\n    s.phone as communication_number\nFROM satscores sc\nJOIN schools s ON sc.cds = s.cdscode\nWHERE s.district = 'Fresno Unified'\nGROUP BY s.school, s.phone\nORDER BY avg_score ASC\nLIMIT 1"
+        },
+        {
+          "id": "california_schools_41",
+          "question": "List the names of virtual schools that are among the top 5 in their respective counties based on average reading scores.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "WITH ranked_schools AS (\n  SELECT\n    s.school,\n    sc.cds,\n    s.virtual,\n    sc.avgscrread,\n    sc.cname AS county,\n    ROW_NUMBER() OVER (PARTITION BY sc.cname ORDER BY sc.avgscrread DESC) AS rn\n  FROM satscores sc\n  JOIN schools s ON sc.cds = s.cdscode\n  WHERE s.virtual = 'Y'\n)\nSELECT school\nFROM ranked_schools\nWHERE rn <= 5\nORDER BY county, rn"
+        },
+        {
+          "id": "california_schools_45",
+          "question": "What is the average writing score of each of the schools managed by Ricci Ulrich? List the schools and the corresponding average writing scores.",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT\n    s.school,\n    AVG(sc.avgscrwrite) as avg_score\nFROM satscores sc\nJOIN schools s ON sc.cds = s.cdscode\nWHERE s.admfname1 = 'Ricci' AND s.admlname1 = 'Ulrich'\nGROUP BY s.school\nORDER BY avg_score DESC"
+        },
+        {
+          "id": "california_schools_46",
+          "question": "Which state special schools have the highest number of enrollees from grades 1 through 12?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH school_enrollment AS (\n  SELECT\n    s.state,\n    SUM(f.\"Enrollment (K-12)\") as enrollment\n  FROM frpm f\n  JOIN schools s ON f.cdscode = s.cdscode\n  WHERE f.\"School Type\" = 'Special School'\n    AND CAST(f.\"Low Grade\" AS integer) >= 1\n    AND CAST(f.\"High Grade\" AS integer) <= 12\n  GROUP BY s.state\n)\nSELECT\n  state,\n  enrollment\nFROM school_enrollment\nORDER BY enrollment DESC\nLIMIT 10"
+        },
+        {
+          "id": "california_schools_47",
+          "question": "What is the monthly average number of schools that opened in Alameda County under the jurisdiction of the Elementary School District in 1980?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COUNT(DISTINCT cdscode) * 1.0 / 12 as monthly_average_schools\nFROM schools\nWHERE county = 'Alameda'\n  AND district = 'Elementary School District'\n  AND EXTRACT(YEAR FROM opendate) = 1980"
+        },
+        {
+          "id": "california_schools_48",
+          "question": "What is the ratio of merged Unified School District schools in Orange County to merged Elementary School District schools?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT SUM(CASE WHEN doctype = 'Unified School District' THEN 1 ELSE 0 END)::float / SUM(CASE WHEN doctype = 'Elementary School District' THEN 1 ELSE 0 END)::float AS ratio FROM schools WHERE county = 'Orange' AND statustype = 'merged'"
+        },
+        {
+          "id": "california_schools_50",
+          "question": "What is the postal street address for the school with the 7th highest Math average? Indicate the school's name.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT s.mailstreet || ' ' || s.mailcity || ', ' || s.zip || ', ' || s.state AS postal_street_address, s.school AS school_name\nFROM satscores sa\nJOIN schools s ON sa.cds = s.soc\nORDER BY sa.avgscrmath DESC\nLIMIT 1 OFFSET 6"
+        },
+        {
+          "id": "california_schools_62",
+          "question": "What is the total number of non-chartered schools in the county of Los Angeles with a percent (%) of eligible free meals for grades 1 through 12 that is less than 0.18%?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(*) as school_count FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE f.\"County Name\" = 'Los Angeles' AND f.\"Charter School (Y/N)\" = 'Y' AND f.\"Percent (%) Eligible Free (K-12)\" < 0.18"
+        },
+        {
+          "id": "california_schools_72",
+          "question": "How many students from the ages of 5 to 17 are enrolled at the State Special School school in Fremont for the 2014-2015 academic year?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COALESCE(SUM(\"Enrollment (Ages 5-17)\"), 0) as student_count FROM frpm JOIN schools ON frpm.cdscode = schools.cdscode WHERE schools.school = 'State Special School' AND schools.city = 'Fremont' AND frpm.\"Academic Year\" = '2014-2015'"
+        },
+        {
+          "id": "california_schools_77",
+          "question": "Which schools served a grade span of Kindergarten to 9th grade in the county of Los Angeles and what is its Percent (%) Eligible FRPM (Ages 5-17)?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT \"School Name\", \"Percent (%) Eligible FRPM (Ages 5-17)\" FROM frpm WHERE \"County Name\" = 'Los Angeles' AND \"Low Grade\" = 'K' AND \"High Grade\" = '9'"
+        },
+        {
+          "id": "california_schools_79",
+          "question": "Between San Diego and Santa Barbara, which county offers the most number of schools that does not offer physical building? Indicate the amount.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT county, COUNT(DISTINCT cdscode) as school_count FROM schools WHERE county IN ('San Diego', 'Santa Barbara') AND virtual = 'true' GROUP BY county ORDER BY school_count DESC LIMIT 1"
+        },
+        {
+          "id": "california_schools_82",
+          "question": "What is the grade span offered in the school with the highest longitude?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT gsoffered FROM schools ORDER BY longitude DESC LIMIT 1"
+        },
+        {
+          "id": "california_schools_83",
+          "question": "Of the schools that offers a magnet program serving a grade span of Kindergarten to 8th grade, how many offers Multiple Provision Types? List the number of cities that offers a Kindergarten to 8th grade span and indicate how many schools are there serving such grade span for each city.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH k8_schools AS (\n  SELECT s.cdscode, s.city, f.\"Educational Option Type\"\n  FROM schools s\n  JOIN frpm f ON s.cdscode = f.cdscode\n  WHERE s.magnet::text = 'Y'\n    AND f.\"Low Grade\" = 'K'\n    AND f.\"High Grade\" = '8'\n),\nmulti_provision_count AS (\n  SELECT COUNT(*) as total_schools\n  FROM (\n    SELECT cdscode, COUNT(DISTINCT \"Educational Option Type\") as provision_count\n    FROM k8_schools\n    GROUP BY cdscode\n    HAVING COUNT(DISTINCT \"Educational Option Type\") > 1\n  ) sub\n),\ncity_school_counts AS (\n  SELECT city, COUNT(*) as school_count\n  FROM k8_schools\n  GROUP BY city\n)\nSELECT\n  mp.total_schools as total_schools_with_multiple_provision,\n  cs.city,\n  cs.school_count\nFROM multi_provision_count mp\nCROSS JOIN city_school_counts cs\nORDER BY cs.school_count DESC"
+        },
+        {
+          "id": "california_schools_85",
+          "question": "What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT \"Percent (%) Eligible Free (K-12)\" AS percent_eligible_free, s.district AS district_code FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE s.admfname1 = 'Alusine'"
+        },
+        {
+          "id": "california_schools_87",
+          "question": "What are the valid e-mail addresses of the administrator of the school located in the San Bernardino county, City of San Bernardino City Unified that opened between 1/1/2009 to 12/31/2010 whose school types are public Intermediate/Middle Schools and Unified Schools?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT DISTINCT admemail1, admemail2, admemail3 FROM schools WHERE county = 'San Bernardino' AND city = 'San Bernardino' AND school ILIKE '%San Bernardino City Unified%' AND opendate >= '2009-01-01' AND opendate <= '2010-12-31' AND soctype IN ('Intermediate/Middle Schools', 'Unified Schools')"
+        }
+      ],
+      "judge_counts": {
+        "correct": 13,
+        "partially_correct": 0,
+        "incorrect": 2,
+        "inconclusive": 3
+      },
+      "judge_verdicts": [
+        {
+          "id": "california_schools_5",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters for virtual schools with a math average score above 400 and returns the count of such schools."
+        },
+        {
+          "id": "california_schools_11",
+          "verdict": "correct",
+          "reason": "The SQL correctly groups by school code, aggregates enrollment, and filters for totals over 500, matching the user's request."
+        },
+        {
+          "id": "california_schools_17",
+          "verdict": "correct",
+          "reason": "The SQL correctly calculates the average writing score per school, filters for scores above 499, and orders the results in descending order as requested."
+        },
+        {
+          "id": "california_schools_23",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, applies the absolute difference filter > 30, and selects the requested school name and concatenated address."
+        },
+        {
+          "id": "california_schools_27",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters schools by open/close dates, calculates the average writing score, groups by school and phone, and returns the requested columns."
+        },
+        {
+          "id": "california_schools_36",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, aggregates the scores, orders by the highest count, and returns the administrator's name as requested."
+        },
+        {
+          "id": "california_schools_39",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, applies the specified filters for county and opening date, and calculates the requested average."
+        },
+        {
+          "id": "california_schools_40",
+          "verdict": "correct",
+          "reason": "The query correctly filters by district, calculates the average reading score, orders ascending, and limits to one to return the requested phone number."
+        },
+        {
+          "id": "california_schools_41",
+          "verdict": "inconclusive",
+          "reason": "The SQL logic correctly implements the per-county ranking and virtual school filter, but the empty result set prevents verification of the output."
+        },
+        {
+          "id": "california_schools_45",
+          "verdict": "correct",
+          "reason": "The query correctly filters by the manager's name, groups by school, and computes the average writing score as requested."
+        },
+        {
+          "id": "california_schools_46",
+          "verdict": "incorrect",
+          "reason": "The grade range filter is logically flawed and incorrectly excludes valid schools, resulting in an empty dataset."
+        },
+        {
+          "id": "california_schools_47",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters by county, district, and year, and calculates the monthly average by dividing the total distinct schools by 12."
+        },
+        {
+          "id": "california_schools_48",
+          "verdict": "correct",
+          "reason": "The SQL correctly applies the specified filters and computes the requested ratio using conditional aggregation."
+        },
+        {
+          "id": "california_schools_50",
+          "verdict": "inconclusive",
+          "reason": "The SQL logic correctly targets the 7th highest math average, but the empty result set prevents verification of the output correctness."
+        },
+        {
+          "id": "california_schools_72",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, applies the specified filters for school, city, and academic year, and aggregates the enrollment count for the requested age group."
+        },
+        {
+          "id": "california_schools_79",
+          "verdict": "inconclusive",
+          "reason": "The query structure matches the question, but the empty result set prevents verification of correctness without schema or data context."
+        },
+        {
+          "id": "california_schools_82",
+          "verdict": "correct",
+          "reason": "The SQL correctly retrieves the grade span for the school with the maximum longitude by ordering descending and limiting to one row."
+        },
+        {
+          "id": "california_schools_83",
+          "verdict": "incorrect",
+          "reason": "The SQL incorrectly uses a CROSS JOIN to combine a global count with city-level counts, producing a Cartesian product instead of the requested list."
+        }
+      ]
+    }
+  ]
+}
