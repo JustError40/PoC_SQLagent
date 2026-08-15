@@ -49,3 +49,31 @@ def test_dotenv_parses_simple_pairs(tmp_path, monkeypatch):
     monkeypatch.setattr(server_campaign, "REPO_ROOT", tmp_path)
     values = server_campaign.dotenv()
     assert values == {"POSTGRES_USER": "warehouse", "POSTGRES_PASSWORD": "s3cret"}
+
+
+def test_compute_eta_min_uses_mean_duration():
+    assert server_campaign.compute_eta_min([10.0, 20.0], 4) == 60.0
+    assert server_campaign.compute_eta_min([], 4) is None
+    assert server_campaign.compute_eta_min([10.0], 0) is None
+
+
+def test_render_progress_shows_position_and_counts():
+    md = server_campaign.render_progress({
+        "campaign_ts": "20260815-000000",
+        "branch": "campaign/20260815-000000",
+        "updated_at": "2026-08-15T00:00:00+00:00",
+        "status": "demo iteration 2 committed",
+        "current_db": "demo",
+        "db_index": 1,
+        "db_total": 3,
+        "run_label": "iteration 2",
+        "run_index": 3,
+        "runs_per_db": 11,
+        "last_counts": {"correct": 5},
+        "judge_counts": {"incorrect": 1},
+        "eta_min": 42.0,
+    })
+    assert "demo (1/3)" in md
+    assert "iteration 2 (3/11)" in md
+    assert '"correct": 5' in md
+    assert "~42.0 min" in md
