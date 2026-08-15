@@ -34,8 +34,8 @@ class Settings:
     explorer_probes_per_round: int = 3
     bootstrap_on_start: bool = True
     verify_interval_hours: float = 24.0
-    llm_concurrency_initial: int = 4
-    db_concurrency_initial: int = 4
+    llm_concurrency_initial: int = 12
+    db_concurrency_initial: int = 12
 
     @classmethod
     def from_env(cls) -> "Settings":

@@ -49,8 +49,8 @@ docker compose up -d --build
   автоматически названные `pg_temp` таблицы на одной connection и ограничивает
   строки, bytes и timeout.
 
-LiteLLM и PostgreSQL имеют отдельные priority-aware AIMD limiter'ы: старт 4,
-диапазон 1–8. 429, timeout и pool saturation уменьшают concurrency; стабильные
+LiteLLM и PostgreSQL имеют отдельные priority-aware AIMD limiter'ы: старт 12,
+диапазон 1–12. 429, timeout и pool saturation уменьшают concurrency; стабильные
 окна постепенно восстанавливают его. Интерактивные запросы имеют приоритет над
 единственным background learner.
 

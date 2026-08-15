@@ -129,7 +129,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--corpus", type=Path, required=True, help="golden jsonl: id/question/golden_sql")
     parser.add_argument("--iterations", type=int, default=int(os.getenv("LOOP_ITERATIONS", "10")))
-    parser.add_argument("--concurrency", type=int, default=int(os.getenv("LOOP_CONCURRENCY", "4")))
+    parser.add_argument("--concurrency", type=int, default=int(os.getenv("LOOP_CONCURRENCY", "12")))
     parser.add_argument("--control", action="store_true", help="skip learning stages (noise baseline)")
     parser.add_argument("--out", type=Path, default=None)
     args = parser.parse_args()

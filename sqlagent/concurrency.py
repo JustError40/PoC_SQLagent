@@ -18,7 +18,7 @@ class LimiterSnapshot:
 
 
 class AdaptiveLimiter:
-    """Priority-aware 1..8 limiter with AIMD feedback.
+    """Priority-aware 1..12 limiter with AIMD feedback.
 
     Priority 0 is interactive traffic. Background learner calls should use 10.
     The limit is cut in half on 429/timeouts/pool saturation and grows by one
@@ -27,13 +27,13 @@ class AdaptiveLimiter:
 
     def __init__(
         self,
-        initial: int = 4,
+        initial: int = 12,
         minimum: int = 1,
-        maximum: int = 8,
+        maximum: int = 12,
         stable_window: int = 8,
     ) -> None:
-        if not (1 <= minimum <= initial <= maximum <= 8):
-            raise ValueError("adaptive limiter requires 1 <= min <= initial <= max <= 8")
+        if not (1 <= minimum <= initial <= maximum <= 12):
+            raise ValueError("adaptive limiter requires 1 <= min <= initial <= max <= 12")
         self.minimum = minimum
         self.maximum = maximum
         self.stable_window = max(1, stable_window)
@@ -117,9 +117,9 @@ class AdaptiveLimiter:
 
 def _initial(name: str) -> int:
     try:
-        return max(1, min(8, int(os.getenv(name, "4"))))
+        return max(1, min(12, int(os.getenv(name, "12"))))
     except ValueError:
-        return 4
+        return 12
 
 
 LITELLM_LIMITER = AdaptiveLimiter(initial=_initial("LLM_CONCURRENCY_INITIAL"))

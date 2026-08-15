@@ -43,7 +43,7 @@ RESULTS_PATH = Path(os.getenv("CAMPAIGN_RESULTS", REPO_ROOT / "Results.md"))
 TIME_BUDGET_HOURS = float(os.getenv("CAMPAIGN_TIME_BUDGET_HOURS", "6"))
 ASK_TIMEOUT_SEC = float(os.getenv("CAMPAIGN_ASK_TIMEOUT_SEC", "1800"))
 JOB_TIMEOUT_SEC = float(os.getenv("CAMPAIGN_JOB_TIMEOUT_SEC", "3600"))
-CAMPAIGN_CONCURRENCY = max(1, min(8, int(os.getenv("CAMPAIGN_CONCURRENCY", "4"))))
+CAMPAIGN_CONCURRENCY = max(1, min(12, int(os.getenv("CAMPAIGN_CONCURRENCY", "12"))))
 LEARNING_RETRY_WAIT_SEC = float(os.getenv("CAMPAIGN_LEARNING_RETRY_WAIT_SEC", "1800"))
 GIT_PUSH = os.getenv("CAMPAIGN_GIT_PUSH", "1").strip() not in {"0", "false", "no"}
 # Comma-separated stage names to skip on resume (e.g. "survey,explore,optimize,evolve,verify").
@@ -286,7 +286,7 @@ def run_questions_ordered(
 ) -> list[dict]:
     """Run independent questions concurrently while retaining corpus order."""
 
-    with ThreadPoolExecutor(max_workers=max(1, min(8, concurrency)), thread_name_prefix="campaign-question") as pool:
+    with ThreadPoolExecutor(max_workers=max(1, min(12, concurrency)), thread_name_prefix="campaign-question") as pool:
         futures = [pool.submit(ask_fn, question) for question in questions]
         return [future.result() for future in futures]
 

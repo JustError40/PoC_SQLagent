@@ -147,7 +147,7 @@ def profiling_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
         return table, table_profile
 
     items = list(state["columns"].items())
-    with ThreadPoolExecutor(max_workers=min(8, max(1, len(items))), thread_name_prefix="survey-profile") as pool:
+    with ThreadPoolExecutor(max_workers=min(12, max(1, len(items))), thread_name_prefix="survey-profile") as pool:
         profiles = dict(pool.map(profile_table, items))
     return {"profiles": profiles}
 
@@ -196,7 +196,7 @@ def joins_node(state: SurveyState, *, db: Database) -> dict[str, Any]:
                 }
             return verified, dangerous
 
-    with ThreadPoolExecutor(max_workers=min(8, max(1, len(foreign_keys))), thread_name_prefix="survey-join") as pool:
+    with ThreadPoolExecutor(max_workers=min(12, max(1, len(foreign_keys))), thread_name_prefix="survey-join") as pool:
         checked = list(pool.map(verify_fk, foreign_keys))
     verified = [item[0] for item in checked if item[0] is not None]
     dangerous = [item[1] for item in checked if item[1] is not None]
@@ -252,7 +252,7 @@ def semantics_node(state: SurveyState, *, llm: OllamaClient | None = None) -> di
             return table, value if isinstance(value, dict) else None
 
         items = list(state["columns"].items())
-        with ThreadPoolExecutor(max_workers=min(8, max(1, len(items))), thread_name_prefix="survey-semantics") as pool:
+        with ThreadPoolExecutor(max_workers=min(12, max(1, len(items))), thread_name_prefix="survey-semantics") as pool:
             descriptions = list(pool.map(describe, items))
         for table, value in descriptions:
             if value is not None:

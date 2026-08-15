@@ -359,7 +359,7 @@ def select_analytical_candidate(
         return item[0], item[1], method(item[1].sql)
 
     checked: list[tuple[dict[str, Any], CompiledPlan, dict[str, Any]]] = []
-    with ThreadPoolExecutor(max_workers=min(8, len(compiled)), thread_name_prefix="analytical-explain") as pool:
+    with ThreadPoolExecutor(max_workers=min(12, len(compiled)), thread_name_prefix="analytical-explain") as pool:
         futures = [pool.submit(contextvars.copy_context().run, estimate, item) for item in compiled]
         for future in as_completed(futures):
             try:

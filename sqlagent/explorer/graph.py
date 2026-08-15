@@ -224,7 +224,7 @@ def act_node(state: ExplorerState, *, db: Database, workspace: Workspace, llm: O
         return record, local_corrections
 
     probes = list(state.get("probes", []))
-    with ThreadPoolExecutor(max_workers=min(8, max(1, len(probes))), thread_name_prefix="explorer-probe") as pool:
+    with ThreadPoolExecutor(max_workers=min(12, max(1, len(probes))), thread_name_prefix="explorer-probe") as pool:
         completed = list(pool.map(execute_probe, probes))
     # Only artifact/log writes are serialized; the results retain planner order.
     results = [item[0] for item in completed]
