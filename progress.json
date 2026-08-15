@@ -1,6 +1,6 @@
 {
-  "campaign_ts": "20260815-092123",
-  "branch": "campaign/20260815-092123",
+  "campaign_ts": "20260815-092327",
+  "branch": "campaign/20260815-092327",
   "status": "california_schools control committed",
   "db_total": 11,
   "db_index": 1,
@@ -8,22 +8,22 @@
   "current_db": "california_schools",
   "run_label": "control",
   "run_index": 1,
-  "eta_min": 2784.0,
-  "updated_at": "2026-08-15T09:57:15.493456+00:00",
+  "eta_min": 2808.0,
+  "updated_at": "2026-08-15T09:57:44.030875+00:00",
   "last_counts": {
     "correct": 2,
-    "wrong_answer": 10,
-    "compare_error": 6,
+    "wrong_answer": 11,
+    "compare_error": 4,
     "clarified": 0,
-    "failed_schema": 2,
+    "failed_schema": 3,
     "failed_react": 10,
     "failed_llm": 0,
     "failed_other": 0
   },
   "judge_counts": {
-    "correct": 13,
-    "partially_correct": 0,
-    "incorrect": 2,
-    "inconclusive": 3
+    "correct": 15,
+    "partially_correct": 1,
+    "incorrect": 0,
+    "inconclusive": 1
   }
 }
