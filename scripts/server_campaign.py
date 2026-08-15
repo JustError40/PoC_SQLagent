@@ -125,7 +125,10 @@ def load_database(cfg: dict) -> None:
         "exec", "-T", "postgres", "psql", "-U", user, "-d", "postgres", "-tAc",
         f"SELECT 1 FROM pg_database WHERE datname = '{database}'",
     )
-    if "1" not in out:
+    # `out` also echoes the command line (which itself contains "SELECT 1"),
+    # so only an exact standalone "1" line counts as "database exists".
+    exists = any(line.strip() == "1" for line in out.splitlines())
+    if not exists:
         log(f"{database}: creating database")
         compose("exec", "-T", "postgres", "psql", "-U", user, "-d", "postgres",
                 "-c", f"CREATE DATABASE {database}", check=True)
