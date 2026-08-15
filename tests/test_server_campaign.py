@@ -41,6 +41,10 @@ def test_aggregate_reports_baseline_delta():
     assert "correct 1 → 3 (+2)" in md
     assert summary["dbs"][0]["db_id"] == "demo"
     assert len(summary["dbs"][0]["rows"]) == 2
+    improvement = summary["dbs"][0]["improvement"]
+    assert improvement["baseline_correct"] == 1
+    assert improvement["final_correct"] == 3
+    assert improvement["delta_correct"] == 2
 
 
 def test_dotenv_parses_simple_pairs(tmp_path, monkeypatch):

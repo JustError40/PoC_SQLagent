@@ -287,7 +287,13 @@ def score_corpus(db, corpus: list[dict], concurrency: int) -> dict:
             else:
                 verdict = "failed_other"
         counts[verdict] = counts.get(verdict, 0) + 1
-        details.append({"id": item["id"], "verdict": verdict, "error_type": answer.get("error_type")})
+        details.append({
+            "id": item["id"],
+            "question": item["question"],
+            "verdict": verdict,
+            "error_type": answer.get("error_type"),
+            "sql": (answer.get("sql") or "")[:4000],
+        })
     return {"counts": counts, "details": details, "answers": answers}
 
 
@@ -467,10 +473,35 @@ def aggregate(results: list[dict]) -> tuple[str, dict]:
         rows = result["rows"]
         db_entry = {"db_id": result["db_id"], "run_id": result["run_id"],
                     "questions": result["questions"], "rows": rows}
+        if result.get("error"):
+            db_entry["error"] = result["error"]
+        if rows:
+            first, last = rows[0]["counts"], rows[-1]["counts"]
+            db_entry["improvement"] = {
+                "baseline_correct": first.get("correct", 0),
+                "final_correct": last.get("correct", 0),
+                "delta_correct": last.get("correct", 0) - first.get("correct", 0),
+                "baseline_counts": first,
+                "final_counts": last,
+            }
+            judged_rows = [row for row in rows if row.get("judge_counts")]
+            if judged_rows:
+                db_entry["judge"] = {
+                    "model": judge.JUDGE_MODEL,
+                    "runs_judged": len(judged_rows),
+                    "totals": {verdict: sum(row["judge_counts"].get(verdict, 0) for row in judged_rows)
+                               for verdict in judge.VERDICTS},
+                    "last_run": judged_rows[-1]["judge_counts"],
+                }
         summary["dbs"].append(db_entry)
         lines += [
             f"## {result['db_id']} ({result['questions']} questions)",
             "",
+        ]
+        if not rows:
+            lines += [f"ABORTED: {result.get('error', 'no runs completed')}", ""]
+            continue
+        lines += [
             "| Run | Correct | Wrong answer | Compare error | Clarified | Fail: schema | Fail: react | Fail: LLM | Fail: other |",
             "|---|---|---|---|---|---|---|---|---|",
         ]
