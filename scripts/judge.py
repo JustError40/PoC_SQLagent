@@ -76,7 +76,10 @@ def _content(body: dict) -> str:
 
 def judge_answer(question: str, sql: str, row_count: int, row_sample: list, base_url: str = "") -> dict:
     """Score one answered question. Never raises: failures become inconclusive."""
-    target_base = (base_url or JUDGE_BASE_URL).rstrip("/")
+    # Explicit CAMPAIGN_JUDGE_BASE_URL wins over the discovered one: the agent
+    # may report a container-only address (host.docker.internal) that does not
+    # resolve on the host running this script.
+    target_base = (JUDGE_BASE_URL or base_url).rstrip("/")
     if not enabled() or not target_base:
         return {"verdict": "inconclusive", "reason": "judge disabled"}
     user = (
