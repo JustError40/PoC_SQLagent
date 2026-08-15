@@ -543,6 +543,12 @@ def main() -> int:
     parser.add_argument("--only", nargs="*", default=None, help="run only these db_id values")
     args = parser.parse_args()
 
+    # docker-compose.yml marks RUN_ID/TARGET_DB as required (:?) and compose
+    # interpolates every variable even for plain `exec` calls, so provide
+    # harmless defaults; recreate_api passes the real per-db values explicitly.
+    os.environ.setdefault("RUN_ID", f"server-campaign-{CAMPAIGN_TS}")
+    os.environ.setdefault("TARGET_DB", "warehouse")
+
     if args.config:
         dbs = json.loads(args.config.read_text(encoding="utf-8"))
     elif (REPO_ROOT / "evals" / "server_dbs.json").exists():
