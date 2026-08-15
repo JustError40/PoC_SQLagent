@@ -1,29 +1,29 @@
 {
-  "campaign_ts": "20260815-092123",
-  "branch": "campaign/20260815-092123",
-  "status": "debit_card_specializing iteration 9 committed",
+  "campaign_ts": "20260815-092327",
+  "branch": "campaign/20260815-092327",
+  "status": "student_club iteration 3 committed",
   "db_total": 11,
-  "db_index": 2,
+  "db_index": 3,
   "runs_per_db": 11,
-  "current_db": "debit_card_specializing",
-  "run_label": "iteration 9",
-  "run_index": 10,
-  "eta_min": 3774.0,
-  "updated_at": "2026-08-15T22:51:50.842536+00:00",
+  "current_db": "student_club",
+  "run_label": "iteration 3",
+  "run_index": 4,
+  "eta_min": 3189.6,
+  "updated_at": "2026-08-15T23:06:47.070835+00:00",
   "last_counts": {
-    "correct": 0,
-    "wrong_answer": 0,
-    "compare_error": 17,
-    "clarified": 1,
-    "failed_schema": 3,
-    "failed_react": 8,
+    "correct": 13,
+    "wrong_answer": 17,
+    "compare_error": 11,
+    "clarified": 0,
+    "failed_schema": 4,
+    "failed_react": 1,
     "failed_llm": 0,
-    "failed_other": 1
+    "failed_other": 0
   },
   "judge_counts": {
-    "correct": 11,
+    "correct": 33,
     "partially_correct": 0,
-    "incorrect": 3,
-    "inconclusive": 3
+    "incorrect": 4,
+    "inconclusive": 4
   }
 }
