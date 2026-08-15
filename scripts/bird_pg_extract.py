@@ -32,19 +32,28 @@ def main() -> int:
     entry = next((e for e in tables_json if e["db_id"] == args.db_id), None)
     if entry is None:
         raise SystemExit(f"db_id {args.db_id!r} not found in dev_tables.json")
-    wanted = set(entry["table_names_original"])
+    wanted = {t.lower(): t for t in entry["table_names_original"]}
 
     dump_path = args.data_dir.parent / "MINIDEV_postgresql" / "BIRD_dev.sql"
     blocks: list[str] = [f"-- BIRD mini-dev / {args.db_id}: extracted from {dump_path.name}\n"]
     found: set[str] = set()
+    actual_names: set[str] = set()
     with dump_path.open(encoding="utf-8") as dump:
         in_block = False
         for line in dump:
             if not in_block:
+                low = line.lower()
                 for table in wanted:
-                    if line.startswith(f"CREATE TABLE public.{table} (") or line.startswith(f"COPY public.{table} "):
+                    if (
+                        low.startswith(f"create table public.{table} (")
+                        or low.startswith(f'create table public."{table}" (')
+                        or low.startswith(f"copy public.{table} ")
+                        or low.startswith(f'copy public."{table}" ')
+                    ):
                         in_block = True
                         found.add(table)
+                        name_token = line.split()[2] if low.startswith("create table") else line.split()[1]
+                        actual_names.add(name_token.removeprefix("public.").strip('"'))
                         blocks.append(line)
                         break
             else:
@@ -52,11 +61,11 @@ def main() -> int:
                 if line.rstrip("\n") in (");", "\\."):
                     in_block = False
 
-    missing = wanted - found
+    missing = set(wanted) - found
     if missing:
-        raise SystemExit(f"tables not found in dump: {sorted(missing)}")
+        raise SystemExit(f"tables not found in dump: {sorted(wanted[t] for t in missing)}")
 
-    drops = "\n".join(f'DROP TABLE IF EXISTS public."{t}" CASCADE;' for t in sorted(wanted))
+    drops = "\n".join(f'DROP TABLE IF EXISTS public."{t}" CASCADE;' for t in sorted(actual_names))
     out_path = ROOT / ".data" / "bird" / f"{args.db_id}.pg.sql"
     out_path.write_text(drops + "\n\n" + "".join(blocks), encoding="utf-8")
     print(json.dumps({"db_id": args.db_id, "tables": sorted(found), "out": str(out_path)}, indent=2))
