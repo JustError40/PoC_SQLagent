@@ -2831,6 +2831,322 @@
           "reason": "The join condition is too loose, missing a date or transaction ID match, which causes duplicate rows for the same customer."
         }
       ]
+    },
+    {
+      "run": "iteration 8",
+      "elapsed_min": 28.8,
+      "stages": {
+        "explore": "completed:3 rounds, 5 artifacts",
+        "optimize": "completed:8 artifacts across 4 domains, 0 failing templates",
+        "evolve": "failed",
+        "promote": "start_failed: HTTP Error 409: Conflict",
+        "verify": "completed"
+      },
+      "counts": {
+        "correct": 0,
+        "wrong_answer": 0,
+        "compare_error": 15,
+        "clarified": 1,
+        "failed_schema": 3,
+        "failed_react": 11,
+        "failed_llm": 0,
+        "failed_other": 0
+      },
+      "details": [
+        {
+          "id": "debit_card_specializing_1471",
+          "question": "What is the ratio of customers who pay in EUR against customers who pay in CZK?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT CAST(COUNT(DISTINCT CASE WHEN i.source = 'EUR' THEN i.link_to_member END) AS FLOAT) / NULLIF(CAST(COUNT(DISTINCT CASE WHEN i.source = 'CZK' THEN i.link_to_member END) AS FLOAT), 0) AS ratio FROM income i WHERE i.source IN ('EUR', 'CZK')"
+        },
+        {
+          "id": "debit_card_specializing_1472",
+          "question": "In 2012, who had the least consumption in LAM?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT m.first_name, m.last_name, SUM(e.cost) AS total_consumption FROM expense e JOIN member m ON e.link_to_member = m.member_id JOIN budget b ON e.link_to_budget = b.budget_id WHERE EXTRACT(YEAR FROM DATE(e.expense_date)) = 2012 AND b.category = 'LAM' GROUP BY m.member_id, m.first_name, m.last_name ORDER BY total_consumption ASC LIMIT 1"
+        },
+        {
+          "id": "debit_card_specializing_1473",
+          "question": "What was the average monthly consumption of customers in SME for the year 2013?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT SUM(e.cost) / 12.0 AS avg_monthly_consumption FROM expense e JOIN member m ON e.link_to_member = m.member_id JOIN major ma ON m.link_to_major = ma.major_id WHERE e.expense_date >= '2013-01-01' AND e.expense_date < '2014-01-01' AND ma.major_name = 'SME'"
+        },
+        {
+          "id": "debit_card_specializing_1476",
+          "question": "What was the difference in gas consumption between CZK-paying customers and EUR-paying customers in 2012?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "WITH gas_expenses AS (SELECT expense_id, expense_date, cost, link_to_member FROM expense WHERE expense_description ILIKE '%gas%' AND expense_date >= '2012-01-01' AND expense_date < '2013-01-01'), member_currency AS (SELECT e.expense_id, e.link_to_member, m.member_id, m.position, CASE WHEN m.position = 'CZK' THEN 'CZK' WHEN m.position = 'EUR' THEN 'EUR' ELSE 'UNKNOWN' END as payment_type, e.cost FROM gas_expenses e JOIN member m ON e.link_to_member = m.member_id) SELECT payment_type, SUM(cost) as total_gas FROM member_currency GROUP BY payment_type"
+        },
+        {
+          "id": "debit_card_specializing_1479",
+          "question": "Which year recorded the most consumption of gas paid in CZK?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT DATE_TRUNC('year', e.expense_date::date) AS year, SUM(e.cost) AS total_consumption FROM expense e JOIN budget b ON e.link_to_budget = b.budget_id WHERE b.category = 'gas' AND b.currency = 'CZK' GROUP BY DATE_TRUNC('year', e.expense_date::date) ORDER BY total_consumption DESC LIMIT 1"
+        },
+        {
+          "id": "debit_card_specializing_1480",
+          "question": "What was the gas consumption peak month for SME customers in 2013?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT DATE_TRUNC('month', e.expense_date::date) AS month, SUM(e.cost) AS total_cost\nFROM expense e\nJOIN budget b ON e.link_to_budget = b.budget_id\nJOIN member m ON e.link_to_member = m.member_id\nWHERE b.category = 'gas'\n  AND e.expense_date >= '2013-01-01'\n  AND e.expense_date < '2014-01-01'\n  AND m.position = 'SME'\nGROUP BY DATE_TRUNC('month', e.expense_date::date)\nORDER BY total_cost DESC\nLIMIT 1"
+        },
+        {
+          "id": "debit_card_specializing_1481",
+          "question": "What is the difference in the annual average consumption of the customers with the least amount of consumption paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH member_2013_expense AS (\n  SELECT\n    m.member_id,\n    m.position,\n    SUM(e.cost) AS total_cost\n  FROM expense e\n  JOIN member m ON e.link_to_member = m.member_id\n  WHERE e.expense_date >= '2013-01-01' AND e.expense_date < '2014-01-01'\n  GROUP BY m.member_id, m.position\n),\nmember_min AS (\n  SELECT member_id, position, total_cost,\n         RANK() OVER (PARTITION BY position ORDER BY total_cost ASC) AS cost_rank\n  FROM member_2013_expense\n),\nmin_customers AS (\n  SELECT member_id, position, total_cost\n  FROM member_min\n  WHERE cost_rank = 1\n),\nposition_stats AS (\n  SELECT position, AVG(total_cost) AS avg_consumption\n  FROM min_customers\n  GROUP BY position\n)\nSELECT\n  CASE\n    WHEN p1.position = 'SME' THEN 'SME vs ' || p2.position\n    WHEN p1.position = 'LAM' THEN 'LAM vs ' || p2.position\n    WHEN p1.position = 'KAM' THEN 'KAM vs ' || p2.position\n  END AS comparison_pair,\n  p1.avg_consumption AS category1_avg,\n  p2.avg_consumption AS category2_avg,\n  p1.avg_consumption - p2.avg_consumption AS difference\nFROM position_stats p1\nCROSS JOIN position_stats p2\nWHERE p1.position IN ('SME','LAM','KAM') AND p2.position IN ('SME','LAM','KAM')\nORDER BY p1.position, p2.position"
+        },
+        {
+          "id": "debit_card_specializing_1482",
+          "question": "Which of the three segments—SME, LAM and KAM—has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH segment_totals_2012 AS (\n    SELECT b.category, SUM(e.cost) AS total_cost\n    FROM expense e\n    JOIN budget b ON e.link_to_budget = b.budget_id\n    WHERE CAST(e.approved AS boolean) = TRUE\n    AND e.expense_date >= '2012-01-01'\n    AND e.expense_date < '2013-01-01'\n    GROUP BY b.category\n),\nsegment_totals_2013 AS (\n    SELECT b.category, SUM(e.cost) AS total_cost\n    FROM expense e\n    JOIN budget b ON e.link_to_budget = b.budget_id\n    WHERE CAST(e.approved AS boolean) = TRUE\n    AND e.expense_date >= '2013-01-01'\n    AND e.expense_date < '2014-01-01'\n    GROUP BY b.category\n),\nsegment_increase AS (\n    SELECT s2012.category,\n           s2012.total_cost AS total_2012,\n           s2013.total_cost AS total_2013,\n           ROUND(((s2013.total_cost - s2012.total_cost) * 100.0 / NULLIF(s2012.total_cost, 0))::numeric, 2) AS pct_increase\n    FROM segment_totals_2012 s2012\n    JOIN segment_totals_2013 s2013 ON s2012.category = s2013.category\n    WHERE s2012.category IN ('SME', 'LAM', 'KAM')\n),\nsegment_max AS (\n    SELECT category, total_2012, total_2013, pct_increase\n    FROM segment_increase\n    WHERE pct_increase = (SELECT MAX(pct_increase) FROM segment_increase)\n),\nsegment_min AS (\n    SELECT category, total_2012, total_2013, pct_increase\n    FROM segment_increase\n    WHERE pct_increase = (SELECT MIN(pct_increase) FROM segment_increase)\n)\nSELECT category, total_2012, total_2013, pct_increase FROM segment_max\nUNION ALL\nSELECT category, total_2012, total_2013, pct_increase FROM segment_min\nORDER BY pct_increase DESC, pct_increase ASC"
+        },
+        {
+          "id": "debit_card_specializing_1483",
+          "question": "How much did customer 6 consume in total between August and November 2013?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT SUM(e.cost) AS total_consumption\nFROM expense e\nJOIN member m ON e.link_to_member = m.member_id\nWHERE m.member_id = '6'\n  AND e.expense_date >= '2013-08-01'\n  AND e.expense_date <= '2013-11-30'"
+        },
+        {
+          "id": "debit_card_specializing_1484",
+          "question": "How many more \"discount\" gas stations does the Czech Republic have compared to Slovakia?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COALESCE(czech_count - slovak_count, 0) AS difference FROM (SELECT COUNT(*) AS czech_count FROM gas_stations WHERE country = 'Czech Republic' AND type = 'discount' UNION ALL SELECT COUNT(*) AS slovak_count FROM gas_stations WHERE country = 'Slovakia' AND type = 'discount') AS counts"
+        },
+        {
+          "id": "debit_card_specializing_1486",
+          "question": "Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "WITH sme_expenses AS (SELECT e.cost, e.link_to_member FROM expense e WHERE EXISTS (SELECT 1 FROM member m WHERE m.member_id = e.link_to_member AND (m.position = 'SME' OR LOWER(m.position) LIKE '%sme%'))), member_currency AS (SELECT m.member_id, m.position, MAX(CASE WHEN e.cost > 0 THEN 'CZK' ELSE 'EUR' END) as currency FROM sme_expenses e JOIN member m ON e.link_to_member = m.member_id GROUP BY m.member_id, m.position) SELECT SUM(CASE WHEN currency = 'CZK' THEN 1 ELSE 0 END) as czk_count, SUM(CASE WHEN currency = 'EUR' THEN 1 ELSE 0 END) as eur_count, SUM(CASE WHEN currency = 'CZK' THEN 1 ELSE 0 END) - SUM(CASE WHEN currency = 'EUR' THEN 1 ELSE 0 END) as difference FROM member_currency WHERE EXISTS (SELECT 1 FROM expense e WHERE e.link_to_member = member_currency.member_id) ORDER BY czk_count DESC LIMIT 1"
+        },
+        {
+          "id": "debit_card_specializing_1490",
+          "question": "How many percent of LAM customer consumed more than 46.73?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT ROUND(CAST(COUNT(DISTINCT CASE WHEN e.cost > 46.73 THEN m.member_id END) AS NUMERIC) * 100.0 / NULLIF(COUNT(DISTINCT m.member_id), 0), 2) AS percentage FROM expense e JOIN member m ON e.link_to_member = m.member_id JOIN major ma ON m.link_to_major = ma.major_id WHERE ma.department = 'LAM'"
+        },
+        {
+          "id": "debit_card_specializing_1493",
+          "question": "In February 2012, what percentage of customers consumed more than 528.3?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH member_consumption AS (\n    SELECT\n        m.member_id,\n        SUM(e.cost) as total_consumption\n    FROM member m\n    INNER JOIN expense e ON m.member_id = e.link_to_member\n    WHERE e.expense_date >= '2012-02-01'\n      AND e.expense_date < '2013-02-01'\n    GROUP BY m.member_id\n),\nactive_members AS (\n    SELECT COUNT(*) as total\n    FROM member m\n    INNER JOIN expense e ON m.member_id = e.link_to_member\n    WHERE e.expense_date >= '2012-02-01'\n      AND e.expense_date < '2013-02-01'\n),\nthreshold_members AS (\n    SELECT COUNT(*) as count\n    FROM member_consumption mc\n    WHERE mc.total_consumption > 528.3\n)\nSELECT\n    ROUND(COALESCE(tm.count, 0) * 100.0 / NULLIF(am.total, 0), 2) as percentage\nFROM threshold_members tm\nCROSS JOIN active_members am"
+        },
+        {
+          "id": "debit_card_specializing_1498",
+          "question": "What is the highest monthly consumption in the year 2012?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT MAX(monthly_consumption) AS highest_monthly_consumption\nFROM (\n    SELECT\n        DATE_TRUNC('month', expense_date::date) AS month,\n        SUM(cost) AS monthly_consumption\n    FROM expense\n    WHERE expense_date >= '2012-01-01' AND expense_date < '2013-01-01'\n    GROUP BY DATE_TRUNC('month', expense_date::date)\n) AS monthly_expenses"
+        },
+        {
+          "id": "debit_card_specializing_1500",
+          "question": "Please list the product description of the products consumed in September, 2013.",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT COUNT(\"expense\".\"expense_description\") AS \"expense_description\" FROM \"expense\" WHERE \"expense\".\"expense_date\" >= '2013-09-01' AND \"expense\".\"expense_date\" <= '2013-09-30' ORDER BY \"expense_description\" ASC"
+        },
+        {
+          "id": "debit_card_specializing_1501",
+          "question": "Please list the countries of the gas stations with transactions taken place in June, 2013.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT DISTINCT z.state FROM expense e JOIN member m ON e.link_to_member = m.member_id JOIN zip_code z ON m.zip = z.zip_code WHERE e.expense_date >= '2013-06-01' AND e.expense_date < '2013-07-01 AND e.link_to_member IS NOT NULL"
+        },
+        {
+          "id": "debit_card_specializing_1505",
+          "question": "Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(DISTINCT m.member_id) AS customer_count FROM member m JOIN expense e ON m.member_id = e.link_to_member JOIN (SELECT link_to_member AS member_id, DATE_TRUNC('month', expense_date::date) AS month, SUM(cost) AS monthly_cost FROM expense GROUP BY link_to_member, DATE_TRUNC('month', expense_date::date)) aggregated ON m.member_id = aggregated.member_id WHERE aggregated.monthly_cost > 1000"
+        },
+        {
+          "id": "debit_card_specializing_1506",
+          "question": "Please list the product descriptions of the transactions taken place in the gas stations in the Czech Republic.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT e.expense_description FROM expense e JOIN member m ON e.link_to_member = m.member_id JOIN zip_code z ON m.zip = z.zip_code WHERE z.type = 'gas_station' AND (z.state ILIKE '%Czech%' OR z.short_state ILIKE '%Czech%') ORDER BY e.expense_date DESC"
+        },
+        {
+          "id": "debit_card_specializing_1507",
+          "question": "Please list the disparate time of the transactions taken place in the gas stations from chain no. 11.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT DISTINCT expense_date FROM expense WHERE expense_description LIKE '%gas%' AND expense_date IS NOT NULL"
+        },
+        {
+          "id": "debit_card_specializing_1509",
+          "question": "Among the transactions made in the gas stations in the Czech Republic, how many of them are taken place after 2012/1/1?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(*) FROM income i WHERE i.date_received > '2012-01-01' AND i.source LIKE '%gas station%' AND i.zip_code = '10000'"
+        },
+        {
+          "id": "debit_card_specializing_1514",
+          "question": "What kind of currency did the customer paid at 16:25:00 in 2012/8/24?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT source AS currency FROM income WHERE date_received = '2012-08-24 16:25:00'"
+        },
+        {
+          "id": "debit_card_specializing_1515",
+          "question": "What segment did the customer have at 2012/8/23 21:20:00?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT maj.major_name AS segment FROM attendance a JOIN member m ON a.link_to_member = m.member_id JOIN major maj ON m.link_to_major = maj.major_id WHERE m.email = 'customer@example.com' AND a.link_to_event = (SELECT event_id FROM event WHERE event_date = '2012-08-23') AND a.attendance_time = '2012-08-23 21:20:00'"
+        },
+        {
+          "id": "debit_card_specializing_1521",
+          "question": "For all the transactions happened during 8:00-9:00 in 2012/8/26, how many happened in CZE?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) FROM event WHERE event_date >= '2012-08-26 08:00:00' AND event_date < '2012-08-26 09:00:00' AND location = 'CZE'"
+        },
+        {
+          "id": "debit_card_specializing_1524",
+          "question": "What's the nationality of the customer who spent 548.4 in 2012/8/24?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT m.member_id, m.first_name, m.last_name, m.email, m.position, m.t_shirt_size, m.phone, m.zip, m.link_to_major FROM member m INNER JOIN expense e ON m.member_id = e.link_to_member WHERE e.expense_date = '2012-08-24' AND e.cost = 548.4"
+        },
+        {
+          "id": "debit_card_specializing_1525",
+          "question": "What is the percentage of the customers who used EUR in 2012/8/25?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT CAST(COUNT(DISTINCT CASE WHEN i.source = 'EUR' THEN i.link_to_member END) AS FLOAT) * 100.0 / NULLIF(CAST(COUNT(DISTINCT i.link_to_member) AS FLOAT), 0) AS percentage FROM income i WHERE i.date_received = '2012-08-25'"
+        },
+        {
+          "id": "debit_card_specializing_1526",
+          "question": "For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH target_member AS (SELECT link_to_member FROM expense WHERE cost = 634.8 AND expense_date = '2012-08-25'::text), annual_totals AS (SELECT m.member_id, SUM(CASE WHEN EXTRACT(YEAR FROM e.expense_date::date) = 2012 THEN e.cost ELSE 0 END) AS total_2012, SUM(CASE WHEN EXTRACT(YEAR FROM e.expense_date::date) = 2013 THEN e.cost ELSE 0 END) AS total_2013 FROM expense e JOIN member m ON e.link_to_member = m.member_id WHERE e.link_to_member IN (SELECT link_to_member FROM target_member) GROUP BY m.member_id) SELECT ((total_2012 - total_2013)::numeric / NULLIF(total_2012, 0) * 100) AS consumption_decrease_rate FROM annual_totals"
+        },
+        {
+          "id": "debit_card_specializing_1528",
+          "question": "What is the percentage of \"premium\" against the overall segment in Country = \"SVK\"?",
+          "verdict": "clarified",
+          "error_type": null,
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1529",
+          "question": "What is the amount spent by customer \"38508\" at the gas stations? How much had the customer spent in January 2012?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT 'Gas Stations' as category, SUM(e.cost) as amount FROM expense e JOIN budget b ON e.link_to_budget = b.budget_id JOIN member m ON e.link_to_member = m.member_id WHERE m.member_id = '38508'::text AND b.category = 'gas stations' UNION ALL SELECT 'January 2012' as category, SUM(e.cost) as amount FROM expense e JOIN member m ON e.link_to_member = m.member_id WHERE m.member_id = '38508'::text AND e.expense_date >= '2012-01-01' AND e.expense_date < '2012-02-01'"
+        },
+        {
+          "id": "debit_card_specializing_1531",
+          "question": "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT e.expense_id, e.link_to_member, e.cost,\n       b.category,\n       b.amount AS budget_amount,\n       b.spent AS budget_spent\nFROM expense e\nJOIN member m ON e.link_to_member = m.member_id\nJOIN budget b ON e.link_to_budget = b.budget_id\nWHERE e.approved = 'true'"
+        },
+        {
+          "id": "debit_card_specializing_1533",
+          "question": "For all the people who paid more than 29.00 per unit of product id No.5. Give their consumption status in the August of 2012.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT m.first_name, m.last_name, e.approved AS consumption_status FROM member m INNER JOIN expense e ON m.member_id = e.link_to_member WHERE e.expense_date BETWEEN '2012-08-01' AND '2012-08-31' AND e.cost > 29.00"
+        }
+      ],
+      "judge_counts": {
+        "correct": 10,
+        "partially_correct": 0,
+        "incorrect": 3,
+        "inconclusive": 2
+      },
+      "judge_verdicts": [
+        {
+          "id": "debit_card_specializing_1471",
+          "verdict": "correct",
+          "reason": "The SQL correctly calculates the ratio of distinct customers paying in EUR to those paying in CZK using conditional aggregation and handles division by zero."
+        },
+        {
+          "id": "debit_card_specializing_1472",
+          "verdict": "inconclusive",
+          "reason": "The SQL logic correctly addresses the question, but the empty result set prevents verification of the answer's accuracy."
+        },
+        {
+          "id": "debit_card_specializing_1473",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters for the year 2013 and SME major, and calculates the average monthly consumption by dividing the total cost by 12."
+        },
+        {
+          "id": "debit_card_specializing_1480",
+          "verdict": "inconclusive",
+          "reason": "The query logic correctly targets the peak month but returns zero rows, which may be legitimate or indicate a schema mismatch, making verification inconclusive."
+        },
+        {
+          "id": "debit_card_specializing_1481",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters for 2013, identifies the minimum consumption per position, computes their averages, and calculates the requested pairwise differences."
+        },
+        {
+          "id": "debit_card_specializing_1482",
+          "verdict": "incorrect",
+          "reason": "The query omits a filter for EUR currency and likely fails due to incorrect type casting, yielding zero results."
+        },
+        {
+          "id": "debit_card_specializing_1483",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters by the specified customer and date range, and aggregates the cost as requested."
+        },
+        {
+          "id": "debit_card_specializing_1490",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters for the LAM department, and calculates the percentage of customers meeting the consumption threshold."
+        },
+        {
+          "id": "debit_card_specializing_1493",
+          "verdict": "incorrect",
+          "reason": "The date filter incorrectly spans the entire year 2012 instead of just February 2012."
+        },
+        {
+          "id": "debit_card_specializing_1498",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters for 2012, aggregates monthly consumption, and computes the maximum as requested."
+        },
+        {
+          "id": "debit_card_specializing_1514",
+          "verdict": "incorrect",
+          "reason": "The SQL queries the wrong table and column for customer payments, resulting in an empty set."
+        },
+        {
+          "id": "debit_card_specializing_1521",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters by the specified date/time range and location, and uses COUNT(*) to answer the question."
+        },
+        {
+          "id": "debit_card_specializing_1525",
+          "verdict": "correct",
+          "reason": "The SQL correctly calculates the requested percentage using distinct customer counts, proper date filtering, and safe division handling."
+        },
+        {
+          "id": "debit_card_specializing_1526",
+          "verdict": "correct",
+          "reason": "The SQL correctly identifies the target customer, aggregates expenses by year, and calculates the decrease rate as requested."
+        },
+        {
+          "id": "debit_card_specializing_1529",
+          "verdict": "correct",
+          "reason": "The SQL correctly addresses both parts of the question using UNION ALL with appropriate joins, filters, and aggregations."
+        }
+      ]
     }
   ]
 }
