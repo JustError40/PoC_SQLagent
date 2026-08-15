@@ -1,13 +1,13 @@
 {
   "campaign_ts": "20260815-084043",
   "branch": "campaign/20260815-084043",
-  "status": "formula_1 aborted: restore failed for formula_1: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"formula_1\" does not exist\n\n",
+  "status": "loading financial",
   "db_total": 11,
-  "db_index": 7,
+  "db_index": 8,
   "runs_per_db": 11,
-  "current_db": "formula_1",
+  "current_db": "financial",
   "run_label": "-",
   "run_index": 0,
   "eta_min": null,
-  "updated_at": "2026-08-15T08:41:23.437764+00:00"
+  "updated_at": "2026-08-15T08:41:26.055000+00:00"
 }
