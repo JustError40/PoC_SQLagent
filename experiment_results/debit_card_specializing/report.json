@@ -1783,6 +1783,347 @@
           "reason": "The join condition only matches on customerid, causing row multiplication and duplicates instead of correctly linking the transaction and time tables."
         }
       ]
+    },
+    {
+      "run": "iteration 5",
+      "elapsed_min": 12.1,
+      "stages": {
+        "explore": "completed:0 rounds, 0 artifacts",
+        "optimize": "completed:0 artifacts across 4 domains, 0 failing templates",
+        "evolve": "failed",
+        "promote": "start_failed: HTTP Error 409: Conflict",
+        "verify": "completed"
+      },
+      "counts": {
+        "correct": 6,
+        "wrong_answer": 7,
+        "compare_error": 7,
+        "clarified": 1,
+        "failed_schema": 4,
+        "failed_react": 5,
+        "failed_llm": 0,
+        "failed_other": 0
+      },
+      "details": [
+        {
+          "id": "debit_card_specializing_1471",
+          "question": "What is the ratio of customers who pay in EUR against customers who pay in CZK?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT SUM(CASE WHEN currency = 'EUR' THEN 1 ELSE 0 END) as eur_count, SUM(CASE WHEN currency = 'CZK' THEN 1 ELSE 0 END) as czk_count, SUM(CASE WHEN currency = 'EUR' THEN 1 ELSE 0 END) * 1.0 / SUM(CASE WHEN currency = 'CZK' THEN 1 ELSE 0 END) as ratio FROM customers WHERE currency IN ('EUR', 'CZK')"
+        },
+        {
+          "id": "debit_card_specializing_1472",
+          "question": "In 2012, who had the least consumption in LAM?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT ym.customerid, ym.consumption FROM yearmonth ym JOIN transactions_1k t ON ym.customerid = t.customerid JOIN gasstations g ON t.gasstationid = g.gasstationid WHERE EXTRACT(YEAR FROM to_date(ym.date, 'YYYYMM')) = 2012 AND g.chainid::text = 'LAM' ORDER BY ym.consumption ASC LIMIT 1"
+        },
+        {
+          "id": "debit_card_specializing_1473",
+          "question": "What was the average monthly consumption of customers in SME for the year 2013?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT AVG(ym.consumption) as avg_monthly_consumption, c.segment, ym.date FROM yearmonth ym JOIN customers c ON ym.customerid = c.customerid WHERE c.segment = 'SME' AND ym.date >= '2013-01-01' AND ym.date < '2014-01-01' GROUP BY c.segment, ym.date"
+        },
+        {
+          "id": "debit_card_specializing_1476",
+          "question": "What was the difference in gas consumption between CZK-paying customers and EUR-paying customers in 2012?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT\n    SUM(CASE WHEN c.currency = 'CZK' THEN ym.consumption ELSE 0 END) as czk_consumption,\n    SUM(CASE WHEN c.currency = 'EUR' THEN ym.consumption ELSE 0 END) as eur_consumption,\n    SUM(CASE WHEN c.currency = 'CZK' THEN ym.consumption ELSE 0 END) -\n    SUM(CASE WHEN c.currency = 'EUR' THEN ym.consumption ELSE 0 END) as difference\nFROM yearmonth ym\nJOIN customers c ON ym.customerid = c.customerid\nWHERE EXTRACT(YEAR FROM TO_DATE(ym.date, 'YYYY-MM-DD')) = 2012\n    AND c.currency IN ('CZK', 'EUR')"
+        },
+        {
+          "id": "debit_card_specializing_1479",
+          "question": "Which year recorded the most consumption of gas paid in CZK?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT EXTRACT(YEAR FROM dm.date) as year, SUM(dm.consumption) as total_consumption FROM yearmonth dm JOIN customers c ON dm.customerid = c.customerid WHERE c.currency = 'CZK' GROUP BY EXTRACT(YEAR FROM dm.date) ORDER BY total_consumption DESC LIMIT 1"
+        },
+        {
+          "id": "debit_card_specializing_1480",
+          "question": "What was the gas consumption peak month for SME customers in 2013?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT ym.date, SUM(ym.consumption) as total_consumption FROM yearmonth ym JOIN customers c ON ym.customerid = c.customerid WHERE c.segment = 'SME' AND EXTRACT(YEAR FROM TO_DATE(ym.date, 'YYYYMM')) = 2013 GROUP BY ym.date ORDER BY total_consumption DESC LIMIT 1"
+        },
+        {
+          "id": "debit_card_specializing_1481",
+          "question": "What is the difference in the annual average consumption of the customers with the least amount of consumption paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "WITH customer_avg AS (\n  SELECT c.customerid, c.segment, AVG(y.consumption) as avg_consumption\n  FROM customers c\n  INNER JOIN yearmonth y ON c.customerid = y.customerid\n  WHERE c.currency = 'CZK'\n  AND EXTRACT(YEAR FROM TO_DATE(y.date::text, 'YYYYMM')) = 2013\n  GROUP BY c.customerid, c.segment\n),\nleast_consumption_customers AS (\n  SELECT DISTINCT customerid\n  FROM customer_avg\n  ORDER BY avg_consumption ASC\n  LIMIT 100\n),\navg_consumption AS (\n  SELECT c.segment, AVG(y.consumption) as annual_avg\n  FROM customers c\n  INNER JOIN yearmonth y ON c.customerid = y.customerid\n  WHERE c.currency = 'CZK'\n  AND EXTRACT(YEAR FROM TO_DATE(y.date::text, 'YYYYMM')) = 2013\n  AND c.customerid IN (SELECT customerid FROM least_consumption_customers)\n  GROUP BY c.segment\n  HAVING segment IN ('SME', 'LAM', 'KAM')\n)\nSELECT\n  a.segment,\n  a.annual_avg,\n  CASE\n    WHEN a.segment = 'SME' THEN a.annual_avg - (SELECT annual_avg FROM avg_consumption WHERE segment = 'LAM')\n    WHEN a.segment = 'LAM' THEN a.annual_avg - (SELECT annual_avg FROM avg_consumption WHERE segment = 'KAM')\n    WHEN a.segment = 'KAM' THEN a.annual_avg - (SELECT annual_avg FROM avg_consumption WHERE segment = 'SME')\n  END as segment_difference\nFROM avg_consumption a\nWHERE a.segment IN ('SME', 'LAM', 'KAM')"
+        },
+        {
+          "id": "debit_card_specializing_1482",
+          "question": "Which of the three segments—SME, LAM and KAM—has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH segment_consumption AS (\n    SELECT c.segment,\n           EXTRACT(YEAR FROM TO_DATE(ym.date, 'YYYYMM')) as year,\n           SUM(ym.consumption) as total_consumption\n    FROM customers c\n    JOIN yearmonth ym ON c.customerid = ym.customerid\n    WHERE c.segment IN ('SME', 'LAM', 'KAM')\n      AND c.currency = 'EUR'\n      AND TO_DATE(ym.date, 'YYYYMM') >= '2012-01-01'\n      AND TO_DATE(ym.date, 'YYYYMM') <= '2013-12-31'\n    GROUP BY c.segment, EXTRACT(YEAR FROM TO_DATE(ym.date, 'YYYYMM'))\n)\nSELECT segment,\n       SUM(CASE WHEN year = 2012 THEN total_consumption ELSE 0 END) as consumption_2012,\n       SUM(CASE WHEN year = 2013 THEN total_consumption ELSE 0 END) as consumption_2013,\n       ROUND((SUM(CASE WHEN year = 2013 THEN total_consumption ELSE 0 END)::numeric / NULLIF(SUM(CASE WHEN year = 2012 THEN total_consumption ELSE 0 END)::numeric, 0)) * 100, 2) as percentage_increase\nFROM segment_consumption\nGROUP BY segment\nORDER BY percentage_increase DESC"
+        },
+        {
+          "id": "debit_card_specializing_1483",
+          "question": "How much did customer 6 consume in total between August and November 2013?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT c.segment, ym.date, SUM(ym.consumption) as total_consumption FROM yearmonth ym JOIN customers c ON ym.customerid = c.customerid GROUP BY c.segment, ym.date"
+        },
+        {
+          "id": "debit_card_specializing_1484",
+          "question": "How many more \"discount\" gas stations does the Czech Republic have compared to Slovakia?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT (SELECT COUNT(*) FROM gasstations WHERE country = 'Czech Republic' AND segment = 'discount') - (SELECT COUNT(*) FROM gasstations WHERE country = 'Slovakia' AND segment = 'discount') AS difference"
+        },
+        {
+          "id": "debit_card_specializing_1486",
+          "question": "Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT SUM(CASE WHEN t.currency = 'CZK' THEN 1 ELSE 0 END) as czk_count, SUM(CASE WHEN t.currency = 'EUR' THEN 1 ELSE 0 END) as eur_count, SUM(CASE WHEN t.currency = 'CZK' THEN 1 ELSE 0 END) - SUM(CASE WHEN t.currency = 'EUR' THEN 1 ELSE 0 END) as difference FROM customers c JOIN transactions_1k t ON c.customerid = t.customerid WHERE c.segment = 'SME'"
+        },
+        {
+          "id": "debit_card_specializing_1490",
+          "question": "How many percent of LAM customer consumed more than 46.73?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT (SELECT COUNT(DISTINCT y.customerid) FROM yearmonth y JOIN customers c ON y.customerid = c.customerid WHERE c.segment = 'LAM' AND y.consumption > 46.73) * 100.0 / (SELECT COUNT(DISTINCT customerid) FROM customers WHERE segment = 'LAM') AS percentage"
+        },
+        {
+          "id": "debit_card_specializing_1493",
+          "question": "In February 2012, what percentage of customers consumed more than 528.3?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT CAST(SUM(CASE WHEN consumption > 528.3 THEN 1 ELSE 0 END) AS NUMERIC) * 100.0 / COUNT(*) AS percentage FROM yearmonth WHERE date >= '2012-02-01' AND date <= '2012-02-29'"
+        },
+        {
+          "id": "debit_card_specializing_1498",
+          "question": "What is the highest monthly consumption in the year 2012?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT MAX(consumption) AS highest_monthly_consumption FROM yearmonth WHERE EXTRACT(YEAR FROM date) = 2012"
+        },
+        {
+          "id": "debit_card_specializing_1500",
+          "question": "Please list the product description of the products consumed in September, 2013.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT DISTINCT p.description FROM products p JOIN transactions_1k t ON p.productid = t.productid WHERE t.date >= '2013-09-01' AND t.date < '2013-10-01'"
+        },
+        {
+          "id": "debit_card_specializing_1501",
+          "question": "Please list the countries of the gas stations with transactions taken place in June, 2013.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT g.country FROM gasstations g JOIN transactions_1k t ON g.gasstationid = t.gasstationid WHERE t.date >= '2013-06-01' AND t.date < '2013-07-01'"
+        },
+        {
+          "id": "debit_card_specializing_1505",
+          "question": "Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COUNT(DISTINCT c.customerid) AS customer_count\nFROM customers c\nJOIN yearmonth ym ON c.customerid = ym.customerid\nWHERE c.currency = 'EUR'\n  AND ym.consumption > 1000"
+        },
+        {
+          "id": "debit_card_specializing_1506",
+          "question": "Please list the product descriptions of the transactions taken place in the gas stations in the Czech Republic.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT p.description FROM transactions_1k t JOIN gasstations g ON t.gasstationid = g.gasstationid JOIN products p ON t.productid = p.productid WHERE g.country = 'Czech Republic'"
+        },
+        {
+          "id": "debit_card_specializing_1507",
+          "question": "Please list the disparate time of the transactions taken place in the gas stations from chain no. 11.",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT DISTINCT t1.time FROM \"transactions_1k\" AS t1 JOIN \"gasstations\" AS t2 ON t1.\"gasstationid\" = t2.\"gasstationid\" WHERE t2.\"chainid\" = 11"
+        },
+        {
+          "id": "debit_card_specializing_1509",
+          "question": "Among the transactions made in the gas stations in the Czech Republic, how many of them are taken place after 2012/1/1?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) AS \"transaction_count\" FROM \"transactions_1k\" JOIN \"gasstations\" ON \"transactions_1k\".\"gasstationid\" = \"gasstations\".\"gasstationid\" WHERE \"gasstations\".\"country\" = 'Czech Republic' AND \"transactions_1k\".\"date\" >= '2012-01-01' ORDER BY \"transaction_count\" DESC"
+        },
+        {
+          "id": "debit_card_specializing_1514",
+          "question": "What kind of currency did the customer paid at 16:25:00 in 2012/8/24?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT DISTINCT c.currency FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE t.date = '2012-08-24' AND t.time = '16:25:00'"
+        },
+        {
+          "id": "debit_card_specializing_1515",
+          "question": "What segment did the customer have at 2012/8/23 21:20:00?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT c.segment FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE t.date = '2012-08-23' AND t.time = '21:20:00' LIMIT 1"
+        },
+        {
+          "id": "debit_card_specializing_1521",
+          "question": "For all the transactions happened during 8:00-9:00 in 2012/8/26, how many happened in CZE?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) AS \"transaction_count\" FROM \"transactions_1k\" JOIN \"gasstations\" ON \"transactions_1k\".\"gasstationid\" = \"gasstations\".\"gasstationid\" WHERE \"gasstations\".\"country\" = 'CZE' AND \"transactions_1k\".\"date\" = '2012-08-26' AND \"transactions_1k\".\"time\" >= '08:00:00' AND \"transactions_1k\".\"time\" < '09:00:00'"
+        },
+        {
+          "id": "debit_card_specializing_1524",
+          "question": "What's the nationality of the customer who spent 548.4 in 2012/8/24?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT t.customerid, c.currency FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid WHERE t.date = '2012-08-24' AND t.amount = 548.4 ORDER BY c.customerid LIMIT 1"
+        },
+        {
+          "id": "debit_card_specializing_1525",
+          "question": "What is the percentage of the customers who used EUR in 2012/8/25?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT CAST(SUM(CASE WHEN c.currency = 'EUR' THEN 1 ELSE 0 END) AS FLOAT) * 100.0 / COUNT(*) AS percentage FROM customers c JOIN transactions_1k t ON c.customerid = t.customerid WHERE t.date = '2012-08-25'"
+        },
+        {
+          "id": "debit_card_specializing_1526",
+          "question": "For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "WITH target_customer AS (\n    SELECT customerid\n    FROM transactions_1k\n    WHERE date = '2012-08-25' AND amount = 634.8\n),\nconsumption_2012 AS (\n    SELECT CAST(SUM(consumption) AS NUMERIC) as total_consumption\n    FROM yearmonth\n    WHERE customerid IN (SELECT customerid FROM target_customer)\n      AND date >= '2012-01-01' AND date < '2013-01-01'\n),\nconsumption_2013 AS (\n    SELECT CAST(SUM(consumption) AS NUMERIC) as total_consumption\n    FROM yearmonth\n    WHERE customerid IN (SELECT customerid FROM target_customer)\n      AND date >= '2013-01-01' AND date < '2014-01-01'\n)\nSELECT\n    ROUND(CAST((c2012.total_consumption - c2013.total_consumption) AS NUMERIC) / CAST(c2012.total_consumption AS NUMERIC) * 100.0, 2) as decrease_rate_percent\nFROM consumption_2012 c2012, consumption_2013 c2013"
+        },
+        {
+          "id": "debit_card_specializing_1528",
+          "question": "What is the percentage of \"premium\" against the overall segment in Country = \"SVK\"?",
+          "verdict": "clarified",
+          "error_type": null,
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1529",
+          "question": "What is the amount spent by customer \"38508\" at the gas stations? How much had the customer spent in January 2012?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT SUM(t1k.amount) AS total_spent FROM transactions_1k t1k JOIN gasstations g ON t1k.gasstationid = g.gasstationid WHERE t1k.customerid = '38508' AND t1k.date >= '2012-01-01' AND t1k.date < '2012-02-01'"
+        },
+        {
+          "id": "debit_card_specializing_1531",
+          "question": "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH customer_totals AS (SELECT c.customerid, c.segment, c.currency, SUM(t.amount) as total_spending FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY c.customerid, c.segment, c.currency), top_customer AS (SELECT * FROM customer_totals ORDER BY total_spending DESC LIMIT 1) SELECT tc.customerid, tc.segment, tc.currency, AVG(t.price) as avg_price_per_item FROM top_customer tc JOIN transactions_1k t ON tc.customerid = t.customerid GROUP BY tc.customerid, tc.segment, tc.currency"
+        },
+        {
+          "id": "debit_card_specializing_1533",
+          "question": "For all the people who paid more than 29.00 per unit of product id No.5. Give their consumption status in the August of 2012.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT ym.consumption, ym.customerid FROM yearmonth ym JOIN transactions_1k t ON ym.customerid = t.customerid WHERE t.productid = 5 AND t.price > 29.00 AND EXTRACT(MONTH FROM t.date::date) = 8 AND EXTRACT(YEAR FROM t.date::date) = 2012 AND EXTRACT(MONTH FROM ym.date::date) = 8 AND EXTRACT(YEAR FROM ym.date::date) = 2012 GROUP BY ym.customerid, ym.consumption"
+        }
+      ],
+      "judge_counts": {
+        "correct": 18,
+        "partially_correct": 1,
+        "incorrect": 1,
+        "inconclusive": 0
+      },
+      "judge_verdicts": [
+        {
+          "id": "debit_card_specializing_1471",
+          "verdict": "correct",
+          "reason": "The SQL correctly counts customers by currency and computes the EUR-to-CZK ratio as requested."
+        },
+        {
+          "id": "debit_card_specializing_1472",
+          "verdict": "incorrect",
+          "reason": "The query returned zero rows, failing to identify the requested customer."
+        },
+        {
+          "id": "debit_card_specializing_1476",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters for 2012 and the specified currencies, then uses conditional aggregation to compute the difference in total consumption."
+        },
+        {
+          "id": "debit_card_specializing_1480",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters for SME customers in 2013, aggregates consumption by month, and orders by descending consumption to identify the peak month."
+        },
+        {
+          "id": "debit_card_specializing_1482",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters, aggregates, and calculates the growth metric for each segment, allowing direct identification of the highest and lowest increases."
+        },
+        {
+          "id": "debit_card_specializing_1484",
+          "verdict": "correct",
+          "reason": "The SQL correctly computes the difference in counts for the specified country and segment, matching the question's intent and result shape."
+        },
+        {
+          "id": "debit_card_specializing_1490",
+          "verdict": "correct",
+          "reason": "The SQL correctly calculates the percentage of LAM customers with consumption greater than 46.73 using appropriate joins, filters, and aggregations."
+        },
+        {
+          "id": "debit_card_specializing_1500",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters for September 2013, and selects distinct product descriptions as requested."
+        },
+        {
+          "id": "debit_card_specializing_1501",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, applies the June 2013 date filter, and selects the requested country column."
+        },
+        {
+          "id": "debit_card_specializing_1505",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters for EUR currency and consumption over 1000, then counts distinct customers as requested."
+        },
+        {
+          "id": "debit_card_specializing_1506",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, filters by the specified country, and selects the requested product descriptions."
+        },
+        {
+          "id": "debit_card_specializing_1507",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters by chain ID, and selects distinct transaction times as requested."
+        },
+        {
+          "id": "debit_card_specializing_1509",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, applies the country and date filters, and returns the aggregated count as requested."
+        },
+        {
+          "id": "debit_card_specializing_1514",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, applies the exact date and time filters, and retrieves the requested currency."
+        },
+        {
+          "id": "debit_card_specializing_1515",
+          "verdict": "correct",
+          "reason": "The query correctly joins the transaction and customer tables, filters by the exact date and time provided, and returns the requested segment."
+        },
+        {
+          "id": "debit_card_specializing_1521",
+          "verdict": "correct",
+          "reason": "The query correctly joins the tables, filters by country, date, and time range, and returns the expected count."
+        },
+        {
+          "id": "debit_card_specializing_1525",
+          "verdict": "correct",
+          "reason": "The query correctly joins the tables, filters by the specified date, and calculates the requested percentage."
+        },
+        {
+          "id": "debit_card_specializing_1526",
+          "verdict": "correct",
+          "reason": "The SQL correctly identifies the target customer, aggregates consumption by year, and calculates the decrease rate using the standard formula."
+        },
+        {
+          "id": "debit_card_specializing_1529",
+          "verdict": "partially_correct",
+          "reason": "The query only calculates the spending for January 2012, omitting the requested total spending at gas stations."
+        },
+        {
+          "id": "debit_card_specializing_1531",
+          "verdict": "correct",
+          "reason": "The SQL correctly identifies the top spending customer, calculates their average item price, and returns the currency as requested."
+        }
+      ]
     }
   ]
 }
