@@ -1,0 +1,83 @@
+{
+  "campaign_ts": "20260815-084043",
+  "branch": "campaign/20260815-084043",
+  "dbs": [
+    {
+      "db_id": "california_schools",
+      "run_id": "server-california_schools-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for california_schools: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"california_schools\" does not exist\n\n"
+    },
+    {
+      "db_id": "debit_card_specializing",
+      "run_id": "server-debit_card_specializing-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for debit_card_specializing: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"debit_card_specializing\" does not exist\n\n"
+    },
+    {
+      "db_id": "student_club",
+      "run_id": "server-student_club-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for student_club: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"student_club\" does not exist\n\n"
+    },
+    {
+      "db_id": "superhero",
+      "run_id": "server-superhero-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for superhero: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"superhero\" does not exist\n\n"
+    },
+    {
+      "db_id": "toxicology",
+      "run_id": "server-toxicology-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for toxicology: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"toxicology\" does not exist\n\n"
+    },
+    {
+      "db_id": "thrombosis_prediction",
+      "run_id": "server-thrombosis_prediction-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for thrombosis_prediction: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"thrombosis_prediction\" does not exist\n\n"
+    },
+    {
+      "db_id": "formula_1",
+      "run_id": "server-formula_1-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for formula_1: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"formula_1\" does not exist\n\n"
+    },
+    {
+      "db_id": "financial",
+      "run_id": "server-financial-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for financial: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"financial\" does not exist\n\n"
+    },
+    {
+      "db_id": "card_games",
+      "run_id": "server-card_games-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for card_games: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"card_games\" does not exist\n\n"
+    },
+    {
+      "db_id": "european_football_2",
+      "run_id": "server-european_football_2-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for european_football_2: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"european_football_2\" does not exist\n\n"
+    },
+    {
+      "db_id": "codebase_community",
+      "run_id": "server-codebase_community-20260815-084043",
+      "questions": 0,
+      "rows": [],
+      "error": "restore failed for codebase_community: psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: FATAL:  database \"codebase_community\" does not exist\n\n"
+    }
+  ]
+}
