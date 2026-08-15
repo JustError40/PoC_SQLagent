@@ -1,29 +1,29 @@
 {
   "campaign_ts": "20260815-092123",
   "branch": "campaign/20260815-092123",
-  "status": "california_schools iteration 7 committed",
+  "status": "california_schools iteration 8 committed",
   "db_total": 11,
   "db_index": 1,
   "runs_per_db": 11,
   "current_db": "california_schools",
-  "run_label": "iteration 7",
-  "run_index": 8,
-  "eta_min": 4435.2,
-  "updated_at": "2026-08-15T14:48:32.402400+00:00",
+  "run_label": "iteration 8",
+  "run_index": 9,
+  "eta_min": 4213.7,
+  "updated_at": "2026-08-15T15:13:14.865383+00:00",
   "last_counts": {
-    "correct": 2,
-    "wrong_answer": 11,
-    "compare_error": 6,
+    "correct": 0,
+    "wrong_answer": 0,
+    "compare_error": 0,
     "clarified": 0,
-    "failed_schema": 0,
-    "failed_react": 10,
+    "failed_schema": 11,
+    "failed_react": 18,
     "failed_llm": 0,
     "failed_other": 1
   },
   "judge_counts": {
-    "correct": 14,
-    "partially_correct": 1,
-    "incorrect": 3,
-    "inconclusive": 1
+    "correct": 0,
+    "partially_correct": 0,
+    "incorrect": 0,
+    "inconclusive": 0
   }
 }
