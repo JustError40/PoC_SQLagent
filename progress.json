@@ -1,7 +1,7 @@
 {
   "campaign_ts": "20260815-083648",
   "branch": "campaign/20260815-083648",
-  "status": "loading toxicology",
+  "status": "toxicology aborted: restore failed for toxicology: time=\"2026-08-15T08:37:15Z\" level=warning msg=\"The \\\"RUN_ID\\\" variable is not set. Defaulting to a blank string.\"\nerror while interpolating services.api.environment.RUN_",
   "db_total": 11,
   "db_index": 5,
   "runs_per_db": 11,
@@ -9,5 +9,5 @@
   "run_label": "-",
   "run_index": 0,
   "eta_min": null,
-  "updated_at": "2026-08-15T08:37:13.076775+00:00"
+  "updated_at": "2026-08-15T08:37:15.870589+00:00"
 }
