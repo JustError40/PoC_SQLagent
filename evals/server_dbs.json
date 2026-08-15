@@ -1,0 +1,13 @@
+[
+  {"db_id": "california_schools", "database": "california_schools", "dump": "db_seed/bird/california_schools.pg.sql", "golden": "evals/bird_california_schools.golden.jsonl"},
+  {"db_id": "card_games", "database": "card_games", "dump": ".data/bird/card_games.pg.sql", "golden": "evals/bird_card_games.golden.jsonl"},
+  {"db_id": "codebase_community", "database": "codebase_community", "dump": ".data/bird/codebase_community.pg.sql", "golden": "evals/bird_codebase_community.golden.jsonl"},
+  {"db_id": "debit_card_specializing", "database": "debit_card_specializing", "dump": "db_seed/bird/debit_card_specializing.pg.sql", "golden": "evals/bird_debit_card_specializing.golden.jsonl"},
+  {"db_id": "european_football_2", "database": "european_football_2", "dump": ".data/bird/european_football_2.pg.sql", "golden": "evals/bird_european_football_2.golden.jsonl"},
+  {"db_id": "financial", "database": "financial", "dump": ".data/bird/financial.pg.sql", "golden": "evals/bird_financial.golden.jsonl"},
+  {"db_id": "formula_1", "database": "formula_1", "dump": "db_seed/bird/formula_1.pg.sql", "golden": "evals/bird_formula_1.golden.jsonl"},
+  {"db_id": "student_club", "database": "student_club", "dump": "db_seed/bird/student_club.pg.sql", "golden": "evals/bird_student_club.golden.jsonl"},
+  {"db_id": "superhero", "database": "superhero", "dump": "db_seed/bird/superhero.pg.sql", "golden": "evals/bird_superhero.golden.jsonl"},
+  {"db_id": "thrombosis_prediction", "database": "thrombosis_prediction", "dump": "db_seed/bird/thrombosis_prediction.pg.sql", "golden": "evals/bird_thrombosis_prediction.golden.jsonl"},
+  {"db_id": "toxicology", "database": "toxicology", "dump": "db_seed/bird/toxicology.pg.sql", "golden": "evals/bird_toxicology.golden.jsonl"}
+]

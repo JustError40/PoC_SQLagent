@@ -1,0 +1,43 @@
+{
+  "description": "BIRD mini-dev: financial (32 questions)",
+  "blocks": [
+    {
+      "name": "financial",
+      "title": "BIRD mini-dev / financial",
+      "questions": [
+        "How many accounts who choose issuance after transaction are staying in East Bohemia region?\n(Hint: A3 contains the data of region; 'POPLATEK PO OBRATU' represents for 'issuance after transaction'.)",
+        "List out the no. of districts that have female average salary is more than 6000 but less than 10000?\n(Hint: A11 refers to average salary; Female mapps to gender = 'F')",
+        "How many male customers who are living in North Bohemia have average salary greater than 8000?\n(Hint: Male means that gender = 'M'; A3 refers to region; A11 pertains to average salary.)",
+        "List out the account numbers of female clients who are oldest and has lowest average salary, calculate the gap between this lowest average salary with the highest average salary?\n(Hint: Female means gender = 'F'; A11 refers to average salary; Gap = highest average salary - lowest average salary; If the person A's birthdate > B's birthdate, it means that person B is order than person A.)",
+        "List out the account numbers of clients who are youngest and have highest average salary?\n(Hint: If the person A's birthdate < B's birthdate, it means that person B is younger than person A; A11 refers to average salary)",
+        "Among the accounts who have approved loan date in 1997, list out the accounts that have the lowest approved amount and choose weekly issuance statement.\n(Hint: 'POPLATEK TYDNE' stands for weekly issuance)",
+        "Among the accounts who have loan validity more than 12 months, list out the accounts that have the highest approved amount and have account opening date in 1993.\n(Hint: Loan validity more than 12 months refers to duration > 12)",
+        "Among the account opened, how many female customers who were born before 1950 and stayed in Sokolov?\n(Hint: Customers refer to clients; Female refers to gender = 'F'; Names of districts appear in column A2)",
+        "For the female client who was born in 1976/1/29, which district did she opened her account?\n(Hint: Female refers to gender = 'F'; A2 refers to district names)",
+        "For the branch which located in the south Bohemia with biggest number of inhabitants, what is the percentage of the male clients?\n(Hint: Percentage of the male clients = DIVIDE(COUNT(male clients), COUNT(clients)) * 100; Male refers to gender = 'M', A3 is the region name. A4 contains the information about inhabitants.)",
+        "For the client whose loan was approved first in 1993/7/5, what is the increase rate of his/her account balance from 1993/3/22 to 1998/12/27?\n(Hint: Increase rate of his/her account balance = [(balance of date A - balance of date B) / balance of Date B] * 100%)",
+        "What is the percentage of loan amount that has been fully paid with no issue.\n(Hint: Loan paid with no issue means contract finished, no problems; status = 'A' means contract finished, no problems; Percentage of accounts by condition = [(total(amount) & condition) / (total amount)] * 100%)",
+        "For loan amount less than USD100,000, what is the percentage of accounts that is still running with no issue.\n(Hint: Status = 'C' stands for running contract, ok so far; Percentage of accounts by condition = [(total(amount) & condition) / (total amount)] * 100.)",
+        "For loans contracts which are still running where client are in debt, list the district of the and the state the percentage unemployment rate increment from year 1995 to 1996.\n(Hint: Unemployment increment rate in percentage = [(unemployment rate 2016 - unemployment rate 2015) / unemployment rate 2015] * 100; unemployment rate 2015 appears in the A12; unemployment rate 2016 appears in the A13; Loan contracts which are still running where client are in debt can be presented as status = 'D')",
+        "List the top nine districts, by descending order, from the highest to the lowest, the number of female account holders.\n(Hint: A2 refers to districts; Female refers to gender = 'F')",
+        "Between 1/1/1995 and 12/31/1997, how many loans in the amount of at least 250,000 per account that chose monthly statement issuance were approved?\n(Hint: Frequency = 'POPLATEK MESICNE' stands for monthly issurance)",
+        "How many accounts have running contracts in Branch location 1?\n(Hint: Status = 'C' stands for running contract, OK so far; Status = 'D' stands for running contract, client in debt)",
+        "In the branch where the second-highest number of crimes were committed in 1995 occurred, how many male clients are there?\n(Hint: Male refers to gender = 'M'; A15 stands for no. of commited crimes 1995)",
+        "Which are the top ten withdrawals (non-credit card) by district names for the month of January 1996?\n(Hint: Non-credit card withdraws refers to type = 'VYDAJ'; January 1996 can be found by date LIKE '1996-01%' in the database; A2 means district names)",
+        "How many accounts have running contracts in Branch location 1?\n(Hint: Status = 'C' stands for running contract, OK so far; Status = 'D' stands for running contract, client in debt)",
+        "In the branch where the second-highest number of crimes were committed in 1995 occurred, how many male clients are there?\n(Hint: Male refers to gender = 'M'; A15 stands for no. of commited crimes 1995)",
+        "Who are the account holder identification numbers whose who have transactions on the credit card with the amount is less than the average, in 1998?\n(Hint: Operation = 'VYBER KARTOU' refers to credit card withdrawal)",
+        "Please list the account types that are not eligible for loans, and the average income of residents in the district where the account is located exceeds $8000 but is no more than $9000.\n(Hint: A11 represents the average salary; Salary and income share the similar meanings; when the account type = 'OWNER', it's eligible for loans)",
+        "What is the average number of crimes committed in 1995 in regions where the number exceeds 4000 and the region has accounts that are opened starting from the year 1997?\n(Hint: A3 refers to region names; A15 stands for the average number of crimes commited in 1995.)",
+        "List all the withdrawals in cash transactions that the client with the id 3356 makes.\n(Hint: operation = 'VYBER' refers to withdrawal in cash)",
+        "What percentage of clients who opened their accounts in the district with an average salary of over 10000 are women?\n(Hint: Female refers to gender = 'F'; Woman and female are closed; Average salary can be found in A11)",
+        "What was the growth rate of the total amount of loans across all accounts for a male client between 1996 and 1997?\n(Hint: Growth rate = (sum of amount_1997 - sum of amount_1996) / (sum of amount_1996) * 100%; Male refers to gender = 'M')",
+        "How often does account number 3 request an account statement to be released? What was the aim of debiting 3539 in total?\n(Hint: k_symbol refers to the purpose of payments)",
+        "What percentage of male clients request for weekly statements to be issued?\n(Hint: Percentage of male clients = [count(male clients who requested weekly statements / count(clients who requested weekly statements)] * 100%; Male means gender = 'M'; 'POPLATEK TYDNE' stands for weekly issuance)",
+        "Name the account numbers of female clients who are oldest and have lowest average salary?\n(Hint: Female refers to 'F' in the gender; A11 contains information about average salary)",
+        "What is the average amount of loan which are still on running contract with statement issuance after each transaction?\n(Hint: status = 'C' stands for running contract, OK so far; status = 'D' stands for running contract, client in debt. 'POPLATEK PO OBRATU' stands for issuance after transaction)",
+        "Provide the IDs and age of the client with high level credit card, which is eligible for loans.\n(Hint: the credit card is high-level refers to card.type = 'gold'; eligible for loans refers to disp.type = 'OWNER')"
+      ]
+    }
+  ]
+}
