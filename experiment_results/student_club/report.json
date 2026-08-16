@@ -5000,6 +5000,574 @@
           "reason": "The SQL correctly retrieves the requested names and amounts, filters by the exact date, and uses appropriate joins."
         }
       ]
+    },
+    {
+      "run": "iteration 9",
+      "elapsed_min": 26.5,
+      "stages": {
+        "explore": "completed:3 rounds, 8 artifacts",
+        "optimize": "completed:11 artifacts across 4 domains, 0 failing templates",
+        "evolve": "failed",
+        "promote": "start_failed: HTTP Error 409: Conflict",
+        "verify": "completed"
+      },
+      "counts": {
+        "correct": 10,
+        "wrong_answer": 16,
+        "compare_error": 17,
+        "clarified": 0,
+        "failed_schema": 1,
+        "failed_react": 2,
+        "failed_llm": 0,
+        "failed_other": 0
+      },
+      "details": [
+        {
+          "id": "student_club_1312",
+          "question": "What's Angela Sanders's major?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT \"major\".\"major_name\" FROM \"member\" JOIN \"major\" ON \"member\".\"link_to_major\" = \"major\".\"major_id\" WHERE \"member\".\"first_name\" = 'Angela' AND \"member\".\"last_name\" = 'Sanders'"
+        },
+        {
+          "id": "student_club_1317",
+          "question": "Among the students from the Student_Club who attended the event \"Women's Soccer\", how many of them want a T-shirt that's in medium size?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) FROM member m JOIN attendance a ON m.member_id = a.link_to_member JOIN event e ON a.link_to_event = e.event_id JOIN major m_major ON m.link_to_major = m_major.major_id WHERE e.event_name = 'Women''s Soccer' AND m.t_shirt_size = 'medium' AND m_major.major_name = 'Student_Club'"
+        },
+        {
+          "id": "student_club_1331",
+          "question": "What is the amount of the funds that the Vice President received?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT SUM(i.amount) as total_income FROM income i JOIN member m ON i.link_to_member = m.member_id WHERE m.position = 'Vice President'"
+        },
+        {
+          "id": "student_club_1334",
+          "question": "List the full name of the Student_Club members that grew up in Illinois state.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT m.first_name || ' ' || m.last_name AS full_name FROM member m JOIN major ma ON m.link_to_major = ma.major_id JOIN zip_code z ON m.zip = z.zip_code WHERE ma.major_name = 'Student_Club' AND z.state = 'IL'"
+        },
+        {
+          "id": "student_club_1338",
+          "question": "Was each expense in October Meeting on October 8, 2019 approved?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT CASE WHEN COUNT(*) = 0 THEN 'Yes (no expenses)' WHEN COUNT(CASE WHEN e.approved::boolean THEN 1 END) = COUNT(*) THEN 'Yes, all expenses approved' ELSE 'No, some expenses not approved' END as approval_status FROM expense e JOIN budget b ON e.link_to_budget = b.budget_id JOIN event ev ON b.link_to_event = ev.event_id WHERE ev.event_name = 'October Meeting' AND ev.event_date = '2019-10-08'"
+        },
+        {
+          "id": "student_club_1339",
+          "question": "Calculate the total average cost that Elijah Allen spent in the events on September and October.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT AVG(e.cost) as avg_cost FROM expense e JOIN member m ON e.link_to_member = m.member_id WHERE m.first_name = 'Elijah' AND m.last_name = 'Allen' AND TO_CHAR(e.expense_date::DATE, 'Month') IN ('September', 'October')"
+        },
+        {
+          "id": "student_club_1340",
+          "question": "Calculate the difference of the total amount spent in all events by the Student_Club in year 2019 and 2020.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "WITH event_spending AS (\n    SELECT\n        e.event_id,\n        e.type,\n        e.event_date,\n        COALESCE(SUM(b.spent), 0) as total_spent\n    FROM event e\n    LEFT JOIN budget b ON b.link_to_event = e.event_id\n    WHERE e.type = 'Student_Club'\n    GROUP BY e.event_id, e.type, e.event_date\n),\nyear_totals AS (\n    SELECT\n        EXTRACT(YEAR FROM event_date::date) as event_year,\n        SUM(total_spent) as year_total\n    FROM event_spending\n    GROUP BY event_year\n)\nSELECT\n    SUM(CASE WHEN event_year = 2019 THEN year_total ELSE 0 END) -\n    SUM(CASE WHEN event_year = 2020 THEN year_total ELSE 0 END) as difference\nFROM year_totals"
+        },
+        {
+          "id": "student_club_1344",
+          "question": "What was the notes of the fundraising on 2019/9/14?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT MAX(\"event\".\"notes\") AS \"event_notes\" FROM \"event\" WHERE \"event\".\"event_date\" = '2019/9/14' AND \"event\".\"type\" = 'fundraising' ORDER BY \"event_notes\" DESC"
+        },
+        {
+          "id": "student_club_1346",
+          "question": "Tell the phone number of \"Carlo Jacobs\".",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1350",
+          "question": "What is the status of the event which bought \"Post Cards, Posters\" on 2019/8/20?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT ev.status FROM expense e JOIN budget b ON e.link_to_budget = b.budget_id JOIN event ev ON b.link_to_event = ev.event_id WHERE e.expense_description = 'Post Cards, Posters' AND e.expense_date = '2019/8/20' LIMIT 1"
+        },
+        {
+          "id": "student_club_1351",
+          "question": "What was Brent Thomason's major?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT MAX(\"major\".\"major_name\") AS \"major_name\" FROM \"member\" JOIN \"major\" ON \"member\".\"link_to_major\" = \"major\".\"major_id\" WHERE \"member\".\"first_name\" = 'Brent' AND \"member\".\"last_name\" = 'Thomason' LIMIT 1"
+        },
+        {
+          "id": "student_club_1352",
+          "question": "For all the club members from \"Business\" major, how many of them wear medium size t-shirt?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) FROM member m JOIN major ma ON m.link_to_major = ma.major_id WHERE ma.major_name = 'Business' AND m.t_shirt_size = 'medium'"
+        },
+        {
+          "id": "student_club_1356",
+          "question": "Which department was the President of the club in?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT \"major\".\"department\" AS \"department\", COUNT(\"member\".\"member_id\") AS \"president_count\" FROM \"member\" JOIN \"major\" ON \"member\".\"link_to_major\" = \"major\".\"major_id\" WHERE \"member\".\"position\" = 'President' GROUP BY \"major\".\"department\" ORDER BY \"department\" ASC"
+        },
+        {
+          "id": "student_club_1357",
+          "question": "State the date Connor Hilton paid his/her dues.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT i.date_received FROM income i JOIN member m ON i.link_to_member = m.member_id WHERE m.first_name = 'Connor' AND m.last_name = 'Hilton' AND i.source = 'dues'"
+        },
+        {
+          "id": "student_club_1359",
+          "question": "How many times was the budget in Advertisement for \"Yearly Kickoff\" meeting more than \"October Meeting\"?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "WITH yearly_budget AS (SELECT b.amount as year_budget FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE e.event_name = 'Yearly Kickoff' AND e.type = 'Advertisement'), oct_budget AS (SELECT b.amount as oct_budget FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE e.event_name = 'October Meeting' AND e.type = 'Advertisement') SELECT COUNT(*) as times_more FROM yearly_budget y, oct_budget o WHERE y.year_budget > o.oct_budget"
+        },
+        {
+          "id": "student_club_1361",
+          "question": "What is the total cost of the pizzas for all the events?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT SUM(e.cost) AS total_cost FROM expense e WHERE e.expense_description LIKE '%pizza%'"
+        },
+        {
+          "id": "student_club_1362",
+          "question": "How many cities are there in Orange County, Virginia?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT COUNT(DISTINCT \"zip_code\".\"city\") AS \"city_count\" FROM \"zip_code\" WHERE \"zip_code\".\"county\" = 'Orange County' AND \"zip_code\".\"state\" = 'Virginia' LIMIT 1000"
+        },
+        {
+          "id": "student_club_1368",
+          "question": "What does the person with the phone number \"809-555-3360\" major in?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT MAX(\"major\".\"major_name\") AS \"major_name\" FROM \"member\" JOIN \"major\" ON \"member\".\"link_to_major\" = \"major\".\"major_id\" WHERE \"member\".\"phone\" = '809-555-3360' ORDER BY \"major_name\" ASC"
+        },
+        {
+          "id": "student_club_1371",
+          "question": "How many members attended the \"Women's Soccer\" event?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(a.link_to_member) as attendance_count FROM event e JOIN attendance a ON e.event_id = a.link_to_event WHERE e.event_name = 'Women's Soccer'"
+        },
+        {
+          "id": "student_club_1375",
+          "question": "List all the members of the \"School of Applied Sciences, Technology and Education\" department.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT m.last_name, maj.department, maj.college FROM member m JOIN major maj ON m.link_to_major = maj.major_id WHERE maj.department = 'School of Applied Sciences, Technology and Education'"
+        },
+        {
+          "id": "student_club_1376",
+          "question": "Among all the closed events, which event has the highest spend-to-budget ratio?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT ev.event_name, ev.type, SUM(e.cost) as total_cost, b.amount as budget_amount, (SUM(e.cost)::numeric / b.amount) as spend_to_budget_ratio FROM expense e JOIN budget b ON e.link_to_budget = b.budget_id JOIN event ev ON b.link_to_event = ev.event_id WHERE ev.status = 'closed' GROUP BY ev.event_id, ev.event_name, ev.type, b.amount ORDER BY spend_to_budget_ratio DESC LIMIT 1"
+        },
+        {
+          "id": "student_club_1378",
+          "question": "What is the highest amount of budget spend for an event?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT MAX(b.spent) as highest_budget_spend FROM budget b JOIN event e ON b.link_to_event = e.event_id"
+        },
+        {
+          "id": "student_club_1380",
+          "question": "What is the total amount of money spent for food?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT SUM(amount) AS total_spent FROM budget WHERE category = 'Food'"
+        },
+        {
+          "id": "student_club_1381",
+          "question": "List the name of students that have attended more than 7 events.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT CONCAT(m.first_name, ' ', m.last_name) as student_name FROM attendance a JOIN member m ON a.link_to_member = m.member_id GROUP BY a.link_to_member, m.first_name, m.last_name HAVING COUNT(*) > 7 ORDER BY COUNT(*) DESC"
+        },
+        {
+          "id": "student_club_1387",
+          "question": "Which student has been entrusted to manage the budget for the Yearly Kickoff?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT DISTINCT m.first_name, m.last_name FROM event e JOIN budget b ON e.event_id = b.link_to_event JOIN expense exp ON b.budget_id = exp.link_to_budget JOIN member m ON exp.link_to_member = m.member_id WHERE e.event_name = 'Yearly Kickoff' AND m.position = 'Student'"
+        },
+        {
+          "id": "student_club_1389",
+          "question": "Which event has the lowest cost?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT ev.event_name, SUM(e.cost) as total_cost FROM expense e JOIN budget b ON e.link_to_budget = b.budget_id JOIN event ev ON b.link_to_event = ev.event_id GROUP BY ev.event_name ORDER BY total_cost ASC LIMIT 1"
+        },
+        {
+          "id": "student_club_1390",
+          "question": "Based on the total cost for all event, what is the percentage of cost for Yearly Kickoff event?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT (SELECT SUM(e.cost) FROM expense e JOIN budget b ON e.link_to_budget = b.budget_id JOIN event ev ON b.link_to_event = ev.event_id WHERE ev.type = 'Yearly Kickoff') * 100.0 / (SELECT SUM(e.cost) FROM expense e JOIN budget b ON e.link_to_budget = b.budget_id JOIN event ev ON b.link_to_event = ev.event_id) AS percentage"
+        },
+        {
+          "id": "student_club_1392",
+          "question": "Indicate the top source of funds received in September 2019 based on their amount.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT source, SUM(amount) as total_amount FROM income WHERE date_received >= '2019-09-01' AND date_received < '2020-01-01' GROUP BY source ORDER BY total_amount DESC"
+        },
+        {
+          "id": "student_club_1394",
+          "question": "How many members of the Student_Club have major in 'Physics Teaching'?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COUNT(m.member_id) as member_count FROM member m JOIN attendance a ON m.member_id = a.link_to_member JOIN event e ON a.link_to_event = e.event_id JOIN major m2 ON m.link_to_major = m2.major_id WHERE e.event_name = 'Student_Club' AND m2.major_name = 'Physics Teaching'"
+        },
+        {
+          "id": "student_club_1398",
+          "question": "Name the event with the highest amount spent on advertisement.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT e.event_name, b.category, SUM(b.spent) as total_spent, COUNT(b.budget_id) as record_count FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE b.category = 'advertisement' GROUP BY e.event_name, b.category ORDER BY total_spent DESC LIMIT 1"
+        },
+        {
+          "id": "student_club_1399",
+          "question": "Did Maya Mclean attend the 'Women's Soccer' event?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT EXISTS(\n    SELECT 1\n    FROM event e\n    JOIN attendance a ON e.event_id = a.link_to_event\n    JOIN member m ON a.link_to_member = m.member_id\n    WHERE e.event_name = 'Women''s Soccer'\n      AND m.first_name = 'Maya'\n      AND m.last_name LIKE 'McLean'\n) AS attended"
+        },
+        {
+          "id": "student_club_1401",
+          "question": "Indicate the cost of posters for 'September Speaker' event.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT ROUND(SUM(CAST(b.spent AS NUMERIC)), 2) AS total_spent FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE b.category = 'posters' AND e.event_name = 'September Speaker'"
+        },
+        {
+          "id": "student_club_1403",
+          "question": "Indicate the name of the closed event whose cost has exceeded the budget the most.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT e.event_name, (b.spent - b.amount) as over_budget FROM event e JOIN budget b ON b.link_to_event = e.event_id WHERE e.status = 'closed' ORDER BY over_budget DESC LIMIT 1"
+        },
+        {
+          "id": "student_club_1404",
+          "question": "Identify the type of expenses and their total value approved for 'October Meeting' event.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH event_spending AS (SELECT e.type, e.event_name, COALESCE(SUM(b.spent), 0) as total_spent FROM event e LEFT JOIN budget b ON b.link_to_event = e.event_id WHERE e.event_name = 'October Meeting' GROUP BY e.event_id, e.type, e.event_name) SELECT type, event_name, ROUND(CAST(total_spent AS NUMERIC), 2) as total_spent FROM event_spending ORDER BY total_spent DESC"
+        },
+        {
+          "id": "student_club_1405",
+          "question": "Calculate the amount budgeted for 'April Speaker' event. List all the budgeted categories for said event in an ascending order based on their amount budgeted.",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT b.category, b.amount FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE e.event_name = 'April Speaker' ORDER BY b.amount ASC"
+        },
+        {
+          "id": "student_club_1409",
+          "question": "Mention the total expense used on 8/20/2019.",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT SUM(cost) AS total_expense FROM expense WHERE expense_date = '2019-08-20'"
+        },
+        {
+          "id": "student_club_1410",
+          "question": "List out the full name and total cost that member id \"rec4BLdZHS2Blfp4v\" incurred?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT m.first_name || ' ' || m.last_name as full_name, SUM(e.cost) as total_cost FROM expense e JOIN member m ON e.link_to_member = m.member_id WHERE m.member_id = 'rec4BLdZHS2Blfp4v' GROUP BY m.member_id, m.first_name, m.last_name"
+        },
+        {
+          "id": "student_club_1411",
+          "question": "State what kind of expenses that Sacha Harrison incurred?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT e.expense_description, e.cost, b.category FROM expense e JOIN member m ON e.link_to_member = m.member_id JOIN budget b ON e.link_to_budget = b.budget_id WHERE m.first_name = 'Sacha' AND m.last_name = 'Harrison'"
+        },
+        {
+          "id": "student_club_1422",
+          "question": "State the category of events were held at MU 215.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT b.category, COUNT(*) as count FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE e.location = 'MU 215' GROUP BY b.category ORDER BY count DESC"
+        },
+        {
+          "id": "student_club_1426",
+          "question": "List the last name of members with a major in environmental engineering and include its department and college name.",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT m.last_name, maj.department, maj.college FROM member m JOIN major maj ON m.link_to_major = maj.major_id WHERE maj.major_name = 'Environmental Engineering'"
+        },
+        {
+          "id": "student_club_1427",
+          "question": "What are the budget category of the events located at MU 215 and a guest speaker type with a 0 budget spent?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT b.category FROM budget b JOIN event e ON b.link_to_event = e.event_id WHERE e.location = 'MU 215' AND e.type = 'Guest Speaker' AND b.spent = 0"
+        },
+        {
+          "id": "student_club_1432",
+          "question": "Among the members with t-shirt size of medium, what is the percentage of the amount 50 received by the Student_Club?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COALESCE((SELECT SUM(amount) FROM income WHERE source = 'Student_Club' AND link_to_member IN (SELECT member_id FROM member WHERE t_shirt_size = 'medium') AND amount = 50), 0) * 100.0 / NULLIF((SELECT SUM(amount) FROM income WHERE source = 'Student_Club' AND link_to_member IN (SELECT member_id FROM member WHERE t_shirt_size = 'medium')), 0)"
+        },
+        {
+          "id": "student_club_1435",
+          "question": "List the names of closed event as \"game\" that was closed from 3/15/2019 to 3/20/2020.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT event.event_name FROM event WHERE event.type = 'game' AND event.status = 'closed' AND event.event_date >= '2019-03-15' AND event.event_date <= '2020-03-20' ORDER BY event.event_date"
+        },
+        {
+          "id": "student_club_1457",
+          "question": "Give the full name and contact number of members who had to spend more than average on each expense.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT m.first_name || ' ' || m.last_name, m.phone FROM member m JOIN expense e ON m.member_id = e.link_to_member WHERE e.cost > (SELECT AVG(cost) FROM expense) ORDER BY m.last_name, m.first_name"
+        },
+        {
+          "id": "student_club_1460",
+          "question": "Write the full name of the member who spent money for water, veggie tray and supplies and include the cost of it.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT m.first_name || ' ' || m.last_name as full_name, SUM(e.cost) as total_spent FROM expense e JOIN member m ON e.link_to_member = m.member_id WHERE e.expense_description = 'water' OR e.expense_description = 'veggie tray' OR e.expense_description = 'supplies' GROUP BY m.member_id, m.first_name, m.last_name ORDER BY total_spent DESC"
+        },
+        {
+          "id": "student_club_1464",
+          "question": "Write the full names of students who received funds on the date of 9/9/2019 and include the amount received.",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT m.first_name, m.last_name, i.amount FROM income i JOIN member m ON i.link_to_member = m.member_id JOIN major maj ON m.link_to_major = maj.major_id WHERE i.date_received = '2019-09-09' AND maj.major_id IS NOT NULL"
+        }
+      ],
+      "judge_counts": {
+        "correct": 34,
+        "partially_correct": 0,
+        "incorrect": 6,
+        "inconclusive": 3
+      },
+      "judge_verdicts": [
+        {
+          "id": "student_club_1312",
+          "verdict": "correct",
+          "reason": "The query correctly joins the member and major tables, filters by the specified name, and retrieves the requested major name."
+        },
+        {
+          "id": "student_club_1317",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, applies all specified filters for major, event, and T-shirt size, and returns the requested count."
+        },
+        {
+          "id": "student_club_1331",
+          "verdict": "correct",
+          "reason": "The query correctly joins the income and member tables, filters for the Vice President, and aggregates the total amount received."
+        },
+        {
+          "id": "student_club_1334",
+          "verdict": "incorrect",
+          "reason": "The query incorrectly joins the major table and filters by major_name instead of using a club or membership table to identify club members."
+        },
+        {
+          "id": "student_club_1338",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters expenses for the specified event and date, evaluates their approval status, and appropriately handles the case where no expenses exist."
+        },
+        {
+          "id": "student_club_1339",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters by the specified member and months, and calculates the average cost as requested."
+        },
+        {
+          "id": "student_club_1340",
+          "verdict": "correct",
+          "reason": "The SQL correctly aggregates spending per event, groups by year, and computes the difference between 2019 and 2020 totals as requested."
+        },
+        {
+          "id": "student_club_1344",
+          "verdict": "correct",
+          "reason": "The query correctly filters the event table by the specified date and type, and retrieves the notes as requested."
+        },
+        {
+          "id": "student_club_1350",
+          "verdict": "inconclusive",
+          "reason": "The SQL correctly joins the tables and applies the filters, but the empty result set prevents verification of the output."
+        },
+        {
+          "id": "student_club_1351",
+          "verdict": "correct",
+          "reason": "The query correctly joins the member and major tables, filters by the specified name, and retrieves the requested major."
+        },
+        {
+          "id": "student_club_1352",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, applies the specified filters, and aggregates the count as requested."
+        },
+        {
+          "id": "student_club_1356",
+          "verdict": "correct",
+          "reason": "The query correctly identifies the department of the President, fulfilling the question's request."
+        },
+        {
+          "id": "student_club_1357",
+          "verdict": "inconclusive",
+          "reason": "The query logic appears correct but returns zero rows, which may be due to missing data."
+        },
+        {
+          "id": "student_club_1359",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters the relevant tables, compares the two specific budget amounts, and counts the occurrences where the condition holds, matching the question's intent and result shape."
+        },
+        {
+          "id": "student_club_1362",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters by county and state, counts distinct cities, and returns the expected single-row result."
+        },
+        {
+          "id": "student_club_1368",
+          "verdict": "correct",
+          "reason": "The query correctly joins the member and major tables, filters by the specified phone number, and returns the requested major."
+        },
+        {
+          "id": "student_club_1375",
+          "verdict": "correct",
+          "reason": "The query correctly joins the member and major tables, filters by the specified department, and returns the member names as requested."
+        },
+        {
+          "id": "student_club_1376",
+          "verdict": "incorrect",
+          "reason": "The SQL incorrectly groups by budget amount instead of just the event, fragmenting the aggregation and failing to calculate the correct total spend-to-budget ratio per event."
+        },
+        {
+          "id": "student_club_1378",
+          "verdict": "correct",
+          "reason": "The SQL correctly calculates the maximum budget spend using an aggregate function and returns a single value as requested."
+        },
+        {
+          "id": "student_club_1380",
+          "verdict": "correct",
+          "reason": "The query correctly aggregates the amount for the Food category, directly answering the question."
+        },
+        {
+          "id": "student_club_1381",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the attendance and member tables, groups by student, filters for counts greater than 7, and returns the requested names."
+        },
+        {
+          "id": "student_club_1387",
+          "verdict": "incorrect",
+          "reason": "The query incorrectly joins through the expense table to find the budget manager instead of directly linking the budget to the member."
+        },
+        {
+          "id": "student_club_1389",
+          "verdict": "correct",
+          "reason": "The query correctly joins the relevant tables, aggregates costs per event, orders ascending, and limits to one, directly answering the question."
+        },
+        {
+          "id": "student_club_1390",
+          "verdict": "correct",
+          "reason": "The SQL correctly calculates the requested percentage using subqueries for the specific event and total cost."
+        },
+        {
+          "id": "student_club_1392",
+          "verdict": "incorrect",
+          "reason": "The date filter incorrectly spans from September 2019 to January 2020 instead of restricting to only September 2019."
+        },
+        {
+          "id": "student_club_1394",
+          "verdict": "incorrect",
+          "reason": "The SQL incorrectly joins attendance and event tables to filter by event name instead of club membership, yielding an incorrect result."
+        },
+        {
+          "id": "student_club_1398",
+          "verdict": "correct",
+          "reason": "The SQL correctly implements the required join, filter, aggregation, and ordering to identify the event with the highest advertisement spending."
+        },
+        {
+          "id": "student_club_1399",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, applies the specified filters, and returns a boolean indicating whether the member attended the event."
+        },
+        {
+          "id": "student_club_1401",
+          "verdict": "correct",
+          "reason": "The query correctly joins the tables, applies the specified filters, and aggregates the cost into a single value as requested."
+        },
+        {
+          "id": "student_club_1403",
+          "verdict": "inconclusive",
+          "reason": "The SQL logic correctly addresses the query, but the empty result set prevents verification of correctness."
+        },
+        {
+          "id": "student_club_1404",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters for the event, aggregates the total expense by type, and returns the requested columns."
+        },
+        {
+          "id": "student_club_1405",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters by the event name, selects the requested categories and amounts, and orders them ascending as specified."
+        },
+        {
+          "id": "student_club_1409",
+          "verdict": "correct",
+          "reason": "The SQL correctly aggregates the cost for the specified date and returns the expected single-row result."
+        },
+        {
+          "id": "student_club_1410",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters by the specified member ID, aggregates the cost, and returns the requested full name and total cost."
+        },
+        {
+          "id": "student_club_1411",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, filters for the specified member, and returns the expense descriptions and categories as requested."
+        },
+        {
+          "id": "student_club_1422",
+          "verdict": "correct",
+          "reason": "The query correctly filters by location, groups by category, and returns the expected result shape with plausible categories."
+        },
+        {
+          "id": "student_club_1426",
+          "verdict": "correct",
+          "reason": "The query correctly joins the member and major tables, filters for the specified major, and selects the requested columns."
+        },
+        {
+          "id": "student_club_1427",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, applies all specified filters, and returns the requested budget categories."
+        },
+        {
+          "id": "student_club_1432",
+          "verdict": "correct",
+          "reason": "The SQL correctly implements the requested percentage calculation with appropriate filters, aggregations, and division-by-zero handling."
+        },
+        {
+          "id": "student_club_1435",
+          "verdict": "correct",
+          "reason": "The SQL correctly implements the requested filters and selection, matching the question's requirements."
+        },
+        {
+          "id": "student_club_1457",
+          "verdict": "incorrect",
+          "reason": "The query returns duplicate rows for members with multiple qualifying expenses and lacks a DISTINCT clause, failing to provide a unique list of members as requested."
+        },
+        {
+          "id": "student_club_1460",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters for the specified items, aggregates the cost per member, and matches the requested output structure."
+        },
+        {
+          "id": "student_club_1464",
+          "verdict": "correct",
+          "reason": "The SQL correctly retrieves the requested names and amounts, filters by the exact date, and uses appropriate joins."
+        }
+      ]
     }
   ]
 }
