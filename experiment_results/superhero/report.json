@@ -1,0 +1,613 @@
+{
+  "db_id": "superhero",
+  "run_id": "server-superhero-20260815-092327",
+  "corpus": "evals/bird_superhero.golden.jsonl",
+  "questions": 52,
+  "judge_model": "hosted_vllm/gemma4-chat",
+  "rows": [
+    {
+      "run": "control",
+      "elapsed_min": 21.4,
+      "stages": {},
+      "counts": {
+        "correct": 8,
+        "wrong_answer": 22,
+        "compare_error": 13,
+        "clarified": 0,
+        "failed_schema": 9,
+        "failed_react": 0,
+        "failed_llm": 0,
+        "failed_other": 0
+      },
+      "details": [
+        {
+          "id": "superhero_717",
+          "question": "Please list all the superpowers of 3-D Man.",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT DISTINCT sp.power_name FROM superhero s JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE s.superhero_name = '3-D Man'"
+        },
+        {
+          "id": "superhero_719",
+          "question": "Among the superheroes with the super power of \"Super Strength\", how many of them have a height of over 200cm?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT COUNT(DISTINCT s.id) as value_count FROM superhero s JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power_name = 'Super Strength' AND s.height_cm > 200"
+        },
+        {
+          "id": "superhero_723",
+          "question": "Among the superheroes with blue eyes, how many of them have the super power of \"Agility\"?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT p.hero_id, COUNT(DISTINCT sp.id) as attribute_count FROM hero_power p JOIN superpower sp ON p.power_id = sp.id GROUP BY p.hero_id ORDER BY attribute_count DESC LIMIT 50"
+        },
+        {
+          "id": "superhero_724",
+          "question": "Please list the superhero names of all the superheroes that have blue eyes and blond hair.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT s.superhero_name FROM superhero s JOIN colour c ON s.eye_colour_id = c.id JOIN colour h ON s.hair_colour_id = h.id WHERE c.colour = 'blue' AND h.colour = 'blond'"
+        },
+        {
+          "id": "superhero_726",
+          "question": "Rank heroes published by Marvel Comics by their height in descending order.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT s.id as superhero_id, s.superhero_name, s.height_cm, p.publisher_name, RANK() OVER (ORDER BY s.height_cm DESC) as height_rank FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE p.publisher_name = 'Marvel Comics' AND s.height_cm IS NOT NULL ORDER BY s.height_cm DESC"
+        },
+        {
+          "id": "superhero_728",
+          "question": "Rank superheroes from Marvel Comics by their eye color popularity, starting with the most common color.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT c.colour, COUNT(*) as value_count FROM superhero s JOIN colour c ON s.eye_colour_id = c.id GROUP BY c.colour ORDER BY value_count DESC"
+        },
+        {
+          "id": "superhero_730",
+          "question": "List the superheroes from Marvel Comics who have the super power of 'Super Strength'.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT s.superhero_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE p.publisher_name = 'Marvel' AND sp.power_name = 'Super Strength'"
+        },
+        {
+          "id": "superhero_732",
+          "question": "Which publisher published the slowest superhero?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT p.publisher_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 'speed' ORDER BY ha.attribute_value ASC LIMIT 1"
+        },
+        {
+          "id": "superhero_733",
+          "question": "How many gold-eyed superheroes did Marvel Comics publish?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT COUNT(s.id) as hero_count FROM superhero s JOIN publisher p ON s.publisher_id = p.id JOIN colour c ON s.eye_colour_id = c.id WHERE p.publisher_name = 'Marvel Comics' AND c.colour = 'Gold'"
+        },
+        {
+          "id": "superhero_736",
+          "question": "Who is the dumbest superhero?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT s.superhero_name FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 'intelligence' ORDER BY ha.attribute_value ASC LIMIT 1"
+        },
+        {
+          "id": "superhero_737",
+          "question": "What is Copycat's race?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT r.race FROM superhero s JOIN race r ON s.race_id = r.id WHERE s.superhero_name = 'Copycat'"
+        },
+        {
+          "id": "superhero_738",
+          "question": "Which superheroes have a durability attribute value of less than 50?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT attribute_name, attribute_value, COUNT(*) as value_count FROM hero_attribute ha JOIN attribute a ON ha.attribute_id = a.id GROUP BY attribute_name, attribute_value ORDER BY value_count DESC LIMIT 20"
+        },
+        {
+          "id": "superhero_739",
+          "question": "What are the names of the superheroes with the power of death touch?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT s.superhero_name FROM superhero s JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power_name = 'death touch'"
+        },
+        {
+          "id": "superhero_740",
+          "question": "How many female superheroes have a strength value of 100?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) AS female_strength_count FROM superhero s JOIN gender g ON s.gender_id = g.id JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE g.gender = 'female' AND a.attribute_name = 'strength' AND ha.attribute_value = 100"
+        },
+        {
+          "id": "superhero_743",
+          "question": "What is the percentage of superheroes who act in their own self-interest or make decisions based on their own moral code? Indicate how many of the said superheroes were published by Marvel Comics.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "WITH total_superheroes AS (\n    SELECT COUNT(*) as total FROM superhero\n),\nneutral_count AS (\n    SELECT COUNT(*) as count FROM superhero s\n    WHERE s.alignment_id = (\n        SELECT id FROM alignment WHERE alignment = 'neutral'\n    )\n),\nmarvel_neutral_count AS (\n    SELECT COUNT(*) as count FROM superhero s\n    JOIN publisher p ON s.publisher_id = p.id\n    WHERE p.publisher_name = 'Marvel Comics'\n    AND s.alignment_id = (\n        SELECT id FROM alignment WHERE alignment = 'neutral'\n    )\n)\nSELECT\n    (SELECT count FROM neutral_count)::numeric / (SELECT total FROM total_superheroes) * 100 as percentage,\n    (SELECT count FROM marvel_neutral_count) as marvel_count\nFROM neutral_count, marvel_neutral_count"
+        },
+        {
+          "id": "superhero_744",
+          "question": "Between DC and Marvel Comics, which publisher has published more superheroes? Find the difference in the number of superheroes they have published.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH dc_count AS (SELECT COUNT(*) as hero_count FROM superhero WHERE publisher_id = (SELECT id FROM publisher WHERE publisher_name = 'DC')), marvel_count AS (SELECT COUNT(*) as hero_count FROM superhero WHERE publisher_id = (SELECT id FROM publisher WHERE publisher_name = 'Marvel Comics')) SELECT CASE WHEN dc_count.hero_count > marvel_count.hero_count THEN 'DC' ELSE 'Marvel Comics' END as publisher_with_more, ABS(dc_count.hero_count - marvel_count.hero_count) as difference FROM dc_count, marvel_count"
+        },
+        {
+          "id": "superhero_745",
+          "question": "Give the publisher ID of Star Trek.",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT p.id FROM publisher p WHERE p.publisher_name = 'Star Trek'"
+        },
+        {
+          "id": "superhero_747",
+          "question": "What is the total number of superheroes without full name?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) AS total FROM superhero WHERE full_name IS NULL"
+        },
+        {
+          "id": "superhero_750",
+          "question": "What is the average weight of all female superheroes?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT AVG(s.weight_kg) as avg_weight FROM superhero s JOIN gender g ON s.gender_id = g.id WHERE g.gender = 'female'"
+        },
+        {
+          "id": "superhero_751",
+          "question": "List down at least five superpowers of male superheroes.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT DISTINCT sp.power_name FROM superhero s JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id JOIN gender g ON s.gender_id = g.id WHERE g.gender = 'male' ORDER BY sp.power_name LIMIT 5"
+        },
+        {
+          "id": "superhero_753",
+          "question": "Among the superheroes with height from 170 to 190, list the names of the superheroes with no eye color.",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": ""
+        },
+        {
+          "id": "superhero_758",
+          "question": "Provide the hair colour of the human superhero who is 185 cm tall.",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT COUNT(\"colour\".\"colour\") AS \"hair_colour\" FROM \"superhero\" JOIN \"colour\" ON \"superhero\".\"hair_colour_id\" = \"colour\".\"id\" WHERE \"superhero\".\"height_cm\" = 185 AND \"superhero\".\"race_id\" = 1 ORDER BY \"hair_colour\" ASC LIMIT 100"
+        },
+        {
+          "id": "superhero_760",
+          "question": "In superheroes with height between 150 to 180, what is the percentage of heroes published by Marvel Comics?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT ROUND(COUNT(CASE WHEN p.publisher_name = 'Marvel Comics' THEN s.id END)::numeric / COUNT(s.id)::numeric * 100, 2) as marvel_percentage FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE s.height_cm BETWEEN 150 AND 180"
+        },
+        {
+          "id": "superhero_761",
+          "question": "Among the male superheroes, list the super hero names of superheroes with weight greater than the 79% average weight of all superheroes.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "WITH weight_threshold AS (SELECT AVG(weight_kg) * 0.79 AS threshold FROM superhero), male_heroes AS (SELECT s.id, s.superhero_name, s.weight_kg FROM superhero s JOIN gender g ON s.gender_id = g.id WHERE g.gender = 'male') SELECT mh.superhero_name FROM male_heroes mh JOIN weight_threshold wt ON mh.weight_kg > wt.threshold ORDER BY mh.weight_kg DESC"
+        },
+        {
+          "id": "superhero_764",
+          "question": "What are the superpowers of heroes with ID 1?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT COUNT(\"superpower\".\"power_name\") AS \"superpower_name\" FROM \"hero_power\" JOIN \"superpower\" ON \"hero_power\".\"power_id\" = \"superpower\".\"id\" WHERE \"hero_power\".\"hero_id\" = 1 ORDER BY \"superpower_name\" ASC LIMIT 50"
+        },
+        {
+          "id": "superhero_765",
+          "question": "How many heroes have stealth power?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) FROM superhero s JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power_name = 'Stealth'"
+        },
+        {
+          "id": "superhero_766",
+          "question": "What is the hero's full name with the highest attribute in strength?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT s.full_name FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 'strength' ORDER BY ha.attribute_value DESC LIMIT 1"
+        },
+        {
+          "id": "superhero_769",
+          "question": "Which superhero has the most durability published by Dark Horse Comics?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT s.superhero_name, MAX(ha.attribute_value) as max_durability FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id JOIN publisher p ON s.publisher_id = p.id WHERE a.attribute_name = 'durability' AND p.publisher_name = 'Dark Horse Comics' GROUP BY s.superhero_name ORDER BY max_durability DESC LIMIT 1"
+        },
+        {
+          "id": "superhero_772",
+          "question": "List the eyes, hair and skin colour of all female superheroes published by Dark Horse Comics.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT c1.colour AS eye_colour, c2.colour AS hair_colour, c3.colour AS skin_colour FROM superhero s JOIN publisher p ON s.publisher_id = p.id JOIN gender g ON s.gender_id = g.id JOIN colour c1 ON s.eye_colour_id = c1.id JOIN colour c2 ON s.hair_colour_id = c2.id JOIN colour c3 ON s.skin_colour_id = c3.id WHERE g.gender = 'female' AND p.publisher_name = 'Dark Horse Comics'"
+        },
+        {
+          "id": "superhero_773",
+          "question": "Which superhero has the same eyes, hair and skin colour? Indicate the publisher of the superhero.",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": ""
+        },
+        {
+          "id": "superhero_775",
+          "question": "What is the percentage of blue female superheroes among all female superheroes?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT\n    COUNT(*) FILTER (WHERE c.colour = 'blue') * 100.0::numeric / NULLIF(COUNT(*), 0) AS blue_percentage\nFROM superhero s\nINNER JOIN gender g ON s.gender_id = g.id\nINNER JOIN colour c ON s.eye_colour_id = c.id\nWHERE g.gender = 'female'"
+        },
+        {
+          "id": "superhero_779",
+          "question": "How many powers does Amazo hero have?",
+          "verdict": "correct",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) as power_count FROM hero_power hp JOIN superhero s ON hp.hero_id = s.id WHERE s.superhero_name = 'Amazo'"
+        },
+        {
+          "id": "superhero_781",
+          "question": "Provide the heights of the heroes whose eye colours are amber.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT s.height_cm FROM superhero s JOIN colour c ON s.eye_colour_id = c.id WHERE c.colour = 'amber'"
+        },
+        {
+          "id": "superhero_782",
+          "question": "List the heroes' names whose eyes and hair colours are both black.",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": ""
+        },
+        {
+          "id": "superhero_785",
+          "question": "Describe the names of neutral alignment superheroes.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT s.superhero_name, s.full_name\nFROM superhero s\nJOIN alignment a ON s.alignment_id = a.id\nWHERE a.alignment = 'neutral'"
+        },
+        {
+          "id": "superhero_786",
+          "question": "How many heroes have the highest attribute value in strength?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) as hero_count FROM hero_attribute ha JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 'strength' GROUP BY attribute_value ORDER BY attribute_value DESC LIMIT 1"
+        },
+        {
+          "id": "superhero_788",
+          "question": "How many percent of female heroes were published by Marvel Comics?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT ROUND(\n    CASE\n        WHEN (SELECT COUNT(*) FROM superhero s WHERE s.gender_id = (SELECT id FROM gender WHERE gender = 'female')) = 0 THEN NULL\n        ELSE ((SELECT COUNT(*) FROM superhero s WHERE s.publisher_id = (SELECT id FROM publisher WHERE publisher_name = 'Marvel Comics') AND s.gender_id = (SELECT id FROM gender WHERE gender = 'female')) * 100.0 / (SELECT COUNT(*) FROM superhero s WHERE s.gender_id = (SELECT id FROM gender WHERE gender = 'female')))\n    END, 4) AS percentage"
+        },
+        {
+          "id": "superhero_790",
+          "question": "Calculate the difference between Emil Blonsky's weight and Charles Chandler's weight.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT (SELECT weight_kg FROM superhero WHERE superhero_name = 'Emil Blonsky') - (SELECT weight_kg FROM superhero WHERE superhero_name = 'Charles Chandler')"
+        },
+        {
+          "id": "superhero_791",
+          "question": "Calculate the average height for all superhero.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT AVG(height_cm) AS average_height FROM superhero"
+        },
+        {
+          "id": "superhero_792",
+          "question": "What is Abomination's superpower?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT s.superhero_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE p.publisher_name = 'Marvel' AND sp.power_name = 'Super Strength'"
+        },
+        {
+          "id": "superhero_794",
+          "question": "Which hero was the fastest?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT s.superhero_name, ha.attribute_value AS speed FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 'Speed' ORDER BY ha.attribute_value DESC LIMIT 1"
+        },
+        {
+          "id": "superhero_796",
+          "question": "State all of 3-D Man's attributes along with their values.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT ha.attribute_value, a.attribute_name FROM hero_attribute ha JOIN attribute a ON ha.attribute_id = a.id JOIN superhero s ON ha.hero_id = s.id WHERE s.superhero_name = '3-D Man' ORDER BY ha.attribute_id"
+        },
+        {
+          "id": "superhero_797",
+          "question": "Which superheroes have blue eyes with brown hair?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT s.superhero_name, c1.colour as eye_colour, c2.colour as hair_colour FROM superhero s JOIN colour c1 ON s.eye_colour_id = c1.id JOIN colour c2 ON s.hair_colour_id = c2.id WHERE c1.colour = 'blue' AND c2.colour = 'brown'"
+        },
+        {
+          "id": "superhero_798",
+          "question": "What is the publisher for Hawkman, Karate Kid and Speedy?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT s.superhero_name, p.publisher_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE s.superhero_name IN ('Hawkman', 'Karate Kid', 'Speedy') ORDER BY s.superhero_name"
+        },
+        {
+          "id": "superhero_800",
+          "question": "Calculate the percentage of superheroes with blue eyes.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT ROUND((COUNT(CASE WHEN c.colour = 'blue' THEN 1 END) * 100.0 / COUNT(*)), 2) AS blue_eye_percentage FROM superhero s JOIN colour c ON s.eye_colour_id = c.id"
+        },
+        {
+          "id": "superhero_801",
+          "question": "Find the ratio between male superheroes and female superheroes.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT CAST(SUM(CASE WHEN g.gender = 'male' THEN 1 ELSE 0 END) AS NUMERIC) / SUM(CASE WHEN g.gender = 'female' THEN 1 ELSE 0 END) AS ratio FROM superhero s JOIN gender g ON s.gender_id = g.id WHERE g.gender IN ('male', 'female')"
+        },
+        {
+          "id": "superhero_806",
+          "question": "Provide the eye colour of the superhero who has Karen Beecher-Duncan as their full name.",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": ""
+        },
+        {
+          "id": "superhero_819",
+          "question": "In superheroes with missing weight data, calculate the difference between the number of superheroes with blue eyes and no eye color.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT COUNT(CASE WHEN s.eye_colour_id = c.id AND c.colour = 'blue' THEN 1 END) as blue_eyes, COUNT(CASE WHEN s.eye_colour_id IS NULL THEN 1 END) as no_eye_color, COUNT(CASE WHEN s.eye_colour_id = c.id AND c.colour = 'blue' THEN 1 END) - COUNT(CASE WHEN s.eye_colour_id IS NULL THEN 1 END) as difference FROM superhero s LEFT JOIN colour c ON s.eye_colour_id = c.id WHERE s.weight_kg IS NULL"
+        },
+        {
+          "id": "superhero_822",
+          "question": "How many green-skinned villains are there in the superhero universe?",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT COUNT(*) FROM superhero s JOIN colour c ON s.skin_colour_id = c.id JOIN alignment a ON s.alignment_id = a.id WHERE c.colour = 'green' AND a.alignment = 'villain'"
+        },
+        {
+          "id": "superhero_824",
+          "question": "Identify superheroes who can control wind and list their names in alphabetical order.",
+          "verdict": "wrong_answer",
+          "error_type": null,
+          "sql": "SELECT s.superhero_name FROM superhero s JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power_name = 'wind' ORDER BY s.superhero_name ASC"
+        },
+        {
+          "id": "superhero_825",
+          "question": "Identify the gender of the superhero who has the ability of Phoenix Force.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT s.gender_id FROM superhero s JOIN hero_power hp ON s.id = hp.hero_id JOIN superpower sp ON hp.power_id = sp.id WHERE sp.power_name = 'Phoenix Force'"
+        },
+        {
+          "id": "superhero_829",
+          "question": "Which publisher created more superheroes: DC or Marvel Comics? Find the difference in the number of superheroes.",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "WITH publisher_counts AS (\n    SELECT\n        publisher_name,\n        COUNT(*) as hero_count\n    FROM superhero\n    JOIN publisher ON superhero.publisher_id = publisher.id\n    WHERE publisher_name IN ('DC', 'Marvel Comics')\n    GROUP BY publisher_name\n),\ndc_count AS (\n    SELECT hero_count FROM publisher_counts WHERE publisher_name = 'DC'\n),\nmarvel_count AS (\n    SELECT hero_count FROM publisher_counts WHERE publisher_name = 'Marvel Comics'\n)\nSELECT\n    publisher_name,\n    hero_count,\n    ABS(hero_count - (SELECT hero_count FROM marvel_count)) as difference\nFROM publisher_counts"
+        }
+      ],
+      "judge_counts": {
+        "correct": 37,
+        "partially_correct": 1,
+        "incorrect": 3,
+        "inconclusive": 2
+      },
+      "judge_verdicts": [
+        {
+          "id": "superhero_717",
+          "verdict": "correct",
+          "reason": "The query correctly joins the relevant tables, filters for the specified superhero, and returns the list of superpowers as requested."
+        },
+        {
+          "id": "superhero_719",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, applies the specified filters for power and height, and returns the requested count."
+        },
+        {
+          "id": "superhero_724",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the superhero and colour tables and applies the appropriate filters for eye and hair color."
+        },
+        {
+          "id": "superhero_726",
+          "verdict": "correct",
+          "reason": "The query correctly filters for Marvel Comics, handles null heights, applies the RANK window function ordered by height descending, and sorts the results appropriately."
+        },
+        {
+          "id": "superhero_728",
+          "verdict": "correct",
+          "reason": "The SQL correctly groups superheroes by eye color, counts occurrences, and orders the results in descending order as requested."
+        },
+        {
+          "id": "superhero_730",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables and applies the appropriate filters for publisher and superpower, logically fulfilling the request."
+        },
+        {
+          "id": "superhero_732",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, filters for the speed attribute, orders ascending to find the slowest superhero, and limits to one publisher."
+        },
+        {
+          "id": "superhero_733",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the necessary tables, applies the specified filters, and returns the requested count."
+        },
+        {
+          "id": "superhero_736",
+          "verdict": "inconclusive",
+          "reason": "The SQL logic correctly targets the lowest intelligence score, but the empty result set prevents verification of the actual output."
+        },
+        {
+          "id": "superhero_737",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the superhero and race tables, filters for the specific character, and returns the expected race."
+        },
+        {
+          "id": "superhero_739",
+          "verdict": "correct",
+          "reason": "The query correctly joins the necessary tables and filters by the specified power name, structurally fulfilling the request."
+        },
+        {
+          "id": "superhero_740",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, applies the specified filters for gender, attribute name, and value, and returns the requested count."
+        },
+        {
+          "id": "superhero_743",
+          "verdict": "incorrect",
+          "reason": "The SQL uses lowercase 'neutral' for the alignment filter, causing a case-sensitivity mismatch that yields incorrect zero results."
+        },
+        {
+          "id": "superhero_744",
+          "verdict": "correct",
+          "reason": "The SQL correctly counts superheroes for both publishers, compares the totals, and returns the publisher with more superheroes along with the exact difference."
+        },
+        {
+          "id": "superhero_745",
+          "verdict": "correct",
+          "reason": "The SQL correctly queries the publisher table for the ID matching the name 'Star Trek' and returns the expected single value."
+        },
+        {
+          "id": "superhero_747",
+          "verdict": "correct",
+          "reason": "The SQL correctly counts superheroes with a NULL full_name using the appropriate table and filter."
+        },
+        {
+          "id": "superhero_750",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters for female superheroes, and calculates the average weight as requested."
+        },
+        {
+          "id": "superhero_751",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, filters for male superheroes, and selects distinct superpowers as requested."
+        },
+        {
+          "id": "superhero_760",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters by height, joins the publisher table, and calculates the exact percentage of Marvel Comics superheroes in the specified range."
+        },
+        {
+          "id": "superhero_761",
+          "verdict": "correct",
+          "reason": "The SQL correctly computes 79% of the overall average weight and filters male superheroes whose weight exceeds this threshold, aligning with the question."
+        },
+        {
+          "id": "superhero_765",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, filters for the 'Stealth' power, and counts the matching heroes."
+        },
+        {
+          "id": "superhero_766",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the necessary tables, filters for the strength attribute, orders by value descending, and limits to one result."
+        },
+        {
+          "id": "superhero_769",
+          "verdict": "inconclusive",
+          "reason": "The SQL correctly implements the requested logic, but the empty result set makes it impossible to verify the output."
+        },
+        {
+          "id": "superhero_772",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the necessary tables, applies the specified filters, and selects the requested columns."
+        },
+        {
+          "id": "superhero_775",
+          "verdict": "correct",
+          "reason": "The SQL correctly implements the required joins, filters, and percentage calculation logic."
+        },
+        {
+          "id": "superhero_779",
+          "verdict": "correct",
+          "reason": "The query correctly joins the hero and power tables, filters for the specified character, and returns the exact count requested."
+        },
+        {
+          "id": "superhero_781",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters for amber eyes, and selects the height, fully satisfying the query requirements."
+        },
+        {
+          "id": "superhero_785",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters by the specified alignment, and selects the requested name columns."
+        },
+        {
+          "id": "superhero_786",
+          "verdict": "incorrect",
+          "reason": "The query returns zero rows instead of a count, and the GROUP BY with LIMIT approach is flawed for correctly isolating the maximum strength value."
+        },
+        {
+          "id": "superhero_788",
+          "verdict": "correct",
+          "reason": "The SQL correctly calculates the specified percentage and handles division by zero, with the null result logically indicating an empty dataset for female heroes."
+        },
+        {
+          "id": "superhero_790",
+          "verdict": "correct",
+          "reason": "The SQL correctly implements the requested calculation using subqueries, and the null result likely stems from data mismatches rather than query logic."
+        },
+        {
+          "id": "superhero_791",
+          "verdict": "correct",
+          "reason": "The SQL correctly computes the average height from the superhero table as requested."
+        },
+        {
+          "id": "superhero_794",
+          "verdict": "correct",
+          "reason": "The query correctly joins the tables, filters for the speed attribute, orders by it descending, and returns the top result."
+        },
+        {
+          "id": "superhero_796",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the necessary tables, filters for the specified superhero, and retrieves all requested attributes and their values."
+        },
+        {
+          "id": "superhero_797",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the colour table twice to filter for blue eyes and brown hair, and zero matches is a valid result."
+        },
+        {
+          "id": "superhero_798",
+          "verdict": "correct",
+          "reason": "The query correctly joins the tables, filters for the specified superheroes, and returns their publishers as requested."
+        },
+        {
+          "id": "superhero_800",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters for blue eyes, and calculates the percentage using standard aggregation."
+        },
+        {
+          "id": "superhero_801",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the tables, filters for the specified genders, and calculates the ratio, with the null result likely due to division by zero."
+        },
+        {
+          "id": "superhero_819",
+          "verdict": "correct",
+          "reason": "The SQL correctly filters for missing weight, uses conditional aggregation to count blue-eyed and eye-color-less superheroes, and computes their difference in a single row."
+        },
+        {
+          "id": "superhero_822",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, applies the specified filters for green skin and villain alignment, and returns the requested count."
+        },
+        {
+          "id": "superhero_824",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables, filters for the wind power, and orders the results alphabetically as requested."
+        },
+        {
+          "id": "superhero_825",
+          "verdict": "incorrect",
+          "reason": "The query returns a gender ID instead of the actual gender name or description requested."
+        },
+        {
+          "id": "superhero_829",
+          "verdict": "partially_correct",
+          "reason": "The query correctly computes counts but calculates a per-row difference (0 for one publisher) instead of a single difference value, and the sample shows only one row."
+        }
+      ]
+    }
+  ]
+}
