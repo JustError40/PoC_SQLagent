@@ -1,9 +1,9 @@
 # Campaign progress
 
-- Campaign: 20260815-092123 (branch `campaign/20260815-092123`)
-- Updated: 2026-08-16T04:13:02.642017+00:00
-- Status: student_club iteration 5 committed
-- Database: student_club (3/11), run iteration 5 (6/11)
-- Last counts: {"clarified": 0, "compare_error": 4, "correct": 0, "failed_llm": 0, "failed_other": 0, "failed_react": 37, "failed_schema": 5, "wrong_answer": 0}
-- Judge: {"correct": 3, "inconclusive": 1, "incorrect": 0, "partially_correct": 0}
-- ETA: ~4251.7 min
+- Campaign: 20260815-092327 (branch `campaign/20260815-092327`)
+- Updated: 2026-08-16T04:14:10.545776+00:00
+- Status: superhero iteration 1 committed
+- Database: superhero (4/11), run iteration 1 (2/11)
+- Last counts: {"clarified": 0, "compare_error": 11, "correct": 12, "failed_llm": 0, "failed_other": 3, "failed_react": 1, "failed_schema": 4, "wrong_answer": 21}
+- Judge: {"correct": 40, "inconclusive": 1, "incorrect": 2, "partially_correct": 1}
+- ETA: ~4979.4 min

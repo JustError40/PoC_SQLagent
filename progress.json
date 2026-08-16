@@ -1,29 +1,29 @@
 {
-  "campaign_ts": "20260815-092123",
-  "branch": "campaign/20260815-092123",
-  "status": "student_club iteration 5 committed",
+  "campaign_ts": "20260815-092327",
+  "branch": "campaign/20260815-092327",
+  "status": "superhero iteration 1 committed",
   "db_total": 11,
-  "db_index": 3,
+  "db_index": 4,
   "runs_per_db": 11,
-  "current_db": "student_club",
-  "run_label": "iteration 5",
-  "run_index": 6,
-  "eta_min": 4251.7,
-  "updated_at": "2026-08-16T04:13:02.642017+00:00",
+  "current_db": "superhero",
+  "run_label": "iteration 1",
+  "run_index": 2,
+  "eta_min": 4979.4,
+  "updated_at": "2026-08-16T04:14:10.545776+00:00",
   "last_counts": {
-    "correct": 0,
-    "wrong_answer": 0,
-    "compare_error": 4,
+    "correct": 12,
+    "wrong_answer": 21,
+    "compare_error": 11,
     "clarified": 0,
-    "failed_schema": 5,
-    "failed_react": 37,
+    "failed_schema": 4,
+    "failed_react": 1,
     "failed_llm": 0,
-    "failed_other": 0
+    "failed_other": 3
   },
   "judge_counts": {
-    "correct": 3,
-    "partially_correct": 0,
-    "incorrect": 0,
+    "correct": 40,
+    "partially_correct": 1,
+    "incorrect": 2,
     "inconclusive": 1
   }
 }
