@@ -1,29 +1,29 @@
 {
   "campaign_ts": "20260815-092327",
   "branch": "campaign/20260815-092327",
-  "status": "loading superhero",
+  "status": "superhero control committed",
   "db_total": 11,
   "db_index": 4,
   "runs_per_db": 11,
   "current_db": "superhero",
-  "run_label": "-",
-  "run_index": 0,
-  "eta_min": null,
-  "updated_at": "2026-08-16T02:13:09.042790+00:00",
+  "run_label": "control",
+  "run_index": 1,
+  "eta_min": 1861.8,
+  "updated_at": "2026-08-16T02:39:38.977279+00:00",
   "last_counts": {
-    "correct": 10,
-    "wrong_answer": 16,
-    "compare_error": 18,
+    "correct": 8,
+    "wrong_answer": 22,
+    "compare_error": 13,
     "clarified": 0,
-    "failed_schema": 1,
-    "failed_react": 1,
+    "failed_schema": 9,
+    "failed_react": 0,
     "failed_llm": 0,
     "failed_other": 0
   },
   "judge_counts": {
-    "correct": 32,
+    "correct": 37,
     "partially_correct": 1,
-    "incorrect": 5,
-    "inconclusive": 6
+    "incorrect": 3,
+    "inconclusive": 2
   }
 }
