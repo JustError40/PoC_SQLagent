@@ -9,3 +9,4 @@
 | Run | Correct | Wrong answer | Compare error | Clarified | Fail: schema/JSON | Fail: react | Fail: LLM | Fail: other | Judge: correct/partial/incorrect/inconclusive | Time, min |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | control | 8 | 22 | 13 | 0 | 9 | 0 | 0 | 0 | 37/1/3/2 | 21.4 |
+| iteration 1 | 12 | 21 | 11 | 0 | 4 | 1 | 0 | 3 | 40/1/2/1 | 94.4 |
