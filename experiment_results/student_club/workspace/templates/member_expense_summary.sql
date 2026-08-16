@@ -1,0 +1,1 @@
+SELECT member.member_id, COUNT(expense.expense_id) as expense_count, SUM(expense.cost) as total_cost FROM expense JOIN member ON expense.link_to_member = member.member_id GROUP BY member.member_id ORDER BY expense_count DESC LIMIT 10;

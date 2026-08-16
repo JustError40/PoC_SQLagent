@@ -1,0 +1,1 @@
+SELECT budget.category, budget.event_status, COUNT(*) as budget_count, SUM(budget.spent) as total_spent, AVG(budget.amount) as avg_budget_amount FROM budget GROUP BY budget.category, budget.event_status ORDER BY budget_count DESC LIMIT 10;

@@ -1,0 +1,3 @@
+domain: locations
+tables:
+- zip_code

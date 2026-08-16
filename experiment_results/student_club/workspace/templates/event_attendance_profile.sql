@@ -1,0 +1,1 @@
+SELECT e.type, COUNT(DISTINCT a.link_to_member) AS unique_attendees, COUNT(*) AS total_attendance FROM event e INNER JOIN attendance a ON e.event_id = a.link_to_event GROUP BY e.type ORDER BY unique_attendees DESC LIMIT 10;

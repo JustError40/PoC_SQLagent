@@ -1,0 +1,1 @@
+SELECT event.event_id, COUNT(DISTINCT attendance.link_to_member) as member_count FROM attendance JOIN event ON attendance.link_to_event = event.event_id GROUP BY event.event_id ORDER BY member_count DESC LIMIT 10;

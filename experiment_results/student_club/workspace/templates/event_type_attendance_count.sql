@@ -1,0 +1,1 @@
+SELECT e.type, COUNT(DISTINCT a.link_to_member) AS unique_attendees, SUM(CASE WHEN a.link_to_member IS NOT NULL THEN 1 ELSE 0 END) AS total_attendance FROM event e LEFT JOIN attendance a ON e.event_id = a.link_to_event GROUP BY e.type ORDER BY unique_attendees DESC;

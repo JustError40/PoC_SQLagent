@@ -1,0 +1,1 @@
+SELECT mem.member_id, mem.first_name, mem.last_name, COUNT(exp.expense_id) as expense_count, SUM(exp.cost) as total_cost, AVG(exp.cost) as avg_cost FROM expense exp JOIN member mem ON exp.link_to_member = mem.member_id GROUP BY mem.member_id, mem.first_name, mem.last_name ORDER BY total_cost DESC LIMIT 20;

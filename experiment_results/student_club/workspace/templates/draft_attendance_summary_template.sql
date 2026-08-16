@@ -1,0 +1,1 @@
+WITH event_attendance AS (SELECT e.event_id, e.event_name, COUNT(DISTINCT a.link_to_member) AS attendance_count FROM event e INNER JOIN attendance a ON e.event_id = a.link_to_event GROUP BY e.event_id, e.event_name) SELECT event_id, event_name, attendance_count FROM event_attendance ORDER BY attendance_count DESC LIMIT 20;

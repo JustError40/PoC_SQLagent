@@ -1,0 +1,1 @@
+WITH event_budget AS (SELECT e.event_id, e.event_name, b.spent, b.amount, ROUND((b.spent::numeric / b.amount::numeric) * 100, 2) as utilization_percent FROM event e JOIN budget b ON e.event_id = b.link_to_event WHERE b.amount > 0) SELECT event_id, event_name, utilization_percent FROM event_budget ORDER BY utilization_percent DESC;

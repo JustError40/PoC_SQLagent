@@ -1,0 +1,1 @@
+SELECT zip_code.zip_code, COUNT(member.member_id) AS member_count, STRING_AGG(zip_code.state, ', ') AS states FROM member JOIN zip_code ON member.zip = zip_code.zip_code GROUP BY zip_code.zip_code ORDER BY member_count DESC LIMIT 30;

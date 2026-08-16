@@ -1,0 +1,1 @@
+SELECT m.member_id, m.first_name || ' ' || m.last_name AS member_name, i.source, SUM(i.amount) AS total_income FROM member m JOIN income i ON m.member_id = i.link_to_member GROUP BY m.member_id, m.first_name, m.last_name, i.source ORDER BY total_income DESC;

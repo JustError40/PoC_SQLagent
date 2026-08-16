@@ -1,0 +1,1 @@
+SELECT budget.event_status, SUM(budget.spent) as total_spent, COUNT(*) as budget_records FROM budget JOIN event ON budget.link_to_event = event.event_id GROUP BY budget.event_status ORDER BY total_spent DESC;

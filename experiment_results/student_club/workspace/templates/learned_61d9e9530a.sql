@@ -1,0 +1,1 @@
+SELECT CAST(COUNT(DISTINCT CASE WHEN i.source = 'EUR' THEN i.link_to_member END) AS FLOAT) / NULLIF(CAST(COUNT(DISTINCT CASE WHEN i.source = 'CZK' THEN i.link_to_member END) AS FLOAT), 0) AS ratio FROM income i WHERE i.source IN ('EUR', 'CZK');

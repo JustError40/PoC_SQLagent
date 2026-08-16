@@ -1,0 +1,1 @@
+SELECT e.status FROM expense ex JOIN budget b ON ex.link_to_budget = b.budget_id JOIN event e ON b.link_to_event = e.event_id WHERE ex.expense_description = 'Post Cards, Posters' AND ex.expense_date = '2019-08-20';

@@ -1,0 +1,1 @@
+SELECT m.member_id, m.first_name, m.last_name, m.email, m.position, m.phone, m.zip FROM member m JOIN major maj ON m.link_to_major = maj.major_id WHERE maj.department = 'School of Applied Sciences, Technology and Education';

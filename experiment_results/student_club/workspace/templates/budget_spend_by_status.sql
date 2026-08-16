@@ -1,0 +1,1 @@
+SELECT b.event_status, SUM(b.spent) as total_spent, COUNT(b.budget_id) as budget_count, AVG(b.spent) as avg_spent FROM budget b JOIN expense e ON b.budget_id = e.link_to_budget WHERE b.event_status IS NOT NULL GROUP BY b.event_status ORDER BY total_spent DESC;

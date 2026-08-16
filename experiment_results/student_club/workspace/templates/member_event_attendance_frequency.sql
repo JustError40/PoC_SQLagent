@@ -1,0 +1,1 @@
+SELECT m.member_id, m.first_name || ' ' || m.last_name AS member_name, COUNT(DISTINCT a.link_to_event) AS events_attended FROM member m JOIN attendance a ON m.member_id = a.link_to_member GROUP BY m.member_id, m.first_name, m.last_name ORDER BY events_attended DESC LIMIT 50;

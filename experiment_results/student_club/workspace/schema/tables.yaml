@@ -1,0 +1,236 @@
+tables:
+- name: attendance
+  description: Records associations between event identifiers (link_to_event) and
+    member identifiers (link_to_member).
+  grain: one row per event-member attendance pair
+  columns:
+  - column_name: link_to_event
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: link_to_member
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 2
+- name: budget
+  description: Tracks budget records for categories such as Food and Advertisement,
+    capturing spent, remaining, and total amounts along with event status and links.
+  grain: one row per budget record
+  columns:
+  - column_name: budget_id
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: category
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: spent
+    data_type: real
+    is_nullable: 'YES'
+    ordinal_position: 3
+  - column_name: remaining
+    data_type: real
+    is_nullable: 'YES'
+    ordinal_position: 4
+  - column_name: amount
+    data_type: bigint
+    is_nullable: 'YES'
+    ordinal_position: 5
+  - column_name: event_status
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 6
+  - column_name: link_to_event
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 7
+- name: event
+  description: This table records individual event occurrences, capturing details
+    such as names like 'Community Theater', dates ranging from 2019 to 2020, types
+    including 'Meeting', locations like 'MU 215', and status values like 'Planning'
+    or 'Closed'.
+  grain: one row per event occurrence
+  columns:
+  - column_name: event_id
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: event_name
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: event_date
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 3
+  - column_name: type
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 4
+  - column_name: notes
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 5
+  - column_name: location
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 6
+  - column_name: status
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 7
+- name: expense
+  description: The expense table stores individual expense records with text descriptions,
+    dates, costs, approval status, and references to members and budgets.
+  grain: one row per expense record
+  columns:
+  - column_name: expense_id
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: expense_description
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: expense_date
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 3
+  - column_name: cost
+    data_type: real
+    is_nullable: 'YES'
+    ordinal_position: 4
+  - column_name: approved
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 5
+  - column_name: link_to_member
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 6
+  - column_name: link_to_budget
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 7
+- name: income
+  description: Stores financial inflows with income ID, date received, amount, source
+    type, notes, and a link to a member.
+  grain: one row per income transaction
+  columns:
+  - column_name: income_id
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: date_received
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: amount
+    data_type: bigint
+    is_nullable: 'YES'
+    ordinal_position: 3
+  - column_name: source
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 4
+  - column_name: notes
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 5
+  - column_name: link_to_member
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 6
+- name: major
+  description: This table stores unique academic majors identified by major_id, including
+    names such as Accounting, along with their affiliated departments and colleges.
+  grain: one row per major
+  columns:
+  - column_name: major_id
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: major_name
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: department
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 3
+  - column_name: college
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 4
+- name: member
+  description: The member table stores individual profiles with unique identifiers,
+    contact information, names, and organizational positions such as President or
+    Treasurer.
+  grain: one row per member
+  columns:
+  - column_name: member_id
+    data_type: text
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: first_name
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: last_name
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 3
+  - column_name: email
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 4
+  - column_name: position
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 5
+  - column_name: t_shirt_size
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 6
+  - column_name: phone
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 7
+  - column_name: zip
+    data_type: bigint
+    is_nullable: 'YES'
+    ordinal_position: 8
+  - column_name: link_to_major
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 9
+- name: zip_code
+  description: This table stores postal delivery information including zip code, city,
+    county, state, and type for each unique zip code.
+  grain: one row per zip code
+  columns:
+  - column_name: zip_code
+    data_type: bigint
+    is_nullable: 'NO'
+    ordinal_position: 1
+  - column_name: type
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 2
+  - column_name: city
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 3
+  - column_name: county
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 4
+  - column_name: state
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 5
+  - column_name: short_state
+    data_type: text
+    is_nullable: 'YES'
+    ordinal_position: 6

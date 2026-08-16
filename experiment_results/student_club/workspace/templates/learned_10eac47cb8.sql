@@ -1,0 +1,1 @@
+SELECT phone FROM member WHERE first_name = 'Carlo' AND last_name = 'Jacobs';

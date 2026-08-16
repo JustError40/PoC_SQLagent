@@ -1,0 +1,167 @@
+rules:
+- rule: SELECT approved, COUNT(*) as count FROM expense GROUP BY approved ORDER BY
+    approved
+  source: explorer
+  confidence: 0.7
+- rule: SELECT parent_column, COUNT(*) as child_count, SUM(child_value) as total FROM
+    child_table JOIN parent_table ON child_table.link_to = parent_table.id_column
+    GROUP BY parent_column HAVING COUNT(*) > 1 ORDER BY child_count DESC LIMIT 10
+  source: explorer
+  confidence: 0.7
+- rule: SELECT m.member_id, m.link_to_major, COUNT(*) AS member_count FROM member
+    m WHERE m.link_to_major IS NOT NULL GROUP BY m.link_to_major, m.member_id HAVING
+    COUNT(*) > 1 ORDER BY member_count DESC LIMIT 100
+  source: explorer
+  confidence: 0.7
+- rule: expense.approved::boolean = TRUE
+  source: explorer
+  confidence: 0.7
+- rule: SELECT COUNT(*) as total_members, COUNT(DISTINCT m.zip) as distinct_zip_values,
+    COUNT(DISTINCT z.zip_code) as distinct_zip_codes, SUM(CASE WHEN m.zip = z.zip_code
+    THEN 1 ELSE 0 END) as matching_count FROM member m LEFT JOIN zip_code z ON m.zip
+    = z.zip_code GROUP BY m.zip
+  source: explorer
+  confidence: 0.7
+- rule: Filter event budgets by event_status before aggregation to prevent NULL status
+    data from skewing financial metrics
+  source: explorer
+  confidence: 0.7
+- rule: SELECT m.member_id, COUNT(CASE WHEN e.approved = 'true' THEN 1 END) as approved_count,
+    COUNT(CASE WHEN e.approved = 'false' THEN 1 END) as rejected_count FROM member
+    m INNER JOIN expense e ON m.member_id = e.link_to_member GROUP BY m.member_id
+    ORDER BY approved_count DESC
+  source: explorer
+  confidence: 0.7
+- rule: Verify fanout pattern for expense.link_to_member by calculating average expenses
+    per member to confirm documented cardinality constraints
+  source: explorer
+  confidence: 0.7
+- rule: SELECT approved, COUNT(*) as expense_count, SUM(cost) as total_cost FROM expense
+    GROUP BY approved ORDER BY approved DESC
+  source: explorer
+  confidence: 0.7
+- rule: 'Track expense approval status by member: use approved::boolean in CASE expressions
+    to count approved/rejected expenses per member'
+  source: explorer
+  confidence: 0.7
+- rule: SELECT CASE WHEN expense.approved = 'true' THEN 'approved' ELSE 'rejected'
+    END as approval_status, COUNT(*) as count FROM expense GROUP BY approved ORDER
+    BY approval_status
+  source: explorer
+  confidence: 0.7
+- rule: All expense approvals must be tracked per member and approved/rejected counts
+    should be aggregated separately
+  source: explorer
+  confidence: 0.7
+- rule: SELECT m.member_id, COUNT(e.expense_id) as expense_count FROM member m INNER
+    JOIN expense e ON e.link_to_member = m.member_id GROUP BY m.member_id HAVING expense_count
+    > 0
+  source: explorer
+  confidence: 0.7
+- rule: SELECT e.event_id, COUNT(a.link_to_member) as attendance_count FROM event
+    e INNER JOIN attendance a ON a.link_to_event = e.event_id GROUP BY e.event_id
+    HAVING attendance_count > 0
+  source: explorer
+  confidence: 0.7
+- rule: SELECT t_shirt_size, COUNT(*) as count FROM member GROUP BY t_shirt_size ORDER
+    BY count DESC
+  source: explorer
+  confidence: 0.7
+- rule: SELECT e.event_id, COUNT(b.budget_id) as budget_count FROM event e LEFT JOIN
+    budget b ON b.link_to_event = e.event_id GROUP BY e.event_id HAVING COUNT(b.budget_id)
+    > 1
+  source: explorer
+  confidence: 0.7
+- rule: SELECT COUNT(DISTINCT attendance.link_to_member) as attendance_count FROM
+    attendance WHERE attendance.link_to_event IN (SELECT event_id FROM event);
+  source: explorer
+  confidence: 0.7
+- rule: Budget utilization queries should filter WHERE b.amount > 0 to avoid division
+    by zero
+  source: explorer
+  confidence: 0.7
+- rule: SELECT member_id, COUNT(expense_id) as expense_count FROM expense e JOIN member
+    m ON e.link_to_member = m.member_id GROUP BY m.member_id ORDER BY expense_count
+    DESC LIMIT 20
+  source: explorer
+  confidence: 0.7
+- rule: Verify income records have single entry per member or flag as multi-period
+    data
+  source: explorer
+  confidence: 0.7
+- rule: SELECT * FROM budget WHERE SUM(budget.spent) > SUM(budget.amount) * 1.1 GROUP
+    BY event.event_id
+  source: explorer
+  confidence: 0.7
+- rule: SELECT e.type, COALESCE(SUM(b.spent), 0) as total_spent FROM budget b INNER
+    JOIN event e ON b.link_to_event = e.event_id GROUP BY e.type
+  source: explorer
+  confidence: 0.7
+- rule: '"SELECT m.member_id, COUNT(*) as expense_count FROM expense e JOIN member
+    m ON e.link_to_member = m.member_id GROUP BY m.member_id ORDER BY expense_count
+    DESC" - Verifies 1:N expense-to-member relationship with counts per member'
+  source: explorer
+  confidence: 0.7
+- rule: Calculate utilization percentage using ROUND((spent::numeric / amount::numeric)
+    * 100, 2) to handle decimal precision
+  source: explorer
+  confidence: 0.7
+- rule: 'Validate expense.link_to_member fanout: SELECT COUNT(DISTINCT expense.link_to_member)
+    FROM expense WHERE expense_id IS NOT NULL'
+  source: explorer
+  confidence: 0.7
+- rule: 'Validate attendance.link_to_event fanout: SELECT COUNT(DISTINCT attendance.link_to_event)
+    FROM attendance WHERE link_to_event IS NOT NULL'
+  source: explorer
+  confidence: 0.7
+- rule: 'Validate income.link_to_member fanout: SELECT COUNT(DISTINCT income.link_to_member)
+    FROM income WHERE link_to_member IS NOT NULL'
+  source: explorer
+  confidence: 0.7
+- rule: member to zip_code joins require zip_code column matching; member.link_to_major
+    maps to major.major_id
+  source: explorer
+  confidence: 0.7
+- rule: 'Budget to expense cardinality check: SELECT b.budget_id, COUNT(e.expense_id)
+    as expense_count FROM budget b LEFT JOIN expense e ON e.link_to_budget = b.budget_id
+    GROUP BY b.budget_id ORDER BY expense_count DESC'
+  source: explorer
+  confidence: 0.7
+- rule: Verify join cardinality by profiling fanout patterns to detect potential data
+    integrity issues or performance bottlenecks
+  source: explorer
+  confidence: 0.7
+- rule: 'SELECT m.member_id, COUNT(i.income_id) AS income_count FROM member m INNER
+    JOIN income i ON m.member_id = i.link_to_member GROUP BY m.member_id, m.first_name,
+    m.last_name HAVING COUNT(i.income_id) > 1 ORDER BY income_count DESC LIMIT 20
+    -- Data quality check: identify members with multiple income records'
+  source: explorer
+  confidence: 0.7
+- rule: 'Utilization rate calculation: ROUND(SUM(spent)::numeric / NULLIF(SUM(amount),
+    0) * 100, 2) for budget tables'
+  source: explorer
+  confidence: 0.7
+- rule: 'Approval rate calculation: ROUND(approved_count::numeric / NULLIF(expense_count,
+    0) * 100, 2) for expense/member metrics'
+  source: explorer
+  confidence: 0.7
+- rule: SELECT zip, COUNT(DISTINCT member_id) FROM member JOIN zip_code ON member.zip
+    = zip_code.zip_code GROUP BY zip ORDER BY COUNT(DISTINCT member_id) DESC
+  source: explorer
+  confidence: 0.7
+- rule: JOIN member.link_to_major = major.major_id for enrollment queries; JOIN expense.link_to_member
+    = member.member_id for expense queries
+  source: explorer
+  confidence: 0.7
+- rule: SELECT COUNT(DISTINCT member_id) FROM attendance WHERE link_to_event IN (SELECT
+    event_id FROM event WHERE type = 'Meeting')
+  source: explorer
+  confidence: 0.7
+- rule: CREATE FUNCTION expense_cost_tier(cost DECIMAL) RETURNS VARCHAR AS $$ SELECT
+    CASE WHEN cost < 100 THEN 'low' WHEN cost < 500 THEN 'medium' ELSE 'high' END
+    $$ LANGUAGE SQL
+  source: explorer
+  confidence: 0.7
+- rule: SELECT * FROM expense WHERE approved = true -- Filter approved expenses only
+  source: explorer
+  confidence: 0.7

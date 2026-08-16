@@ -1,0 +1,1 @@
+SELECT COUNT("attendance"."link_to_member") AS "member_count" FROM "attendance" JOIN "event" ON "attendance"."link_to_event" = "event"."event_id" WHERE "event"."event_name" = 'Women''s Soccer' ORDER BY "member_count" ASC;

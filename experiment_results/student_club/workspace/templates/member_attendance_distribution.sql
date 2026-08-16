@@ -1,0 +1,1 @@
+WITH attendance_counts AS (SELECT m.member_id, m.first_name, m.last_name, COUNT(a.link_to_event) as attendance_count FROM member m JOIN attendance a ON m.member_id = a.link_to_member GROUP BY m.member_id, m.first_name, m.last_name ORDER BY attendance_count DESC) SELECT * FROM attendance_counts;

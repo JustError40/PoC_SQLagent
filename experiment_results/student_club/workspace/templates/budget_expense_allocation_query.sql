@@ -1,0 +1,1 @@
+WITH expense_budget_counts AS (SELECT b.budget_id, COUNT(e.expense_id) as expense_count FROM expense e INNER JOIN budget b ON e.link_to_budget = b.budget_id GROUP BY b.budget_id) SELECT budget_id, expense_count FROM expense_budget_counts ORDER BY expense_count DESC LIMIT 10;

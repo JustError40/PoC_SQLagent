@@ -1,0 +1,1 @@
+SELECT m.member_id, m.first_name, m.last_name, COUNT(CASE WHEN e.approved = 'true' THEN 1 END) as approved_count, COUNT(CASE WHEN e.approved = 'false' THEN 1 END) as rejected_count FROM member m INNER JOIN expense e ON m.member_id = e.link_to_member GROUP BY m.member_id, m.first_name, m.last_name ORDER BY approved_count DESC NULLS LAST;

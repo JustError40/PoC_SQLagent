@@ -1,0 +1,1 @@
+SELECT e.type, COUNT(DISTINCT b.link_to_event) as budget_records, SUM(b.amount) as total_budget, SUM(b.spent) as total_spent, ROUND(SUM(b.spent)::numeric / NULLIF(SUM(b.amount), 0) * 100, 2) as utilization FROM budget b JOIN event e ON b.link_to_event = e.event_id GROUP BY e.type ORDER BY total_spent DESC;

@@ -1,0 +1,12 @@
+finance:
+- budget
+- expense
+- income
+events:
+- attendance
+- event
+members:
+- major
+- member
+locations:
+- zip_code

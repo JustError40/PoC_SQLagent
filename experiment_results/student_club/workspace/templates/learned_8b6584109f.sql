@@ -1,0 +1,1 @@
+SELECT COUNT("member"."member_id") AS "member_count" FROM "member" JOIN "major" ON "member"."link_to_major" = "major"."major_id" WHERE "major"."major_name" = 'Business' AND "member"."t_shirt_size" = 'medium' ORDER BY "member_count" DESC;

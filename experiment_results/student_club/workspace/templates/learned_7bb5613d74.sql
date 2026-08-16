@@ -1,0 +1,1 @@
+SELECT m.first_name || ' ' || m.last_name as full_name FROM member m JOIN attendance a ON m.member_id = a.link_to_member JOIN event e ON a.link_to_event = e.event_id JOIN zip_code z ON m.zip = z.zip_code WHERE e.type = 'Student_Club' AND z.state = 'Illinois';
