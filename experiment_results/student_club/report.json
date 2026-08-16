@@ -2603,6 +2603,379 @@
           "reason": "The SQL correctly joins the necessary tables to filter by the given phone number and retrieve the associated major."
         }
       ]
+    },
+    {
+      "run": "iteration 5",
+      "elapsed_min": 24.4,
+      "stages": {
+        "explore": "completed:3 rounds, 8 artifacts",
+        "optimize": "completed:12 artifacts across 4 domains, 0 failing templates",
+        "evolve": "failed",
+        "promote": "start_failed: HTTP Error 409: Conflict",
+        "verify": "completed"
+      },
+      "counts": {
+        "correct": 0,
+        "wrong_answer": 0,
+        "compare_error": 4,
+        "clarified": 0,
+        "failed_schema": 5,
+        "failed_react": 37,
+        "failed_llm": 0,
+        "failed_other": 0
+      },
+      "details": [
+        {
+          "id": "student_club_1312",
+          "question": "What's Angela Sanders's major?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT ha.attribute_value AS major FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE s.superhero_name = 'Brent Thomason' AND a.attribute_name = 'major'"
+        },
+        {
+          "id": "student_club_1317",
+          "question": "Among the students from the Student_Club who attended the event \"Women's Soccer\", how many of them want a T-shirt that's in medium size?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(*) as shirt_count FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 't-shirt' AND ha.attribute_value = 'medium'"
+        },
+        {
+          "id": "student_club_1331",
+          "question": "What is the amount of the funds that the Vice President received?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT ha.attribute_value FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 'Funds Received' AND s.superhero_name = 'Vice President'"
+        },
+        {
+          "id": "student_club_1334",
+          "question": "List the full name of the Student_Club members that grew up in Illinois state.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT s.full_name FROM superhero s WHERE s.state = 'Illinois'"
+        },
+        {
+          "id": "student_club_1338",
+          "question": "Was each expense in October Meeting on October 8, 2019 approved?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT superhero_name FROM superhero WHERE 1=0"
+        },
+        {
+          "id": "student_club_1339",
+          "question": "Calculate the total average cost that Elijah Allen spent in the events on September and October.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT AVG(s.cost) as total_average_cost FROM superhero s JOIN events e ON e.superhero_id = s.id JOIN spending sp ON sp.event_id = e.id WHERE s.full_name = 'Elijah Allen' AND e.event_date >= '2024-09-01' AND e.event_date < '2024-11-01'"
+        },
+        {
+          "id": "student_club_1340",
+          "question": "Calculate the difference of the total amount spent in all events by the Student_Club in year 2019 and 2020.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COALESCE((SELECT SUM(ha.attribute_value) FROM hero_attribute ha JOIN superhero s ON ha.hero_id = s.id JOIN attribute a ON ha.attribute_id = a.id WHERE s.superhero_name = 'Student_Club' AND a.attribute_name = 'amount' AND ha.attribute_value::text LIKE '%2019%'), 0) - COALESCE((SELECT SUM(ha.attribute_value) FROM hero_attribute ha JOIN superhero s ON ha.hero_id = s.id JOIN attribute a ON ha.attribute_id = a.id WHERE s.superhero_name = 'Student_Club' AND a.attribute_name = 'amount' AND ha.attribute_value::text LIKE '%2020%'), 0) AS difference"
+        },
+        {
+          "id": "student_club_1344",
+          "question": "What was the notes of the fundraising on 2019/9/14?",
+          "verdict": "failed_react",
+          "error_type": "sql_validation_failed",
+          "sql": "SELECT notes FROM fundraising WHERE date = '2019-09-14'"
+        },
+        {
+          "id": "student_club_1346",
+          "question": "Tell the phone number of \"Carlo Jacobs\".",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT s.id, s.full_name, ha.attribute_value FROM superhero s LEFT JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE s.full_name = 'Carlo Jacobs' AND a.attribute_name = 'phone'"
+        },
+        {
+          "id": "student_club_1350",
+          "question": "What is the status of the event which bought \"Post Cards, Posters\" on 2019/8/20?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT p.publisher_name FROM publisher p WHERE EXISTS (SELECT 1 FROM superhero s WHERE s.publisher_id = p.id AND s.superhero_name = 'Post Cards, Posters')"
+        },
+        {
+          "id": "student_club_1351",
+          "question": "What was Brent Thomason's major?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT ha.attribute_value AS major FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE s.superhero_name = 'Brent Thomason' AND a.attribute_name = 'major'"
+        },
+        {
+          "id": "student_club_1352",
+          "question": "For all the club members from \"Business\" major, how many of them wear medium size t-shirt?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(*) as count FROM superhero s JOIN hero_attribute ha1 ON s.id = ha1.hero_id JOIN attribute a1 ON ha1.attribute_id = a1.id JOIN hero_attribute ha2 ON s.id = ha2.hero_id JOIN attribute a2 ON ha2.attribute_id = a2.id WHERE a1.attribute_name = 'major' AND ha1.attribute_value::text = 'Business' AND a2.attribute_name = 't-shirt_size' AND ha2.attribute_value::text = 'medium'"
+        },
+        {
+          "id": "student_club_1356",
+          "question": "Which department was the President of the club in?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT s.full_name, s.department_id FROM superhero s WHERE s.superhero_name = 'President'"
+        },
+        {
+          "id": "student_club_1357",
+          "question": "State the date Connor Hilton paid his/her dues.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT s.full_name FROM superhero s WHERE s.full_name = 'Connor Hilton'"
+        },
+        {
+          "id": "student_club_1359",
+          "question": "How many times was the budget in Advertisement for \"Yearly Kickoff\" meeting more than \"October Meeting\"?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(*) AS meeting_count FROM advertisement a1 JOIN advertisement a2 ON a1.id = a2.id WHERE a1.meeting_name = 'Yearly Kickoff' AND a2.meeting_name = 'October Meeting' AND a1.budget > a2.budget"
+        },
+        {
+          "id": "student_club_1361",
+          "question": "What is the total cost of the pizzas for all the events?",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT COALESCE(SUM(CASE WHEN superhero.id IS NOT NULL THEN 0 ELSE 0 END), 0) AS total_cost FROM superhero"
+        },
+        {
+          "id": "student_club_1362",
+          "question": "How many cities are there in Orange County, Virginia?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(*) FROM publisher WHERE publisher_name LIKE '%Orange County%' AND publisher_name LIKE '%Virginia%'"
+        },
+        {
+          "id": "student_club_1368",
+          "question": "What does the person with the phone number \"809-555-3360\" major in?",
+          "verdict": "compare_error",
+          "error_type": null,
+          "sql": "SELECT ha2.attribute_value AS major FROM hero_attribute ha2 JOIN hero_attribute ha1 ON ha2.hero_id = ha1.hero_id JOIN superhero s ON s.id = ha2.hero_id JOIN attribute a1 ON ha1.attribute_id = a1.id JOIN attribute a2 ON ha2.attribute_id = a2.id WHERE a1.attribute_name = 'phone number' AND ha1.attribute_value::text = '809-555-3360' AND a2.attribute_name = 'major'"
+        },
+        {
+          "id": "student_club_1371",
+          "question": "How many members attended the \"Women's Soccer\" event?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(*) as attendance FROM superhero s WHERE s.superhero_name LIKE '%Women%' AND s.gender_id = 1"
+        },
+        {
+          "id": "student_club_1375",
+          "question": "List all the members of the \"School of Applied Sciences, Technology and Education\" department.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT superhero_name FROM superhero WHERE gender_id = 1"
+        },
+        {
+          "id": "student_club_1376",
+          "question": "Among all the closed events, which event has the highest spend-to-budget ratio?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT id AS event_id, name AS event_name, budget AS budget, spend AS spend, (spend::numeric / budget::numeric) AS spend_to_budget_ratio FROM superhero WHERE budget IS NOT NULL AND budget > 0 ORDER BY spend_to_budget_ratio DESC LIMIT 1"
+        },
+        {
+          "id": "student_club_1378",
+          "question": "What is the highest amount of budget spend for an event?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT MAX(s.superhero_name) as highest_budget FROM superhero s"
+        },
+        {
+          "id": "student_club_1380",
+          "question": "What is the total amount of money spent for food?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COALESCE(SUM(ha.attribute_value), 0) AS total_amount FROM hero_attribute ha JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 'food' AND ha.attribute_value IS NOT NULL"
+        },
+        {
+          "id": "student_club_1381",
+          "question": "List the name of students that have attended more than 7 events.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT full_name FROM superhero WHERE event_count > 7"
+        },
+        {
+          "id": "student_club_1387",
+          "question": "Which student has been entrusted to manage the budget for the Yearly Kickoff?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT s.full_name FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id WHERE s.superhero_name = 'Yearly Kickoff' AND ha.attribute_id = (SELECT id FROM attribute WHERE attribute_name = 'budget_manager') AND ha.attribute_value = 'budget_manager'"
+        },
+        {
+          "id": "student_club_1389",
+          "question": "Which event has the lowest cost?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT * FROM superhero ORDER BY weight_kg ASC LIMIT 1"
+        },
+        {
+          "id": "student_club_1390",
+          "question": "Based on the total cost for all event, what is the percentage of cost for Yearly Kickoff event?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "WITH yearly_kickoff AS (SELECT 1 AS id UNION ALL SELECT 2), all_events AS (SELECT 1 AS id UNION ALL SELECT 2 UNION ALL SELECT 3), total_cost AS (SELECT SUM(id) AS total FROM all_events), percentage AS (SELECT yk.id, t.total, (yk.id / t.total) * 100 AS cost_percentage FROM yearly_kickoff yk, total_cost t) SELECT cost_percentage FROM percentage WHERE cost_percentage IS NOT NULL"
+        },
+        {
+          "id": "student_club_1392",
+          "question": "Indicate the top source of funds received in September 2019 based on their amount.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "WITH funds_received AS (SELECT s.id AS hero_id, p.publisher_name AS source, ha.attribute_value AS amount FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id JOIN publisher p ON s.publisher_id = p.id WHERE a.attribute_name = 'Funds Received' AND s.id IN (SELECT hero_id FROM hero_dates WHERE date BETWEEN '2019-09-01' AND '2019-09-30')) SELECT source, SUM(amount) AS total_funds FROM funds_received GROUP BY source ORDER BY total_funds DESC LIMIT 1"
+        },
+        {
+          "id": "student_club_1394",
+          "question": "How many members of the Student_Club have major in 'Physics Teaching'?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(*) FROM attribute a JOIN superhero s ON a.id = s.attribute_id WHERE s.attribute_name = 'Physics Teaching' AND s.club_id IN (SELECT id FROM student_club WHERE club_name = 'Student_Club')"
+        },
+        {
+          "id": "student_club_1398",
+          "question": "Name the event with the highest amount spent on advertisement.",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT event_name, amount_spent, event_id FROM events ORDER BY amount_spent DESC LIMIT 1"
+        },
+        {
+          "id": "student_club_1399",
+          "question": "Did Maya Mclean attend the 'Women's Soccer' event?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT s.full_name FROM superhero s WHERE s.full_name = 'Maya Mclean'"
+        },
+        {
+          "id": "student_club_1401",
+          "question": "Indicate the cost of posters for 'September Speaker' event.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT p.publisher_name, s.superhero_name FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE p.publisher_name = 'September Speaker'"
+        },
+        {
+          "id": "student_club_1403",
+          "question": "Indicate the name of the closed event whose cost has exceeded the budget the most.",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT s.superhero_name FROM superhero s LEFT JOIN hero_attribute ha ON s.id = ha.hero_id WHERE ha.attribute_value IS NOT NULL GROUP BY s.id, s.superhero_name ORDER BY SUM(ha.attribute_value) DESC LIMIT 1"
+        },
+        {
+          "id": "student_club_1404",
+          "question": "Identify the type of expenses and their total value approved for 'October Meeting' event.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT superhero_name, SUM(height_cm) AS total_value FROM superhero GROUP BY superhero_name"
+        },
+        {
+          "id": "student_club_1405",
+          "question": "Calculate the amount budgeted for 'April Speaker' event. List all the budgeted categories for said event in an ascending order based on their amount budgeted.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT a.attribute_name, ha.attribute_value FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE s.full_name = 'April Speaker' ORDER BY ha.attribute_value ASC"
+        },
+        {
+          "id": "student_club_1409",
+          "question": "Mention the total expense used on 8/20/2019.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COALESCE(SUM(amount), 0) as total_expense FROM superhero;"
+        },
+        {
+          "id": "student_club_1410",
+          "question": "List out the full name and total cost that member id \"rec4BLdZHS2Blfp4v\" incurred?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT s.full_name, NULL AS total_cost FROM superhero AS s WHERE s.id = 'rec4BLdZHS2Blfp4v'"
+        },
+        {
+          "id": "student_club_1411",
+          "question": "State what kind of expenses that Sacha Harrison incurred?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT s.full_name FROM superhero s WHERE s.full_name = 'Sacha Harrison'"
+        },
+        {
+          "id": "student_club_1422",
+          "question": "State the category of events were held at MU 215.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT superhero_name FROM superhero WHERE superhero_name LIKE '%MU%' OR superhero_name LIKE '%215%'"
+        },
+        {
+          "id": "student_club_1426",
+          "question": "List the last name of members with a major in environmental engineering and include its department and college name.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT s.full_name AS last_name, a.attribute_name AS department, a.attribute_name AS college_name FROM superhero s JOIN hero_attribute ha ON s.id = ha.hero_id JOIN attribute a ON ha.attribute_id = a.id WHERE a.attribute_name = 'major' AND ha.attribute_value::text = 'environmental engineering'"
+        },
+        {
+          "id": "student_club_1427",
+          "question": "What are the budget category of the events located at MU 215 and a guest speaker type with a 0 budget spent?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT superhero_name, publisher_name FROM superhero JOIN publisher ON superhero.publisher_id = publisher.id"
+        },
+        {
+          "id": "student_club_1432",
+          "question": "Among the members with t-shirt size of medium, what is the percentage of the amount 50 received by the Student_Club?",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT COUNT(*) * 100.0 / NULLIF((SELECT COUNT(*) FROM superhero s JOIN publisher p ON s.publisher_id = p.id WHERE p.publisher_name = 'Student_Club' AND EXISTS (SELECT 1 FROM hero_attribute ha2 WHERE ha2.hero_id = s.id AND EXISTS (SELECT 1 FROM attribute a2 WHERE a2.id = ha2.attribute_id AND a2.attribute_name = 'amount') AND ha2.attribute_value = '50')), 0) as percentage FROM superhero s JOIN publisher p ON s.publisher_id = p.id LEFT JOIN hero_attribute ha ON s.id = ha.hero_id LEFT JOIN attribute a ON ha.attribute_id = a.id WHERE p.publisher_name = 'Student_Club' AND a.attribute_name = 't-shirt size' AND CAST(ha.attribute_value AS TEXT) = 'medium' AND EXISTS (SELECT 1 FROM hero_attribute ha2 WHERE ha2.hero_id = s.id AND EXISTS (SELECT 1 FROM attribute a2 WHERE a2.id = ha2.attribute_id AND a2.attribute_name = 'amount') AND ha2.attribute_value = '50')"
+        },
+        {
+          "id": "student_club_1435",
+          "question": "List the names of closed event as \"game\" that was closed from 3/15/2019 to 3/20/2020.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT superhero_name, full_name FROM superhero WHERE full_name IS NOT NULL"
+        },
+        {
+          "id": "student_club_1457",
+          "question": "Give the full name and contact number of members who had to spend more than average on each expense.",
+          "verdict": "failed_schema",
+          "error_type": "llm_schema_violation",
+          "sql": "SELECT s.superhero_name FROM superhero s JOIN gender g ON s.gender_id = g.id WHERE g.gender = 'male' AND s.weight_kg > (SELECT AVG(s2.weight_kg) * 0.79 FROM superhero s2)"
+        },
+        {
+          "id": "student_club_1460",
+          "question": "Write the full name of the member who spent money for water, veggie tray and supplies and include the cost of it.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT s.full_name, p.cost FROM superhero s JOIN purchase p ON s.id = p.member_id WHERE p.item_name IN ('water', 'veggie tray', 'supplies')"
+        },
+        {
+          "id": "student_club_1464",
+          "question": "Write the full names of students who received funds on the date of 9/9/2019 and include the amount received.",
+          "verdict": "failed_react",
+          "error_type": "react_exhausted",
+          "sql": "SELECT s.full_name FROM superhero s"
+        }
+      ],
+      "judge_counts": {
+        "correct": 3,
+        "partially_correct": 0,
+        "incorrect": 0,
+        "inconclusive": 1
+      },
+      "judge_verdicts": [
+        {
+          "id": "student_club_1331",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the relevant tables and applies filters to retrieve the specific attribute value for the named superhero."
+        },
+        {
+          "id": "student_club_1346",
+          "verdict": "inconclusive",
+          "reason": "The SQL correctly implements the requested logic, but the empty result set prevents verification of the output."
+        },
+        {
+          "id": "student_club_1351",
+          "verdict": "correct",
+          "reason": "The query correctly implements the EAV pattern to filter by superhero name and attribute name, structurally answering the question."
+        },
+        {
+          "id": "student_club_1368",
+          "verdict": "correct",
+          "reason": "The SQL correctly joins the necessary tables to filter by the given phone number and retrieve the associated major."
+        }
+      ]
     }
   ]
 }
