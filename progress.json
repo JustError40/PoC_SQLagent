@@ -1,20 +1,20 @@
 {
   "campaign_ts": "smoke-20260817-074714",
   "branch": "campaign/smoke-20260817-074714",
-  "status": "debit_card_specializing control committed",
+  "status": "debit_card_specializing iteration 1 committed",
   "db_total": 11,
   "db_index": 2,
   "runs_per_db": 11,
   "current_db": "debit_card_specializing",
-  "run_label": "control",
-  "run_index": 1,
-  "eta_min": 1242.6,
-  "updated_at": "2026-08-17T08:53:19.424302+00:00",
+  "run_label": "iteration 1",
+  "run_index": 2,
+  "eta_min": 642.6,
+  "updated_at": "2026-08-17T08:53:53.489711+00:00",
   "last_counts": {
     "correct": 0,
     "incorrect": 0,
-    "empty": 25,
+    "empty": 30,
     "clarified": 0,
-    "pipeline_failed": 5
+    "pipeline_failed": 0
   }
 }
