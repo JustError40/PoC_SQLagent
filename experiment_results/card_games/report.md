@@ -1,0 +1,10 @@
+# Evolution experiment — card_games
+
+- Corpus: evals/bird_card_games.golden.jsonl (52 questions)
+- Run ID (workspace): campaign
+- Database: card_games
+- Control = run without learning stages (model noise baseline)
+
+| Run | Correct | Incorrect | Empty | Clarified | Pipeline failed | Time, min |
+|---|---|---|---|---|---|---|
+| control | 0 | 0 | 0 | 0 | 52 | 0.3 |
