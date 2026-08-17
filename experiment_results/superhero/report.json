@@ -2693,6 +2693,391 @@
         }
       ],
       "judge_on": false
+    },
+    {
+      "run": "iteration 7",
+      "elapsed_min": 1.4,
+      "stages": {
+        "explore": "failed",
+        "optimize": "failed",
+        "evolve": "failed",
+        "promote": "start_failed: HTTP Error 409: Conflict",
+        "verify": "failed"
+      },
+      "counts": {
+        "correct": 0,
+        "incorrect": 0,
+        "empty": 0,
+        "clarified": 0,
+        "pipeline_failed": 52
+      },
+      "details": [
+        {
+          "id": "superhero_717",
+          "question": "Please list all the superpowers of 3-D Man.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_719",
+          "question": "Among the superheroes with the super power of \"Super Strength\", how many of them have a height of over 200cm?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_723",
+          "question": "Among the superheroes with blue eyes, how many of them have the super power of \"Agility\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_724",
+          "question": "Please list the superhero names of all the superheroes that have blue eyes and blond hair.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_726",
+          "question": "Rank heroes published by Marvel Comics by their height in descending order.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_728",
+          "question": "Rank superheroes from Marvel Comics by their eye color popularity, starting with the most common color.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_730",
+          "question": "List the superheroes from Marvel Comics who have the super power of 'Super Strength'.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_732",
+          "question": "Which publisher published the slowest superhero?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_733",
+          "question": "How many gold-eyed superheroes did Marvel Comics publish?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_736",
+          "question": "Who is the dumbest superhero?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_737",
+          "question": "What is Copycat's race?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_738",
+          "question": "Which superheroes have a durability attribute value of less than 50?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_739",
+          "question": "What are the names of the superheroes with the power of death touch?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_740",
+          "question": "How many female superheroes have a strength value of 100?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_743",
+          "question": "What is the percentage of superheroes who act in their own self-interest or make decisions based on their own moral code? Indicate how many of the said superheroes were published by Marvel Comics.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_744",
+          "question": "Between DC and Marvel Comics, which publisher has published more superheroes? Find the difference in the number of superheroes they have published.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_745",
+          "question": "Give the publisher ID of Star Trek.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_747",
+          "question": "What is the total number of superheroes without full name?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_750",
+          "question": "What is the average weight of all female superheroes?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_751",
+          "question": "List down at least five superpowers of male superheroes.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_753",
+          "question": "Among the superheroes with height from 170 to 190, list the names of the superheroes with no eye color.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_758",
+          "question": "Provide the hair colour of the human superhero who is 185 cm tall.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_760",
+          "question": "In superheroes with height between 150 to 180, what is the percentage of heroes published by Marvel Comics?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_761",
+          "question": "Among the male superheroes, list the super hero names of superheroes with weight greater than the 79% average weight of all superheroes.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_764",
+          "question": "What are the superpowers of heroes with ID 1?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_765",
+          "question": "How many heroes have stealth power?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_766",
+          "question": "What is the hero's full name with the highest attribute in strength?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_769",
+          "question": "Which superhero has the most durability published by Dark Horse Comics?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_772",
+          "question": "List the eyes, hair and skin colour of all female superheroes published by Dark Horse Comics.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_773",
+          "question": "Which superhero has the same eyes, hair and skin colour? Indicate the publisher of the superhero.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_775",
+          "question": "What is the percentage of blue female superheroes among all female superheroes?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_779",
+          "question": "How many powers does Amazo hero have?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_781",
+          "question": "Provide the heights of the heroes whose eye colours are amber.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_782",
+          "question": "List the heroes' names whose eyes and hair colours are both black.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_785",
+          "question": "Describe the names of neutral alignment superheroes.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_786",
+          "question": "How many heroes have the highest attribute value in strength?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_788",
+          "question": "How many percent of female heroes were published by Marvel Comics?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_790",
+          "question": "Calculate the difference between Emil Blonsky's weight and Charles Chandler's weight.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_791",
+          "question": "Calculate the average height for all superhero.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_792",
+          "question": "What is Abomination's superpower?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_794",
+          "question": "Which hero was the fastest?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_796",
+          "question": "State all of 3-D Man's attributes along with their values.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_797",
+          "question": "Which superheroes have blue eyes with brown hair?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_798",
+          "question": "What is the publisher for Hawkman, Karate Kid and Speedy?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_800",
+          "question": "Calculate the percentage of superheroes with blue eyes.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_801",
+          "question": "Find the ratio between male superheroes and female superheroes.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_806",
+          "question": "Provide the eye colour of the superhero who has Karen Beecher-Duncan as their full name.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_819",
+          "question": "In superheroes with missing weight data, calculate the difference between the number of superheroes with blue eyes and no eye color.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_822",
+          "question": "How many green-skinned villains are there in the superhero universe?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_824",
+          "question": "Identify superheroes who can control wind and list their names in alphabetical order.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_825",
+          "question": "Identify the gender of the superhero who has the ability of Phoenix Force.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "superhero_829",
+          "question": "Which publisher created more superheroes: DC or Marvel Comics? Find the difference in the number of superheroes.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        }
+      ],
+      "judge_on": false
     }
   ]
 }
