@@ -1,6 +1,6 @@
 {
-  "campaign_ts": "smoke2-20260817-083523",
-  "branch": "campaign/smoke2-20260817-083523",
+  "campaign_ts": "smoke3-20260817-085834",
+  "branch": "campaign/smoke3-20260817-085834",
   "iterations": 0,
   "dbs": [
     {
@@ -12,5 +12,5 @@
       "concurrency": 12
     }
   ],
-  "started_at": "2026-08-17T08:35:23.899730+00:00"
+  "started_at": "2026-08-17T08:58:34.264968+00:00"
 }
