@@ -481,6 +481,489 @@
         }
       ],
       "judge_on": false
+    },
+    {
+      "run": "iteration 1",
+      "elapsed_min": 61.5,
+      "stages": {
+        "explore": "failed",
+        "optimize": "failed",
+        "evolve": "failed",
+        "promote": "timeout",
+        "verify": "failed"
+      },
+      "counts": {
+        "correct": 0,
+        "incorrect": 0,
+        "empty": 0,
+        "clarified": 0,
+        "pipeline_failed": 66
+      },
+      "details": [
+        {
+          "id": "formula_1_846",
+          "question": "Please list the reference names of the drivers who are eliminated in the first period in race number 20.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_847",
+          "question": "What is the surname of the driver with the best lap time in race number 19 in the second qualifying period?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_850",
+          "question": "Please give the name of the race held on the circuits in Germany.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_854",
+          "question": "What is the coordinates location of the circuits for Australian grand prix?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_857",
+          "question": "Give the coordinate position for Abu Dhabi Grand Prix.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_859",
+          "question": "What's Bruno Senna's Q1 result in the qualifying race No. 354?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_861",
+          "question": "What is his number of the driver who finished 0:01:54 in the Q3 of qualifying race No.903?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_862",
+          "question": "For the Bahrain Grand Prix in 2007, how many drivers not finished the game?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_865",
+          "question": "For all the drivers who finished the game in race No. 592, who is the oldest?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_866",
+          "question": "Who was the player that got the lap time of 0:01:27 in the race No. 161? Show his introduction website.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_868",
+          "question": "Where is Malaysian Grand Prix held? Give the location coordinates.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_869",
+          "question": "For the constructor which got the highest point in the race No. 9 , what is its introduction website?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_872",
+          "question": "In the race No. 45, for the driver who had the Q3 time as 0:01:33, what is his abbreviated code?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_875",
+          "question": "Show me the season page of year when the race No. 901 took place.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_877",
+          "question": "For all the drivers who finished the game in race No. 872, who is the youngest?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_879",
+          "question": "For the driver who set the fastest lap speed, what is his nationality?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_880",
+          "question": "Paul di Resta was in the No. 853 race, what percent faster did he finish in the 853rd race than the next race for the fastest lap speed?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_881",
+          "question": "For the drivers who took part in the race in 1983/7/16, what's their race completion rate?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_884",
+          "question": "List the names of all races that occurred in the earliest recorded year and month.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_892",
+          "question": "State the driver with the most points scored. Find his full name with that points.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_894",
+          "question": "What is the best lap time recorded? List the driver and race with such recorded lap time.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_895",
+          "question": "What is the average lap time for Lewis Hamilton in the 2009 Malaysian Grand Prix?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_896",
+          "question": "Calculate the percentage whereby Hamilton was not at the 1st track of the the f1 circuit since 2010.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_897",
+          "question": "Name the driver with the most winning. Mention his nationality and what is his maximum point scores.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_898",
+          "question": "How old is the youngest Japanese driver? What is his name?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_901",
+          "question": "Name the races along with its circuit name and location for f1 races hosted in September 2005.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_902",
+          "question": "Which race was Alex Yoong in when he was in track number less than 20?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_904",
+          "question": "State the race and year of race in which Michael Schumacher had his fastest lap.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_906",
+          "question": "Which was Lewis Hamilton first race? What was his points recorded for his first race event?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_909",
+          "question": "Among all European Grand Prix races, what is the percentage of the races were hosted in Germany?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_910",
+          "question": "What's the location coordinates of Silverstone Circuit?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_912",
+          "question": "What's the reference name of Marina Bay Street Circuit?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_915",
+          "question": "Which country is the oldest driver from?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_928",
+          "question": "Which driver ranked the first in the Canadian Grand Prix in 2007? Please give his reference name.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_930",
+          "question": "In which Formula_1 race did Lewis Hamilton rank the highest?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_931",
+          "question": "What was the fastest lap speed among all drivers in the 2009 Spanish Grand Prix?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_933",
+          "question": "What was Lewis Hamilton's final rank in the 2008 Chinese Grand Prix?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_937",
+          "question": "What's the finish time for the driver who ranked second in 2008's Chinese Grand Prix?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_940",
+          "question": "Among the drivers that finished the race in the 2008 Chinese Grand Prix, how many of them have participated in Formula_1 races?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_944",
+          "question": "How much faster in percentage is the champion than the driver who finished the race last in the 2008 Australian Grand Prix?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_945",
+          "question": "How many circuits are there in Adelaide, Australia?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_948",
+          "question": "What are the maximum points of British constructors?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_950",
+          "question": "Please list the constructor names with 0 points at race 291.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_951",
+          "question": "How many Japanese constructors have 0 points in 2 races?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_954",
+          "question": "Please calculate the race completion percentage of Japanese drivers from 2007 to 2009.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_955",
+          "question": "What is the average time in seconds of champion for each year, before year 1975?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_959",
+          "question": "What is the fastest lap number of the champion in 2009?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_960",
+          "question": "What is the average of fastest lap speed in the 2009 Spanish Grand Prix race?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_962",
+          "question": "From 2000 to 2005, what percentage of drivers who were born before 1985 and the lap numbers were over 50?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_963",
+          "question": "How many French drivers who obtain the laptime less than 02:00.00?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_964",
+          "question": "List out the code for drivers who have nationality in America.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_967",
+          "question": "State code numbers of top 3 yougest drivers. How many Netherlandic drivers among them?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_971",
+          "question": "Please state the reference name of the oldest German driver.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_972",
+          "question": "Which drivers who were born in 1971 and has the fastest lap time on the race? Give id and code of these drivers.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_977",
+          "question": "From race no. 50 to 100, how many finishers have been disqualified?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_978",
+          "question": "How many times the circuits were held in Austria? Please give their location and coordinates.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_981",
+          "question": "On what year did the youngest driver had his first qualifying race? Also state the name, date and time of the race.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_988",
+          "question": "List down top 3 German drivers who has the shortest average pit stop duration and were born between 1980-1985.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_989",
+          "question": "Who is the champion of the Canadian Grand Prix in 2008? Indicate his finish time.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_990",
+          "question": "What is the constructor reference name of the champion in the 2009 Singapore Grand Prix? Please give its website.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_994",
+          "question": "Which constructor scored most points from Monaco Grand Prix between 1980 and 2010? List the score, name and nationality of this team.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_1001",
+          "question": "What is full name of the racer who ranked 1st in the 3rd qualifying race held in the Marina Bay Street Circuit in 2008?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_1002",
+          "question": "As of the present, what is the full name of the youngest racer? Indicate her nationality and the name of the race to which he/she first joined.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_1003",
+          "question": "How many accidents did the driver who had the highest number accidents in the Canadian Grand Prix have?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_1011",
+          "question": "Which top 20 driver created the shortest lap time ever record in a Formula_1 race? Please give them full names.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "formula_1_1014",
+          "question": "Please list the lap records for the circuits in Italy.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        }
+      ],
+      "judge_on": false
     }
   ]
 }
