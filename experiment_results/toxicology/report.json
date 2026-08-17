@@ -600,6 +600,307 @@
         }
       ],
       "judge_on": false
+    },
+    {
+      "run": "iteration 2",
+      "elapsed_min": 1.4,
+      "stages": {
+        "explore": "failed",
+        "optimize": "failed",
+        "evolve": "failed",
+        "promote": "start_failed: HTTP Error 409: Conflict",
+        "verify": "failed"
+      },
+      "counts": {
+        "correct": 0,
+        "incorrect": 0,
+        "empty": 0,
+        "clarified": 0,
+        "pipeline_failed": 40
+      },
+      "details": [
+        {
+          "id": "toxicology_195",
+          "question": "What is the most common bond type?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_197",
+          "question": "Calculate the average number of oxygen atoms in single-bonded molecules.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_198",
+          "question": "On average how many carcinogenic molecules are single bonded?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_200",
+          "question": "Find the triple-bonded molecules which are carcinogenic.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_201",
+          "question": "What is the percentage of carbon in double-bond molecules?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_206",
+          "question": "What elements are in the TR004_8_9 bond atoms?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_207",
+          "question": "What elements are in a double type bond?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_208",
+          "question": "Which type of label is the most numerous in atoms with hydrogen?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_212",
+          "question": "Which element is the least numerous in non-carcinogenic molecules?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_213",
+          "question": "What type of bond is there between the atoms TR004_8 and TR004_20?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_215",
+          "question": "How many atoms with iodine and with sulfur type elements are there in single bond molecules?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_218",
+          "question": "What percentage of carcinogenic-type molecules does not contain fluorine?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_219",
+          "question": "What is the percentage of carcinogenic molecules in triple type bonds?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_220",
+          "question": "Please list top three elements of the toxicology of the molecule TR000 in alphabetical order.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_226",
+          "question": "What is the percentage of double bonds in the molecule TR008? Please provide your answer as a percentage with five decimal places.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_227",
+          "question": "What is the percentage of molecules that are carcinogenic? Please provide your answer as a percentage with three decimal places.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_228",
+          "question": "How much of the hydrogen in molecule TR206 is accounted for? Please provide your answer as a percentage with four decimal places.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_230",
+          "question": "What are the elements of the toxicology and label of molecule TR060?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_231",
+          "question": "Which bond type accounted for the majority of the bonds found in molecule TR010 and state whether or not this molecule is carcinogenic?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_232",
+          "question": "Please list top three molecules that have single bonds between two atoms and are not carcinogenic in alphabetical order.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_234",
+          "question": "How many bonds which involved atom 12 does molecule TR009 have?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_236",
+          "question": "What are the bond type and the atoms of the bond ID of TR001_6_9?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_239",
+          "question": "How many connections does the atom 19 have?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_240",
+          "question": "List all the elements of the toxicology of the molecule \"TR004\".",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_242",
+          "question": "Among all the atoms from 21 to 25, list all the molecules that are carcinogenic.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_243",
+          "question": "What are the bonds that have phosphorus and nitrogen as their atom elements?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_244",
+          "question": "Is the molecule with the most double bonds carcinogenic?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_245",
+          "question": "What is the average number of bonds the atoms with the element iodine have?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_247",
+          "question": "List all the elements of atoms that can not bond with any other atoms.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_248",
+          "question": "What are the atoms of the triple bond with the molecule \"TR041\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_249",
+          "question": "What are the elements of the atoms of TR144_8_19?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_253",
+          "question": "List the elements of all the triple bonds.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_255",
+          "question": "What proportion of single bonds are carcinogenic? Please provide your answer as a percentage with five decimal places.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_260",
+          "question": "Calculate the total atoms with triple-bond molecules containing the element phosphorus or bromine.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_263",
+          "question": "What is the composition of element chlorine in percentage among the single bond molecules?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_268",
+          "question": "What are the elements for bond id TR001_10_11?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_273",
+          "question": "What is the percentage of element chlorine in carcinogenic molecules?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_281",
+          "question": "Tally the toxicology element of the 4th atom of each molecule that was carcinogenic.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_282",
+          "question": "What is the ratio of Hydrogen elements in molecule ID TR006? List the ratio with its label.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "toxicology_327",
+          "question": "Which non-carcinogenic molecules consisted more than 5 atoms?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        }
+      ],
+      "judge_on": false
     }
   ]
 }
