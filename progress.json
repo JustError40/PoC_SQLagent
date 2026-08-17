@@ -1,20 +1,20 @@
 {
   "campaign_ts": "smoke3-20260817-085834",
   "branch": "campaign/smoke3-20260817-085834",
-  "status": "loading superhero",
+  "status": "superhero control committed",
   "db_total": 11,
   "db_index": 4,
   "runs_per_db": 11,
   "current_db": "superhero",
-  "run_label": "-",
-  "run_index": 0,
-  "eta_min": null,
-  "updated_at": "2026-08-17T16:27:52.389972+00:00",
+  "run_label": "control",
+  "run_index": 1,
+  "eta_min": 26.1,
+  "updated_at": "2026-08-17T16:28:46.755117+00:00",
   "last_counts": {
     "correct": 0,
     "incorrect": 0,
     "empty": 0,
     "clarified": 0,
-    "pipeline_failed": 46
+    "pipeline_failed": 52
   }
 }
