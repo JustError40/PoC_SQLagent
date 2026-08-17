@@ -1,21 +1,10 @@
 # Evolution experiment — california_schools
 
 - Corpus: evals/bird_california_schools.golden.jsonl (30 questions)
-- Run ID (workspace): server-california_schools-20260815-092123
+- Run ID (workspace): campaign
 - Database: california_schools
 - Control = run without learning stages (model noise baseline)
-- Judge: hosted_vllm/gemma4-chat (reporting only; verdicts are never fed back to the agent)
 
-| Run | Correct | Wrong answer | Compare error | Clarified | Fail: schema/JSON | Fail: react | Fail: LLM | Fail: other | Judge: correct/partial/incorrect/inconclusive | Time, min |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| control | 2 | 10 | 6 | 0 | 2 | 10 | 0 | 0 | 13/0/2/3 | 23.2 |
-| iteration 1 | 1 | 12 | 5 | 0 | 2 | 10 | 0 | 0 | 12/2/3/1 | 77.3 |
-| iteration 2 | 2 | 12 | 5 | 0 | 0 | 11 | 0 | 0 | 15/1/2/1 | 22.9 |
-| iteration 3 | 3 | 10 | 5 | 0 | 1 | 11 | 0 | 0 | 16/0/1/1 | 19.2 |
-| iteration 4 | 2 | 11 | 5 | 0 | 1 | 11 | 0 | 0 | 14/1/2/1 | 20.8 |
-| iteration 5 | 3 | 10 | 5 | 0 | 2 | 10 | 0 | 0 | 15/0/2/1 | 25.5 |
-| iteration 6 | 3 | 10 | 6 | 0 | 0 | 11 | 0 | 0 | 16/1/1/1 | 25.7 |
-| iteration 7 | 2 | 11 | 6 | 0 | 0 | 10 | 0 | 1 | 14/1/3/1 | 99.4 |
-| iteration 8 | 0 | 0 | 0 | 0 | 11 | 18 | 0 | 1 | 0/0/0/0 | 24.6 |
-| iteration 9 | 0 | 0 | 0 | 0 | 7 | 23 | 0 | 0 | 0/0/0/0 | 58.9 |
-| iteration 10 | 0 | 0 | 0 | 0 | 5 | 25 | 0 | 0 | 0/0/0/0 | 15.8 |
+| Run | Correct | Incorrect | Empty | Clarified | Pipeline failed | Time, min |
+|---|---|---|---|---|---|---|
+| control | 1 | 7 | 3 | 0 | 19 | 18.1 |
