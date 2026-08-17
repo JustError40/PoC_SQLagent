@@ -26,10 +26,14 @@ templates:
     grain: School
     status: ok
     last_error: ''
-    verified_at: '2026-08-17T08:26:13.576105+00:00'
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
     result_hash: c460b5bd51823378
     last_rows: 500
-    last_elapsed_ms: 22.466255351901054
+    last_elapsed_ms: 20.388209261000156
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 15.144
+      last_rows: 1
   satscore_avg_by_school_type:
     path: templates/satscore_avg_by_school_type.sql
     description: Calculate average number of tests taken per school type
@@ -40,10 +44,10 @@ templates:
       last_rows: 1
     status: ok
     last_error: ''
-    verified_at: '2026-08-17T08:26:13.576105+00:00'
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
     result_hash: a4b506872b7cfa8d
     last_rows: 2
-    last_elapsed_ms: 9.592496789991856
+    last_elapsed_ms: 10.335193946957588
   learned_502f02c1cc:
     path: templates/learned_502f02c1cc.sql
     description: How many schools with an average score in Math greater than 400 in
@@ -76,10 +80,10 @@ templates:
     explain_cost: 74.06
     status: ok
     last_error: ''
-    verified_at: '2026-08-17T08:26:13.576105+00:00'
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
     result_hash: 9905944daf20921f
     last_rows: 1
-    last_elapsed_ms: 9.234587661921978
+    last_elapsed_ms: 9.454967454075813
     metrics:
       uses: 11
       avg_elapsed_ms: 33.866
@@ -95,14 +99,14 @@ templates:
     explain_cost: 1811.7
     status: ok
     last_error: ''
-    verified_at: '2026-08-17T08:26:13.576105+00:00'
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
     result_hash: e3b0c44298fc1c14
     last_rows: 0
-    last_elapsed_ms: 19.600522704422474
+    last_elapsed_ms: 20.338659174740314
     metrics:
-      uses: 9
-      avg_elapsed_ms: 44.836
-      last_rows: 0
+      uses: 10
+      avg_elapsed_ms: 41.737
+      last_rows: 1
   learned_4499c86216:
     path: templates/learned_4499c86216.sql
     description: Of the schools that offers a magnet program serving a grade span
@@ -142,14 +146,14 @@ templates:
     explain_cost: 1227.86
     status: ok
     metrics:
-      uses: 2
-      avg_elapsed_ms: 17.818
-      last_rows: 10
+      uses: 4
+      avg_elapsed_ms: 18.219
+      last_rows: 1
     last_error: ''
-    verified_at: '2026-08-17T08:26:13.576105+00:00'
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
     result_hash: b7486752d05df7e7
     last_rows: 10
-    last_elapsed_ms: 16.146790236234665
+    last_elapsed_ms: 17.18865893781185
   learned_1aaa8d3fea:
     path: templates/learned_1aaa8d3fea.sql
     description: Please list the codes of the schools with a total enrollment of over
@@ -161,10 +165,10 @@ templates:
     explain_cost: 477.82
     status: ok
     last_error: ''
-    verified_at: '2026-08-17T08:26:13.576105+00:00'
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
     result_hash: a660035cb892e9e6
     last_rows: 500
-    last_elapsed_ms: 14.719734899699688
+    last_elapsed_ms: 13.972999528050423
     metrics:
       uses: 1
       avg_elapsed_ms: 13.846
@@ -180,14 +184,14 @@ templates:
     explain_cost: 1271.99
     status: ok
     last_error: ''
-    verified_at: '2026-08-17T08:26:13.576105+00:00'
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
     result_hash: 67cc230db366e66c
     last_rows: 1
-    last_elapsed_ms: 15.893437899649143
+    last_elapsed_ms: 15.401333570480347
     metrics:
-      uses: 2
-      avg_elapsed_ms: 19.698
-      last_rows: 500
+      uses: 4
+      avg_elapsed_ms: 19.239
+      last_rows: 0
   learned_837318fad5:
     path: templates/learned_837318fad5.sql
     description: What is the ratio of merged Unified School District schools in Orange
@@ -199,9 +203,14 @@ templates:
     explain_cost: 1055.56
     status: ok
     metrics:
-      uses: 1
-      avg_elapsed_ms: 91.832
+      uses: 2
+      avg_elapsed_ms: 53.226
       last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
+    result_hash: fe76e12ae4d573a6
+    last_rows: 1
+    last_elapsed_ms: 12.810482643544674
   learned_7102749e71:
     path: templates/learned_7102749e71.sql
     description: Under whose administration is the school with the highest number
@@ -211,4 +220,263 @@ templates:
     source: query_agent
     spec: null
     explain_cost: 1294.31
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
+    result_hash: e321fbbeacee221b
+    last_rows: 1
+    last_elapsed_ms: 19.37143597751856
+  learned_a40b2e5121:
+    path: templates/learned_a40b2e5121.sql
+    description: List the names of schools with more than 30 difference in enrollements
+      between K-12 and ages 5-17? Please also give the full street adress of the schools.
+    grain: ''
+    fingerprint: a40b2e5121
+    source: query_agent
+    spec: null
+    explain_cost: 2075.5
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
+    result_hash: 7cf3936f00ccd042
+    last_rows: 500
+    last_elapsed_ms: 20.164132118225098
+  learned_f6f2fe6f05:
+    path: templates/learned_f6f2fe6f05.sql
+    description: What is the eligible free rate of the 10th and 11th schools with
+      the highest enrolment for students in grades 1 through 12?
+    grain: ''
+    fingerprint: f6f2fe6f05
+    source: query_agent
+    spec: null
+    explain_cost: 675.55
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
+    result_hash: 65ba9f8c67323c33
+    last_rows: 2
+    last_elapsed_ms: 13.034400530159473
+    metrics:
+      uses: 1
+      avg_elapsed_ms: 10.762
+      last_rows: 0
+  learned_b777138262:
+    path: templates/learned_b777138262.sql
+    description: Name schools in Riverside which the average of average math score
+      for SAT is grater than 400, what is the funding type of these schools?
+    grain: ''
+    fingerprint: b777138262
+    source: query_agent
+    spec: null
+    explain_cost: 1254.68
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T09:03:39.867144+00:00'
+    result_hash: a1807938ea202e8b
+    last_rows: 8
+    last_elapsed_ms: 17.750482074916363
+  learned_87d9585a9e:
+    path: templates/learned_87d9585a9e.sql
+    description: Rank schools by their average score in Writing where the score is
+      greater than 499, showing their charter numbers.
+    grain: charternum
+    fingerprint: 87d9585a9e
+    source: query_agent
+    spec:
+      from: satscores
+      joins:
+      - table: schools
+        left: cds
+        right: cdscode
+      group_by:
+      - table: schools
+        column: charternum
+      measures:
+      - agg: avg
+        table: satscores
+        column: avgscrwrite
+        alias: avg_writing_score
+      filters:
+      - column: avgscrwrite
+        op: '>'
+        value: 499
+      order:
+        by: avg_writing_score
+        dir: desc
+      limit: 10
+    explain_cost: 1302.56
+    status: ok
+    metrics:
+      uses: 1
+      avg_elapsed_ms: 18.541
+      last_rows: 1
+  learned_3abd2da68f:
+    path: templates/learned_3abd2da68f.sql
+    description: Please list the codes of the schools with a total enrollment of over
+      500.
+    grain: ''
+    fingerprint: 3abd2da68f
+    source: query_agent
+    spec: null
+    explain_cost: 2055.48
+    status: ok
+  learned_6b3520d5ec:
+    path: templates/learned_6b3520d5ec.sql
+    description: Under whose administration is the school with the highest number
+      of students scoring 1500 or more on the SAT? Indicate their full names.
+    grain: ''
+    fingerprint: 6b3520d5ec
+    source: query_agent
+    spec:
+      type: object
+      from: satscores
+      joins:
+      - table: schools
+        left: cds
+        right: cdscode
+      group_by: []
+      measures:
+      - agg: max
+        table: satscores
+        column: numge1500
+        alias: numge1500
+      - agg: max
+        table: schools
+        column: admfname3
+        alias: admfname3
+      - agg: max
+        table: schools
+        column: admlname3
+        alias: admlname3
+      filters: []
+      order:
+        by: numge1500
+        dir: desc
+      limit: 1
+    explain_cost: 1333.97
+    status: ok
+  learned_c4bcaaecb5:
+    path: templates/learned_c4bcaaecb5.sql
+    description: How many schools with an average score in Math greater than 400 in
+      the SAT test are exclusively virtual?
+    grain: ''
+    fingerprint: c4bcaaecb5
+    source: query_agent
+    spec:
+      from: schools
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      measure:
+        agg: count
+        column: '*'
+        table: schools
+        alias: virtual_schools_count
+      filters:
+      - table: schools
+        column: virtual
+        op: '='
+        value: '1'
+      - table: satscores
+        column: avgscrmath
+        op: '>'
+        value: 400
+      limit: 1
+    explain_cost: 1255.24
+    status: ok
+  learned_a10876c417:
+    path: templates/learned_a10876c417.sql
+    description: What is the average number of test takers from Fresno schools that
+      opened between 1/1/1980 and 12/31/1980?
+    grain: ''
+    fingerprint: a10876c417
+    source: query_agent
+    spec: null
+    explain_cost: 1346.0
+    status: ok
+  learned_037c600cfc:
+    path: templates/learned_037c600cfc.sql
+    description: Among the schools with an SAT excellence rate of over 0.3, what is
+      the highest eligible free rate for students aged 5-17?
+    grain: ''
+    fingerprint: 037c600cfc
+    source: query_agent
+    spec:
+      from: frpm
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      group_by: []
+      measures:
+      - agg: max
+        table: frpm
+        column: Percent (%) Eligible FRPM (Ages 5-17)
+        alias: highest_eligible_free_rate
+      filters:
+      - table: satscores
+        column: numtsttakr
+        op: '>'
+        value: 0.3
+      order:
+        by: highest_eligible_free_rate
+        dir: desc
+    explain_cost: 583.27
+    status: ok
+  learned_654d5509f7:
+    path: templates/learned_654d5509f7.sql
+    description: What is the postal street address for the school with the 7th highest
+      Math average? Indicate the school's name.
+    grain: ''
+    fingerprint: 654d5509f7
+    source: query_agent
+    spec: null
+    explain_cost: 1360.14
+    status: ok
+  learned_ec435e8a9a:
+    path: templates/learned_ec435e8a9a.sql
+    description: Give the names of the schools with the percent eligible for free
+      meals in K-12 is more than 0.1 and test takers whose test score is greater than
+      or equal to 1500?
+    grain: school
+    fingerprint: ec435e8a9a
+    source: query_agent
+    spec:
+      from: schools
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      - table: frpm
+        left: cdscode
+        right: cdscode
+      group_by:
+      - table: schools
+        column: school
+      measures:
+      - agg: count
+        table: satscores
+        column: numge1500
+        alias: test_takers_1500
+      filters:
+      - table: frpm
+        column: Percent (%) Eligible Free (K-12)
+        op: '>'
+        value: 0.1
+      order:
+        by: test_takers_1500
+        dir: desc
+      limit: 100
+    explain_cost: 1936.93
+    status: ok
+  learned_c48ac3943d:
+    path: templates/learned_c48ac3943d.sql
+    description: Between San Diego and Santa Barbara, which county offers the most
+      number of schools that does not offer physical building? Indicate the amount.
+    grain: ''
+    fingerprint: c48ac3943d
+    source: query_agent
+    spec: null
+    explain_cost: 1225.34
     status: ok
