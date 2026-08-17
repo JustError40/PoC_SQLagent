@@ -8,3 +8,4 @@
 | Run | Correct | Incorrect | Empty | Clarified | Pipeline failed | Time, min |
 |---|---|---|---|---|---|---|
 | control | 3 | 18 | 6 | 0 | 3 | 24.5 |
+| iteration 1 | 3 | 18 | 6 | 0 | 3 | 21.7 |
