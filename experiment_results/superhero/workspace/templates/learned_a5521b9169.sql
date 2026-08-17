@@ -1,0 +1,1 @@
+SELECT s.school, s.fundingtype FROM schools s JOIN satscores sc ON s.cdscode = sc.cds WHERE s.county = 'Riverside' AND s.fundingtype IS NOT NULL GROUP BY s.school, s.fundingtype HAVING AVG(sc.avgscrmath) > 400;

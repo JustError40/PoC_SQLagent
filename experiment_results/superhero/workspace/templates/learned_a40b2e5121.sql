@@ -1,0 +1,1 @@
+SELECT f."School Name", s.street || ', ' || s.city || ', ' || s.state || ' ' || s.zip AS full_address FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE ABS(f."Enrollment (K-12)" - f."Enrollment (Ages 5-17)") > 30 ORDER BY ABS(f."Enrollment (K-12)" - f."Enrollment (Ages 5-17)") DESC;

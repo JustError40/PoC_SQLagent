@@ -1,0 +1,1 @@
+SELECT AVG(satscores.enroll12) as avg_enrollment, schools.fundingtype, COUNT(*) as school_count FROM satscores JOIN schools ON satscores.cds = schools.cdscode WHERE satscores.enroll12 IS NOT NULL GROUP BY schools.fundingtype;

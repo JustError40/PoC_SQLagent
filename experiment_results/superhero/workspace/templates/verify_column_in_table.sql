@@ -1,0 +1,1 @@
+SELECT 'Percent (%) Eligible Free (K-12)' as column_name, PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY "Percent (%) Eligible Free (K-12)") as sample_value FROM frpm WHERE "Percent (%) Eligible Free (K-12)" IS NOT NULL LIMIT 1;
