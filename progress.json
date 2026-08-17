@@ -1,20 +1,20 @@
 {
   "campaign_ts": "smoke3-20260817-085834",
   "branch": "campaign/smoke3-20260817-085834",
-  "status": "loading formula_1",
+  "status": "formula_1 control committed",
   "db_total": 11,
   "db_index": 7,
   "runs_per_db": 11,
   "current_db": "formula_1",
-  "run_label": "-",
-  "run_index": 0,
-  "eta_min": null,
-  "updated_at": "2026-08-17T20:16:45.848476+00:00",
+  "run_label": "control",
+  "run_index": 1,
+  "eta_min": 16.2,
+  "updated_at": "2026-08-17T20:17:44.675684+00:00",
   "last_counts": {
     "correct": 0,
     "incorrect": 0,
     "empty": 0,
     "clarified": 0,
-    "pipeline_failed": 50
+    "pipeline_failed": 66
   }
 }
