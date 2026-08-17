@@ -1,1 +1,0 @@
-SELECT z.zip_code, COUNT(m.member_id) as member_count, z.state, z.city FROM member m JOIN zip_code z ON m.zip = z.zip_code WHERE m.zip IS NOT NULL GROUP BY z.zip_code, z.state, z.city ORDER BY member_count DESC LIMIT 20;

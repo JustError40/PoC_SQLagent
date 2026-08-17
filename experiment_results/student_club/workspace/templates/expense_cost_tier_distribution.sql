@@ -1,1 +1,0 @@
-SELECT CASE WHEN e.cost < 100 THEN 'low' WHEN e.cost < 500 THEN 'medium' ELSE 'high' END as cost_tier, COUNT(*) as expense_count, AVG(e.cost) as avg_cost, SUM(e.cost) as total_cost FROM expense e GROUP BY cost_tier ORDER BY total_cost DESC LIMIT 10;

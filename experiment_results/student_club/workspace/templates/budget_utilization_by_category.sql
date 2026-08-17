@@ -1,1 +1,0 @@
-SELECT b.category, b.event_status, b.spent, b.amount, ROUND((b.spent::numeric / b.amount::numeric) * 100, 2) as utilization_pct, COUNT(DISTINCT e.event_name) as event_count FROM budget b JOIN event e ON b.link_to_event = e.event_id GROUP BY b.category, b.event_status, b.spent, b.amount, b.link_to_event ORDER BY utilization_pct DESC LIMIT 10;

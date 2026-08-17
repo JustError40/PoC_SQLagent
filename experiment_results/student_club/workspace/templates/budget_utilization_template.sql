@@ -1,1 +1,0 @@
-SELECT e.event_id, e.event_name, b.amount, b.spent, ROUND((b.spent::numeric / b.amount * 100)::numeric, 2) as utilization_pct FROM event e JOIN budget b ON e.event_id = b.link_to_event ORDER BY utilization_pct DESC LIMIT 20;

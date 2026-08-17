@@ -1,1 +1,0 @@
-SELECT m.member_id, m.first_name || ' ' || m.last_name as member_name, COUNT(e.expense_id) as expense_count, SUM(e.cost) as total_cost, AVG(e.cost) as avg_cost FROM member m LEFT JOIN expense e ON m.member_id = e.link_to_member WHERE e.expense_id IS NOT NULL GROUP BY m.member_id, m.first_name, m.last_name ORDER BY total_cost DESC LIMIT 50;

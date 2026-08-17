@@ -1,1 +1,0 @@
-SELECT e.type as event_type, COUNT(a.link_to_event) as total_attendance, COUNT(DISTINCT a.link_to_member) as unique_members FROM event e INNER JOIN attendance a ON e.event_id = a.link_to_event GROUP BY e.type ORDER BY total_attendance DESC;

@@ -1,1 +1,0 @@
-WITH member_expenses AS (SELECT m.member_id, m.first_name, m.last_name, SUM(e.cost) as total_cost, COUNT(e.expense_id) as expense_count FROM member m JOIN expense e ON e.link_to_member = m.member_id GROUP BY m.member_id, m.first_name, m.last_name) SELECT first_name, last_name, total_cost, expense_count FROM member_expenses ORDER BY total_cost DESC;

@@ -1,1 +1,0 @@
-SELECT "event"."type" AS "type", COUNT(DISTINCT "event"."type") AS "event_type" FROM "event" JOIN "attendance" ON "event"."event_id" = "attendance"."link_to_event" WHERE "event"."location" = 'MU 215' GROUP BY "event"."type" ORDER BY "event_type" ASC LIMIT 100;

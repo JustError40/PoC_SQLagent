@@ -11,11 +11,11 @@ Use `manifest.yaml` first, then load only the domain and artifact files selected
 - No one-to-many fanout joins detected during survey.
 
 ## Lessons from exploration
-- Use explicit schema prefixes for all table references to avoid cross-namespace collisions.
-- Cap exploratory queries with LIMIT clauses to ensure safe resource usage.
-- Validate column names against the specific table schema before referencing them.
-- Ensure join conditions reference columns guaranteed to exist in both participating tables.
-- Structure queries to select from the primary table first to establish context for subsequent joins.
-- Ensure indexed columns are used in WHERE clauses for efficient lookups.
-- Apply explicit aliases in SELECT clauses to distinguish data from multiple sources.
-- Avoid SELECT * to prevent unnecessary data transfer and potential type conflicts.
+- Qualify all columns in `ORDER BY` and `GROUP BY` clauses with their table alias to prevent ambiguity and sorting errors.
+- Use `INNER JOIN` by default and add `LEFT JOIN` only when null values from the left side are required.
+- Apply SARGable predicates to WHERE clauses to maintain index efficiency without function wrapping.
+- Utilize Common Table Expressions (CTEs) to modularize complex logic and improve query plan readability.
+- Prefer EXISTS over IN for existence checks to reduce memory consumption and improve join performance.
+- Order joins by descending table cardinality to minimize intermediate result size.
+- Enforce explicit column aliases in all SELECT clauses to prevent ambiguity.
+- Apply aggregation filters using HAVING instead of WHERE.

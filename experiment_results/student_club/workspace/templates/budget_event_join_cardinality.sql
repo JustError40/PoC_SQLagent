@@ -1,1 +1,0 @@
-SELECT e.event_id, COUNT(b.budget_id) as budget_count, SUM(b.spent) as total_spent, SUM(b.remaining) as total_remaining FROM event e LEFT JOIN budget b ON e.event_id = b.link_to_event GROUP BY e.event_id ORDER BY budget_count DESC LIMIT 20;

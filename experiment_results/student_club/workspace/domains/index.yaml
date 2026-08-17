@@ -1,12 +1,6 @@
-finance:
-- budget
-- expense
-- income
-events:
-- attendance
-- event
-members:
-- major
-- member
-locations:
-- zip_code
+school_master:
+- schools
+academic_performance:
+- satscores
+student_support:
+- frpm

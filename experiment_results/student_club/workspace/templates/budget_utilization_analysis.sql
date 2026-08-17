@@ -1,1 +1,0 @@
-SELECT event.event_id, COUNT(budget.budget_id) as budget_count, SUM(budget.spent) as total_spent, SUM(budget.amount) as total_budget, ROUND((SUM(budget.spent) * 100.0 / NULLIF(SUM(budget.amount), 0))::numeric, 2) as utilization_pct FROM budget JOIN event ON budget.link_to_event = event.event_id GROUP BY event.event_id ORDER BY total_spent DESC LIMIT 20;

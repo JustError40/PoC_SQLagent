@@ -1,46 +1,16 @@
 joins:
-- left: attendance.link_to_event
-  right: event.event_id
+- left: frpm.cdscode
+  right: satscores.cds
   cardinality: unknown
   verified: true
   verified_by: explorer
-- left: expense.link_to_member
-  right: member.member_id
+- left: satscores.cds
+  right: schools.cdscode
   cardinality: unknown
   verified: true
   verified_by: explorer
-- left: expense.link_to_budget
-  right: budget.budget_id
-  cardinality: unknown
-  verified: true
-  verified_by: explorer
-- left: member.zip
-  right: zip_code.zip_code
-  cardinality: unknown
-  verified: true
-  verified_by: explorer
-- left: member.member_id
-  right: attendance.link_to_member
-  cardinality: unknown
-  verified: true
-  verified_by: explorer
-- left: member.link_to_major
-  right: major.major_id
-  cardinality: unknown
-  verified: true
-  verified_by: explorer
-- left: budget.link_to_event
-  right: event.event_id
-  cardinality: unknown
-  verified: true
-  verified_by: explorer
-- left: member.member_id
-  right: income.link_to_member
-  cardinality: unknown
-  verified: true
-  verified_by: explorer
-- left: income.link_to_member
-  right: attendance.link_to_member
+- left: schools.cdscode
+  right: frpm.cdscode
   cardinality: unknown
   verified: true
   verified_by: explorer

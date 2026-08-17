@@ -1,12 +1,1 @@
-joins:
-- left: expense.link_to_member
-  right: member.member_id
-  reason: 'One member can have multiple expenses (fanout pattern observed: 12, 11,
-    9 expenses per member)'
-  required_action: Document cardinality constraints and implement fanout-aware queries
-- left: member.member_id
-  right: expense.link_to_member
-  reason: Multiple expenses per member detected (9-12 expenses per member in sample
-    data)
-  required_action: Add pagination or fanout limiting in queries that join member to
-    expense
+joins: []

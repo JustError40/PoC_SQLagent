@@ -1,1 +1,0 @@
-SELECT m2.major_name, COUNT(DISTINCT a.link_to_member) as unique_attendees, COUNT(a.link_to_member) as total_attendance FROM attendance a JOIN member m ON a.link_to_member = m.member_id JOIN major m2 ON m.link_to_major = m2.major_id GROUP BY m2.major_name ORDER BY total_attendance DESC LIMIT 15;

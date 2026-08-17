@@ -1,1 +1,0 @@
-SELECT m.member_id, m.position, COUNT(CASE WHEN e.approved::boolean = true THEN 1 END) as approved_count, COUNT(CASE WHEN e.approved::boolean = false THEN 1 END) as rejected_count, COUNT(*) as total_expenses FROM member m JOIN expense e ON m.member_id = e.link_to_member GROUP BY m.member_id, m.position ORDER BY approved_count DESC NULLS LAST;

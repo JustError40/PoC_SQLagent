@@ -1,0 +1,1 @@
+SELECT "schools"."county" AS "county", COUNT("schools"."school") AS "school_count" FROM "schools" WHERE "schools"."county" IN ('San Diego', 'Santa Barbara') AND "schools"."virtual" = 'Y' GROUP BY "schools"."county" ORDER BY "school_count" DESC LIMIT 1;

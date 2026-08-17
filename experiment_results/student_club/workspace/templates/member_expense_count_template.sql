@@ -1,1 +1,0 @@
-SELECT m.member_id, m.first_name, m.last_name, COUNT(DISTINCT e.expense_id) as expense_count FROM member m JOIN expense e ON m.member_id = e.link_to_member GROUP BY m.member_id, m.first_name, m.last_name ORDER BY expense_count DESC LIMIT 10;

@@ -2,27 +2,16 @@ version: 1
 workspace: skill
 generated_by: surveyor
 tables:
-- attendance
-- budget
-- event
-- expense
-- income
-- major
-- member
-- zip_code
+- frpm
+- satscores
+- schools
 domains:
-  finance:
-  - budget
-  - expense
-  - income
-  events:
-  - attendance
-  - event
-  members:
-  - major
-  - member
-  locations:
-  - zip_code
+  school_master:
+  - schools
+  academic_performance:
+  - satscores
+  student_support:
+  - frpm
 artifacts:
   schema: schema/tables.yaml
   relationships: relationships/verified_joins.yaml
@@ -31,1197 +20,974 @@ artifacts:
   invariants: evals/invariants.yaml
   templates: templates/
 templates:
-  expense_member_budget_metric_template:
-    path: templates/expense_member_budget_metric_template.sql
-    description: Reusable metric template to calculate expense totals per member with
-      budget allocation, filtering for approved expenses
-    grain: expense
+  frpm_participation_rate:
+    path: templates/frpm_participation_rate.sql
+    description: Calculate FRPM participation rate as a reusable metric template
+    grain: School
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: c460b5bd51823378
+    last_rows: 500
+    last_elapsed_ms: 16.736255027353764
     metrics:
-      uses: 61
-      avg_elapsed_ms: 15.156
+      uses: 24
+      avg_elapsed_ms: 30.17
+      last_rows: 1
+  satscore_avg_by_school_type:
+    path: templates/satscore_avg_by_school_type.sql
+    description: Calculate average number of tests taken per school type
+    grain: school_type
+    metrics:
+      uses: 8
+      avg_elapsed_ms: 65.342
       last_rows: 1
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: b64dc8feabdef608
-    last_rows: 31
-    last_elapsed_ms: 9.71891824156046
-  budget_utilization:
-    path: templates/budget_utilization.sql
-    description: Reusable metric template for calculating budget utilization percentage
-      per event
-    grain: event
-    metrics:
-      uses: 39
-      avg_elapsed_ms: 10.404
-      last_rows: 1
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 9.997762739658356
-  learned_8b6584109f:
-    path: templates/learned_8b6584109f.sql
-    description: For all the club members from "Business" major, how many of them
-      wear medium size t-shirt?
-    grain: ''
-    fingerprint: 8b6584109f
-    source: query_agent
-    spec:
-      type: object
-      from: member
-      joins:
-      - table: major
-        left: link_to_major
-        right: major_id
-      group_by: []
-      measures:
-      - agg: count
-        table: member
-        column: member_id
-        alias: member_count
-      filters:
-      - table: major
-        column: major_name
-        op: '='
-        value: Business
-      - table: member
-        column: t_shirt_size
-        op: '='
-        value: medium
-      order:
-        by: member_count
-        dir: desc
-    explain_cost: 17.83
-    status: ok
-    metrics:
-      uses: 16
-      avg_elapsed_ms: 9.885
-      last_rows: 1
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 2ccbdb86c9b01539
-    last_rows: 1
-    last_elapsed_ms: 10.42933575809002
-  learned_10eac47cb8:
-    path: templates/learned_10eac47cb8.sql
-    description: Tell the phone number of "Carlo Jacobs".
-    grain: ''
-    fingerprint: 10eac47cb8
-    source: query_agent
-    spec: null
-    explain_cost: 14.05
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 2f47ab6c062536a8
-    last_rows: 1
-    last_elapsed_ms: 8.69013275951147
-    metrics:
-      uses: 5
-      avg_elapsed_ms: 41.62
-      last_rows: 1
-  learned_7bb5613d74:
-    path: templates/learned_7bb5613d74.sql
-    description: List the full name of the Student_Club members that grew up in Illinois
-      state.
-    grain: ''
-    fingerprint: 7bb5613d74
-    source: query_agent
-    spec: null
-    explain_cost: 1004.9
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 13.509205542504787
-    metrics:
-      uses: 7
-      avg_elapsed_ms: 12.136
-      last_rows: 0
-  learned_1916474de5:
-    path: templates/learned_1916474de5.sql
-    description: What was Brent Thomason's major?
-    grain: ''
-    fingerprint: 1916474de5
-    source: query_agent
-    spec: null
-    explain_cost: 18.63
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 2a23c55187e7168d
-    last_rows: 1
-    last_elapsed_ms: 9.79184452444315
-    metrics:
-      uses: 18
-      avg_elapsed_ms: 22.101
-      last_rows: 1
-  learned_1c74fe657e:
-    path: templates/learned_1c74fe657e.sql
-    description: How many members attended the "Women's Soccer" event?
-    grain: ''
-    fingerprint: 1c74fe657e
-    source: query_agent
-    spec:
-      type: object
-      from: attendance
-      joins:
-      - table: event
-        left: link_to_event
-        right: event_id
-      group_by: []
-      measures:
-      - agg: count
-        table: attendance
-        column: link_to_member
-        alias: member_count
-      filters:
-      - table: event
-        column: event_name
-        op: '='
-        value: Women's Soccer
-      order:
-        by: member_count
-        dir: asc
-    explain_cost: 21.57
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 5847c289d228b44f
-    last_rows: 1
-    last_elapsed_ms: 9.305324405431747
-    metrics:
-      uses: 9
-      avg_elapsed_ms: 27.13
-      last_rows: 1
-  learned_4e7c125c01:
-    path: templates/learned_4e7c125c01.sql
-    description: Among the students from the Student_Club who attended the event "Women's
-      Soccer", how many of them want a T-shirt that's in medium size?
-    grain: ''
-    fingerprint: 4e7c125c01
-    source: query_agent
-    spec: null
-    explain_cost: 39.36
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: c6cc7b37f9ae0b15
-    last_rows: 1
-    last_elapsed_ms: 8.899640291929245
-    metrics:
-      uses: 5
-      avg_elapsed_ms: 18.254
-      last_rows: 1
-  learned_cf08b50109:
-    path: templates/learned_cf08b50109.sql
-    description: How many cities are there in Orange County, Virginia?
-    grain: ''
-    fingerprint: cf08b50109
-    source: query_agent
-    spec: null
-    explain_cost: 1068.18
-    status: ok
-    metrics:
-      uses: 5
-      avg_elapsed_ms: 15.012
-      last_rows: 1
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: c6cc7b37f9ae0b15
-    last_rows: 1
-    last_elapsed_ms: 13.452649116516113
-  learned_e2390077dc:
-    path: templates/learned_e2390077dc.sql
-    description: List the name of students that have attended more than 7 events.
-    grain: ''
-    fingerprint: e2390077dc
-    source: query_agent
-    spec: null
-    explain_cost: 39.31
-    status: ok
-    metrics:
-      uses: 4
-      avg_elapsed_ms: 24.645
-      last_rows: 29
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 3a58bb6978124af8
-    last_rows: 29
-    last_elapsed_ms: 8.949285373091698
-  learned_b5a077f840:
-    path: templates/learned_b5a077f840.sql
-    description: Write the full names of students who received funds on the date of
-      9/9/2019 and include the amount received.
-    grain: ''
-    fingerprint: b5a077f840
-    source: query_agent
-    spec: null
-    explain_cost: 28.89
-    status: ok
-    metrics:
-      uses: 11
-      avg_elapsed_ms: 9.757
-      last_rows: 2
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 0af0e0843b5ead7c
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: a4b506872b7cfa8d
     last_rows: 2
-    last_elapsed_ms: 8.626500144600868
-  learned_f8ce541317:
-    path: templates/learned_f8ce541317.sql
-    description: What is the status of the event which bought "Post Cards, Posters"
-      on 2019/8/20?
+    last_elapsed_ms: 9.8594194278121
+  learned_502f02c1cc:
+    path: templates/learned_502f02c1cc.sql
+    description: How many schools with an average score in Math greater than 400 in
+      the SAT test are exclusively virtual?
     grain: ''
-    fingerprint: f8ce541317
-    source: query_agent
-    spec: null
-    explain_cost: 31.57
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 1e72111d33781bcd
-    last_rows: 1
-    last_elapsed_ms: 9.10714827477932
-    metrics:
-      uses: 6
-      avg_elapsed_ms: 35.132
-      last_rows: 1
-  learned_a4c4499bf2:
-    path: templates/learned_a4c4499bf2.sql
-    description: What is the highest amount of budget spend for an event?
-    grain: ''
-    fingerprint: a4c4499bf2
-    source: query_agent
-    spec: null
-    explain_cost: 18.82
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 8a575ea839bff1a4
-    last_rows: 1
-    last_elapsed_ms: 8.77173338085413
-    metrics:
-      uses: 6
-      avg_elapsed_ms: 33.19
-      last_rows: 0
-  learned_7ecb55e2b2:
-    path: templates/learned_7ecb55e2b2.sql
-    description: State the category of events were held at MU 215.
-    grain: type
-    fingerprint: 7ecb55e2b2
+    fingerprint: 502f02c1cc
     source: query_agent
     spec:
       type: object
-      from: event
-      joins:
-      - table: attendance
-        left: event_id
-        right: link_to_event
-        join_type: inner
+      from: satscores
+      joins: []
+      group_by: []
+      measures:
+      - agg: count
+        table: satscores
+        column: cds
+        alias: school_count
+      filters:
+      - table: satscores
+        column: avgscrmath
+        op: '>'
+        value: 400
+      - table: satscores
+        column: rtype
+        op: '='
+        value: virtual
+      order:
+        by: school_count
+        dir: asc
+    explain_cost: 74.06
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 9905944daf20921f
+    last_rows: 1
+    last_elapsed_ms: 8.87319166213274
+    metrics:
+      uses: 17
+      avg_elapsed_ms: 25.636
+      last_rows: 1
+  learned_18e282f69c:
+    path: templates/learned_18e282f69c.sql
+    description: List the names of schools with more than 30 difference in enrollements
+      between K-12 and ages 5-17? Please also give the full street adress of the schools.
+    grain: ''
+    fingerprint: 18e282f69c
+    source: query_agent
+    spec: null
+    explain_cost: 1811.7
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e3b0c44298fc1c14
+    last_rows: 0
+    last_elapsed_ms: 19.614072516560555
+    metrics:
+      uses: 22
+      avg_elapsed_ms: 31.429
+      last_rows: 0
+  learned_4499c86216:
+    path: templates/learned_4499c86216.sql
+    description: Of the schools that offers a magnet program serving a grade span
+      of Kindergarten to 8th grade, how many offers Multiple Provision Types? List
+      the number of cities that offers a Kindergarten to 8th gra
+    grain: city
+    fingerprint: 4499c86216
+    source: query_agent
+    spec:
+      from: schools
+      joins: []
       group_by:
-      - table: event
-        column: type
+      - table: schools
+        column: city
       measures:
+      - agg: count
+        table: schools
+        column: '*'
+        alias: total_schools
       - agg: count_distinct
-        table: event
-        column: type
-        alias: event_type
+        table: schools
+        column: fundingtype
+        alias: multiple_provision_types
       filters:
-      - table: event
-        column: location
+      - table: schools
+        column: magnet
         op: '='
-        value: MU 215
+        value: 1
+      - table: schools
+        column: gsoffered
+        op: '='
+        value: K-8
       order:
-        by: event_type
-        dir: asc
-      limit: 100
-    explain_cost: 21.62
+        by: multiple_provision_types
+        dir: desc
+      limit: 10
+    explain_cost: 1227.86
     status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 362c40bf8612427d
-    last_rows: 2
-    last_elapsed_ms: 8.857895620167255
     metrics:
-      uses: 4
-      avg_elapsed_ms: 9.955
-      last_rows: 2
-  learned_61d9e9530a:
-    path: templates/learned_61d9e9530a.sql
-    description: What is the ratio of customers who pay in EUR against customers who
-      pay in CZK?
+      uses: 10
+      avg_elapsed_ms: 27.149
+      last_rows: 10
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: b7486752d05df7e7
+    last_rows: 10
+    last_elapsed_ms: 15.81489760428667
+  learned_1aaa8d3fea:
+    path: templates/learned_1aaa8d3fea.sql
+    description: Please list the codes of the schools with a total enrollment of over
+      500.
     grain: ''
-    fingerprint: 61d9e9530a
+    fingerprint: 1aaa8d3fea
     source: query_agent
     spec: null
-    explain_cost: 15.23
+    explain_cost: 477.82
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: a660035cb892e9e6
+    last_rows: 500
+    last_elapsed_ms: 12.81549409031868
+    metrics:
+      uses: 8
+      avg_elapsed_ms: 13.775
+      last_rows: 500
+  learned_e33823ea13:
+    path: templates/learned_e33823ea13.sql
+    description: What is the telephone number for the school with the lowest average
+      score in reading in Fresno Unified?
+    grain: ''
+    fingerprint: e33823ea13
+    source: query_agent
+    spec: null
+    explain_cost: 1271.99
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 67cc230db366e66c
+    last_rows: 1
+    last_elapsed_ms: 14.473828487098217
+    metrics:
+      uses: 12
+      avg_elapsed_ms: 18.241
+      last_rows: 1
+  learned_837318fad5:
+    path: templates/learned_837318fad5.sql
+    description: What is the ratio of merged Unified School District schools in Orange
+      County to merged Elementary School District schools?
+    grain: ''
+    fingerprint: 837318fad5
+    source: query_agent
+    spec: null
+    explain_cost: 1055.56
     status: ok
     metrics:
-      uses: 11
-      avg_elapsed_ms: 24.228
+      uses: 8
+      avg_elapsed_ms: 40.534
       last_rows: 1
     last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
     result_hash: fe76e12ae4d573a6
     last_rows: 1
-    last_elapsed_ms: 9.478647261857986
-  geographic_member_distribution:
-    path: templates/geographic_member_distribution.sql
-    description: Query to profile how many members are associated with each geographic
-      location (zip_code, state, city) for geographic distribution analysis
-    grain: zip_code
+    last_elapsed_ms: 14.110386371612549
+  learned_7102749e71:
+    path: templates/learned_7102749e71.sql
+    description: Under whose administration is the school with the highest number
+      of students scoring 1500 or more on the SAT? Indicate their full names.
+    grain: ''
+    fingerprint: 7102749e71
+    source: query_agent
+    spec: null
+    explain_cost: 1294.31
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 100e40623e34e72f
-    last_rows: 20
-    last_elapsed_ms: 21.704642102122307
-  approved_expense_member_metric:
-    path: templates/approved_expense_member_metric.sql
-    description: Calculate total approved expenses per member with cost breakdown
-      using expense.link_to_member join
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 7a60b6c5d376ab55
-    last_rows: 3
-    last_elapsed_ms: 10.368060320615768
-    metrics:
-      uses: 4
-      avg_elapsed_ms: 11.279
-      last_rows: 12
-  budget_allocation_patterns:
-    path: templates/budget_allocation_patterns.sql
-    description: Profile budget distribution across categories and event status with
-      counts, totals, and averages
-    grain: budget_category_status
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: e55178ce13124d49
-    last_rows: 10
-    last_elapsed_ms: 7.66940601170063
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e321fbbeacee221b
+    last_rows: 1
+    last_elapsed_ms: 20.15695907175541
     metrics:
       uses: 6
-      avg_elapsed_ms: 49.845
+      avg_elapsed_ms: 25.542
       last_rows: 1
-  learned_e11a8e6838:
-    path: templates/learned_e11a8e6838.sql
-    description: For all the transactions happened during 8:00-9:00 in 2012/8/26,
-      how many happened in CZE?
+  learned_a40b2e5121:
+    path: templates/learned_a40b2e5121.sql
+    description: List the names of schools with more than 30 difference in enrollements
+      between K-12 and ages 5-17? Please also give the full street adress of the schools.
     grain: ''
-    fingerprint: e11a8e6838
+    fingerprint: a40b2e5121
     source: query_agent
     spec: null
-    explain_cost: 15.61
+    explain_cost: 2075.5
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: c6cc7b37f9ae0b15
-    last_rows: 1
-    last_elapsed_ms: 9.597529657185078
-    metrics:
-      uses: 4
-      avg_elapsed_ms: 9.993
-      last_rows: 1
-  income_by_source_aggregation:
-    path: templates/income_by_source_aggregation.sql
-    description: Reusable query to group transactions by source with count, sum, and
-      average metrics
-    grain: transaction.source
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: b28994f848300cd4
-    last_rows: 4
-    last_elapsed_ms: 8.95772222429514
-    metrics:
-      uses: 4
-      avg_elapsed_ms: 10.807
-      last_rows: 3
-  member_attendance_distribution:
-    path: templates/member_attendance_distribution.sql
-    description: Query to calculate event attendance frequency distribution across
-      all members to identify power users and participation patterns
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 95019a75bd645de6
-    last_rows: 30
-    last_elapsed_ms: 9.743540547788143
-  major_attendance_analysis:
-    path: templates/major_attendance_analysis.sql
-    description: Query to analyze attendance patterns by major to identify which academic
-      programs have highest event engagement
-    grain: major
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: d11aaea0af6b9aed
-    last_rows: 23
-    last_elapsed_ms: 9.142846800386906
-  budget_spend_by_status:
-    path: templates/budget_spend_by_status.sql
-    description: Query to analyze budget spending patterns by event status for financial
-      monitoring
-    grain: event_status
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 7e4adcbbde894794
-    last_rows: 2
-    last_elapsed_ms: 7.66406487673521
-  expense_approval_by_member_count:
-    path: templates/expense_approval_by_member_count.sql
-    description: Query to analyze expense approval status distribution across members
-      to identify members with more approved vs rejected expenses
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 51f1df86f95ed83e
-    last_rows: 3
-    last_elapsed_ms: 9.7725884988904
-  member_zip_profile_by_location:
-    path: templates/member_zip_profile_by_location.sql
-    description: Query to analyze geographic distribution of members by zip code to
-      understand membership patterns across different locations
-    grain: zip_code
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 85f1b622e688ca3b
-    last_rows: 33
-    last_elapsed_ms: 22.941069677472115
-  event_attendance_by_major:
-    path: templates/event_attendance_by_major.sql
-    description: Query to analyze total attendance count per major to understand which
-      academic programs have highest event engagement
-    grain: major
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: d516f98b6bb058ae
-    last_rows: 23
-    last_elapsed_ms: 8.929404430091381
-  income_source_metric_template:
-    path: templates/income_source_metric_template.sql
-    description: Reusable metric to calculate income totals by source for financial
-      reporting
-    grain: income
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 9e51c68dfb84296a
-    last_rows: 4
-    last_elapsed_ms: 7.963692769408226
-  budget_spend_by_event_status:
-    path: templates/budget_spend_by_event_status.sql
-    description: Template for analyzing budget spending patterns grouped by event
-      status category
-    grain: budget.event_status
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: ee7b434d22da5509
-    last_rows: 3
-    last_elapsed_ms: 8.830560371279716
-  event_type_distribution_profile:
-    path: templates/event_type_distribution_profile.sql
-    description: Reusable query to understand event category distribution for analysis
-    grain: event.type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 1409b742ca2640e9
-    last_rows: 8
-    last_elapsed_ms: 8.360158652067184
-  budget_category_distribution_profile:
-    path: templates/budget_category_distribution_profile.sql
-    description: Reusable query to understand budget allocation patterns across the
-      club
-    grain: budget.category
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 1cd869d721446831
-    last_rows: 5
-    last_elapsed_ms: 8.171208202838898
-    metrics:
-      uses: 3
-      avg_elapsed_ms: 10.362
-      last_rows: 0
-  budget_event_join_cardinality:
-    path: templates/budget_event_join_cardinality.sql
-    description: Profile the budget.link_to_event join cardinality by counting how
-      many budget records exist per event to understand if budgets are 1:1 or 1:N
-      with events.
-    grain: event
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 1b4cf97bc79b2881
-    last_rows: 20
-    last_elapsed_ms: 8.376820012927055
-  expense_approval_by_member:
-    path: templates/expense_approval_by_member.sql
-    description: Calculate expense approval status (approved/rejected counts) per
-      member using expense.link_to_member join
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: b27a4fd2279cbb11
-    last_rows: 3
-    last_elapsed_ms: 10.138587094843388
-  member_attendance_summary_metric:
-    path: templates/member_attendance_summary_metric.sql
-    description: Calculate event attendance counts per member with member name for
-      identifying power users
-    grain: per member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 0296b23f1e989e77
-    last_rows: 10
-    last_elapsed_ms: 8.79516452550888
-  income_member_metric_template:
-    path: templates/income_member_metric_template.sql
-    description: Reusable metric template to calculate total income received per member
-      with source breakdown, filtering for members with at least one income transaction
-    grain: member_id
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 02a521a834de88eb
-    last_rows: 31
-    last_elapsed_ms: 8.579578250646591
-    metrics:
-      uses: 7
-      avg_elapsed_ms: 11.73
-      last_rows: 1
-  attendance_by_event_type:
-    path: templates/attendance_by_event_type.sql
-    description: Reusable query to calculate total attendance count per event type
-    grain: event_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 189223448fd79185
-    last_rows: 7
-    last_elapsed_ms: 9.69796534627676
-  budget_by_event_status:
-    path: templates/budget_by_event_status.sql
-    description: Reusable query to calculate total spending per event status
-    grain: event_status
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: c6efcefde803d1db
-    last_rows: 3
-    last_elapsed_ms: 10.260467417538166
-  member_geo_distribution:
-    path: templates/member_geo_distribution.sql
-    description: Reusable query to count members by zip code
-    grain: zip_code
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: ed7b0ca1e6f7d0ec
-    last_rows: 33
-    last_elapsed_ms: 17.95915886759758
-  check_1n_expense_member:
-    path: templates/check_1n_expense_member.sql
-    description: Query to verify 1:N relationship between expense and member tables
-      by counting expenses per member
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 23c7f8216ffa5aed
-    last_rows: 3
-    last_elapsed_ms: 9.386982768774033
-  check_1n_attendance_event:
-    path: templates/check_1n_attendance_event.sql
-    description: Query to verify 1:N relationship between attendance and event tables
-      by counting attendance per event
-    grain: event
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 9c689571797966a6
-    last_rows: 17
-    last_elapsed_ms: 9.659582749009132
-  budget_event_status_distribution:
-    path: templates/budget_event_status_distribution.sql
-    description: Aggregates budget records by event status with spending totals and
-      remaining amounts
-    grain: per event_status
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 2dcdb74eb13b0699
-    last_rows: 3
-    last_elapsed_ms: 9.463333524763584
-  member_tshirt_size_distribution:
-    path: templates/member_tshirt_size_distribution.sql
-    description: Returns t_shirt_size distribution among members for profile analysis
-    grain: per t_shirt_size
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 4487751b6798a2e8
-    last_rows: 4
-    last_elapsed_ms: 8.968898095190525
-  income_member_fanout_check:
-    path: templates/income_member_fanout_check.sql
-    description: Verifies income records per member to check for data quality issues
-    grain: per link_to_member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 7744fd8f3428678b
-    last_rows: 32
-    last_elapsed_ms: 8.611851371824741
-  member_expense_summary_template:
-    path: templates/member_expense_summary_template.sql
-    description: Reusable metric template to calculate total expense costs and count
-      per member for financial tracking
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 7380e138ec0d90ba
-    last_rows: 3
-    last_elapsed_ms: 8.547543548047543
-  member_geographic_profile:
-    path: templates/member_geographic_profile.sql
-    description: Reusable metric template to profile members by geographic state and
-      short_state using zip_code join for location-based analytics
-    grain: state
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 358f8a77a61ee16e
-    last_rows: 18
-    last_elapsed_ms: 23.67013320326805
-  expense_cost_distribution:
-    path: templates/expense_cost_distribution.sql
-    description: Analyze expense cost distribution to understand spending patterns
-    grain: cost_tier
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 6395b5c9f80edf9e
-    last_rows: 3
-    last_elapsed_ms: 8.026504889130592
-    metrics:
-      uses: 2
-      avg_elapsed_ms: 11.542
-      last_rows: 0
-  budget_utilization_by_event:
-    path: templates/budget_utilization_by_event.sql
-    description: Calculate budget utilization percentage (spent/amount) per event
-      to identify budget efficiency patterns
-    grain: per_event
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 865660bb7a60118f
-    last_rows: 52
-    last_elapsed_ms: 9.488780982792377
-  geographic_state_distribution:
-    path: templates/geographic_state_distribution.sql
-    description: Reusable query template for member count distribution by state using
-      zip_code join
-    grain: short_state
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 31e02f391c467031
-    last_rows: 18
-    last_elapsed_ms: 18.944538198411465
-  budget_event_cardinality_check:
-    path: templates/budget_event_cardinality_check.sql
-    description: Verify budget records per event to validate link_to_event relationship
-    grain: event_id
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 32fa8b75672c5a04
-    last_rows: 20
-    last_elapsed_ms: 9.597978554666042
-  attendance_by_major_distribution:
-    path: templates/attendance_by_major_distribution.sql
-    description: Get attendance distribution by major with member engagement metrics
-    grain: major_name
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: f9663c7dbc2e11d7
-    last_rows: 15
-    last_elapsed_ms: 9.341002441942692
-  member_expense_summary:
-    path: templates/member_expense_summary.sql
-    description: Calculate expense metrics per member including count and total cost
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 3d35240f7ca69b55
-    last_rows: 3
-    last_elapsed_ms: 10.191104374825954
-    metrics:
-      uses: 3
-      avg_elapsed_ms: 49.634
-      last_rows: 0
-  budget_utilization_analysis:
-    path: templates/budget_utilization_analysis.sql
-    description: Calculate budget utilization percentage per event with spending totals
-    grain: event
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 20e86dea4eed71f5
-    last_rows: 20
-    last_elapsed_ms: 11.419467628002167
-  member_geographic_distribution:
-    path: templates/member_geographic_distribution.sql
-    description: Profile member count distribution by zip_code with state aggregation
-    grain: zip_code
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 6ac1d8b4c7339bf2
-    last_rows: 30
-    last_elapsed_ms: 21.013900637626648
-  member_event_attendance_frequency:
-    path: templates/member_event_attendance_frequency.sql
-    description: Query to identify power users and participation patterns by counting
-      distinct events attended per member
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 4c123f97bc491001
-    last_rows: 30
-    last_elapsed_ms: 10.274764150381088
-  income_by_source_member_breakdown:
-    path: templates/income_by_source_member_breakdown.sql
-    description: Query to understand funding patterns by breaking down income amounts
-      by source for each member
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: bb7a8a588f8397ee
-    last_rows: 31
-    last_elapsed_ms: 9.221850894391537
-  event_type_attendance_count:
-    path: templates/event_type_attendance_count.sql
-    description: Query to understand which event categories attract the most members
-    grain: event
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 71683c6d225ff9c7
-    last_rows: 8
-    last_elapsed_ms: 9.692259132862091
-  budget_expense_allocation_query:
-    path: templates/budget_expense_allocation_query.sql
-    description: Query to analyze expense allocation patterns by budget, showing expense
-      counts per budget
-    grain: budget_id
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 387791f81d3e0e24
-    last_rows: 10
-    last_elapsed_ms: 9.065774269402027
-  event_type_budget_analysis_query:
-    path: templates/event_type_budget_analysis_query.sql
-    description: Query to analyze budget spend totals by event type with utilization
-      percentage
-    grain: event_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 34736b81226bf4f8
-    last_rows: 3
-    last_elapsed_ms: 10.879617184400558
-  member_engagement_by_major:
-    path: templates/member_engagement_by_major.sql
-    description: Calculate member engagement metrics by academic major including attendance
-      participation
-    grain: major
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 7c35428362b5e1c0
-    last_rows: 10
-    last_elapsed_ms: 10.274705477058887
-  budget_utilization_by_category:
-    path: templates/budget_utilization_by_category.sql
-    description: Calculate budget utilization percentage by category with event counts
-    grain: category
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 77a5485100c3ab48
-    last_rows: 10
-    last_elapsed_ms: 9.89561527967453
-  expense_approval_by_major:
-    path: templates/expense_approval_by_major.sql
-    description: Analyze expense approval patterns by member and major for approval
-      rate insights
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 0b4ae113b7fce921
-    last_rows: 3
-    last_elapsed_ms: 11.005139909684658
-  expense_cost_by_member_profile:
-    path: templates/expense_cost_by_member_profile.sql
-    description: Calculate average and total expense cost per member to profile spending
-      patterns and validate expense.link_to_member fanout cardinality
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: d33f63061d8bb46e
-    last_rows: 3
-    last_elapsed_ms: 9.99937392771244
-    metrics:
-      uses: 4
-      avg_elapsed_ms: 10.498
-      last_rows: 1
-  event_type_attendance_by_member_join:
-    path: templates/event_type_attendance_by_member_join.sql
-    description: Draft reusable metric template to calculate total attendance per
-      event type with member count, testing attendance.link_to_event join with event.type
-      grouping
-    grain: event
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 098dee9df2c87a10
-    last_rows: 7
-    last_elapsed_ms: 10.793503373861313
-  budget_utilization_by_event_type:
-    path: templates/budget_utilization_by_event_type.sql
-    description: Query to calculate budget utilization percentage by event type
-    grain: event_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: d6fa0ab7a88d7b52
-    last_rows: 3
-    last_elapsed_ms: 10.692623443901539
-  expense_by_zip_state_profile:
-    path: templates/expense_by_zip_state_profile.sql
-    description: Query to calculate total expenses grouped by member's zip code state
-    grain: state
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: ea70d56bafa7db67
-    last_rows: 3
-    last_elapsed_ms: 22.515143267810345
-  learned_bec9200974:
-    path: templates/learned_bec9200974.sql
-    description: List all the members of the "School of Applied Sciences, Technology
-      and Education" department.
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 7cf3936f00ccd042
+    last_rows: 500
+    last_elapsed_ms: 19.878100603818893
+  learned_f6f2fe6f05:
+    path: templates/learned_f6f2fe6f05.sql
+    description: What is the eligible free rate of the 10th and 11th schools with
+      the highest enrolment for students in grades 1 through 12?
     grain: ''
-    fingerprint: bec9200974
+    fingerprint: f6f2fe6f05
     source: query_agent
     spec: null
-    explain_cost: 18.67
+    explain_cost: 675.55
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 4a5d4f0e31d8a159
-    last_rows: 5
-    last_elapsed_ms: 10.038096457719803
-    metrics:
-      uses: 2
-      avg_elapsed_ms: 14.255
-      last_rows: 5
-  member_zip_cardinality_profile:
-    path: templates/member_zip_cardinality_profile.sql
-    description: Profile member distribution by zip code with member count per zip
-      code
-    grain: zip_code
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: ed7b0ca1e6f7d0ec
-    last_rows: 33
-    last_elapsed_ms: 17.486903816461563
-  member_major_cardinality_profile:
-    path: templates/member_major_cardinality_profile.sql
-    description: Profile member distribution by major with member count per major
-    grain: major
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 7b1172bdf79a8144
-    last_rows: 26
-    last_elapsed_ms: 10.000408627092838
-    metrics:
-      uses: 2
-      avg_elapsed_ms: 9.755
-      last_rows: 1
-  budget_category_summary:
-    path: templates/budget_category_summary.sql
-    description: Summarize budget allocations by category with initial and spent amounts
-    grain: category
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: bfd383d5aa50efe2
-    last_rows: 5
-    last_elapsed_ms: 9.55399964004755
-  attendance_metrics_by_event_type:
-    path: templates/attendance_metrics_by_event_type.sql
-    description: Query attendance metrics grouped by event type with member counts
-    grain: event_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: d4eb70d4362e6a66
-    last_rows: 7
-    last_elapsed_ms: 9.693967178463936
-  income_by_member_metric:
-    path: templates/income_by_member_metric.sql
-    description: Reusable metric template to calculate total income received per member
-      with transaction count and filtering for active members
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: d9ebdbab3f8e5c77
-    last_rows: 32
-    last_elapsed_ms: 9.569286368787289
-  budget_status_distribution:
-    path: templates/budget_status_distribution.sql
-    description: Query to analyze budget records grouped by event status to understand
-      status distribution and identify any N:1 fanout patterns
-    grain: per_event_status
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: ebb7e554b015e160
-    last_rows: 3
-    last_elapsed_ms: 8.8734682649374
-  member_zip_cardinality:
-    path: templates/member_zip_cardinality.sql
-    description: Query to profile member geographic distribution by zip code to understand
-      member concentration patterns
-    grain: per_zip_code
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: d3d214c874fdeef2
-    last_rows: 20
-    last_elapsed_ms: 9.220737963914871
-  event_attendance_profile:
-    path: templates/event_attendance_profile.sql
-    description: Query to profile event type distribution with attendance counts
-    grain: event_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 6a272237ca32d07d
-    last_rows: 7
-    last_elapsed_ms: 11.016305536031723
-  verify_attendance_fanout_per_event:
-    path: templates/verify_attendance_fanout_per_event.sql
-    description: Metric template for analyzing attendance fanout patterns by counting
-      distinct members per event
-    grain: event
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 7cdc8205a1b0d11d
-    last_rows: 10
-    last_elapsed_ms: 11.33755873888731
-  profile_member_major_join_cardinality:
-    path: templates/profile_member_major_join_cardinality.sql
-    description: Metric template for understanding member distribution across majors
-    grain: major
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 7b1172bdf79a8144
-    last_rows: 26
-    last_elapsed_ms: 9.42546222358942
-  draft_attendance_summary_template:
-    path: templates/draft_attendance_summary_template.sql
-    description: Reusable metric template for calculating total attendance per event
-      with member count breakdown
-    grain: event
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 42848e55a58ac377
-    last_rows: 17
-    last_elapsed_ms: 10.79574041068554
-  member_attendance_by_income_source:
-    path: templates/member_attendance_by_income_source.sql
-    description: Query to analyze member attendance patterns grouped by income source
-      for funding engagement analysis
-    grain: member_income_attendance
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 05a3da20d1d74767
-    last_rows: 1
-    last_elapsed_ms: 10.78388374298811
-  budget_event_type_profile:
-    path: templates/budget_event_type_profile.sql
-    description: Query to analyze budget allocation and utilization patterns by event
-      type
-    grain: budget_event_type_profile
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 42976dbe31b3889d
-    last_rows: 3
-    last_elapsed_ms: 9.651615284383297
-  expense_approval_by_member_type:
-    path: templates/expense_approval_by_member_type.sql
-    description: Query to analyze expense approval patterns per member to identify
-      high-engagement members
-    grain: member_expense_counts
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: f5cf9f6d9f9ce6a7
-    last_rows: 3
-    last_elapsed_ms: 9.737161919474602
-  geographic_distribution_analysis:
-    path: templates/geographic_distribution_analysis.sql
-    description: Query to analyze member geographic distribution by zip code with
-      member count per location
-    grain: member zip code
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 359891fe1f847a53
-    last_rows: 10
-    last_elapsed_ms: 17.475096508860588
-  member_activity_frequency:
-    path: templates/member_activity_frequency.sql
-    description: Query to analyze member participation patterns and attendance frequency
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: ae67ab10a35622b0
-    last_rows: 30
-    last_elapsed_ms: 9.350046515464783
-  member_major_enrollment_analysis:
-    path: templates/member_major_enrollment_analysis.sql
-    description: Template for analyzing member enrollment patterns by major using
-      link_to_major relationship
-    grain: major
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 7b1172bdf79a8144
-    last_rows: 26
-    last_elapsed_ms: 9.267340414226055
-  expense_profile_by_member:
-    path: templates/expense_profile_by_member.sql
-    description: Template for analyzing expense patterns and spending distribution
-      per member
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: b9128984e0743021
-    last_rows: 3
-    last_elapsed_ms: 9.707421064376831
-  income_by_source:
-    path: templates/income_by_source.sql
-    description: Calculate total income by source per transaction
-    grain: source
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 782988fc7741d4a8
-    last_rows: 1
-    last_elapsed_ms: 9.414180181920528
-  budget_utilization_template:
-    path: templates/budget_utilization_template.sql
-    description: Calculate budget utilization percentage per event to identify cost
-      efficiency
-    grain: event
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: a672f3b82bbcb271
-    last_rows: 20
-    last_elapsed_ms: 10.299899615347385
-  budget_spending_by_event_type:
-    path: templates/budget_spending_by_event_type.sql
-    description: Calculates total budget spent per event type with count of budget
-      records
-    grain: per event type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: d865fbdb7a697ea7
-    last_rows: 3
-    last_elapsed_ms: 8.925786241889
-  attendance_fanout_per_event:
-    path: templates/attendance_fanout_per_event.sql
-    description: Reusable metric to count distinct members per event for attendance
-      distribution analysis
-    grain: event
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 7cdc8205a1b0d11d
-    last_rows: 10
-    last_elapsed_ms: 9.735791012644768
-  event_type_attendance_summary:
-    path: templates/event_type_attendance_summary.sql
-    description: Reusable metric to count attendance by event type to identify popular
-      categories
-    grain: event_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: ad246cee3732da14
-    last_rows: 7
-    last_elapsed_ms: 10.232937522232533
-  member_expense_count_template:
-    path: templates/member_expense_count_template.sql
-    description: Reusable metric to calculate total expense count per member for spending
-      pattern analysis
-    grain: member
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: 27af8cecbf5a78f0
-    last_rows: 3
-    last_elapsed_ms: 8.97881481796503
-  expense_cost_tier_distribution:
-    path: templates/expense_cost_tier_distribution.sql
-    description: Profiles expense costs by tier (low/medium/high) to understand spending
-      patterns and budget allocation
-    grain: expense
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T23:30:25.223416+00:00'
-    result_hash: b88b58294a577aaf
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 65ba9f8c67323c33
     last_rows: 2
-    last_elapsed_ms: 8.852770552039146
+    last_elapsed_ms: 11.85025367885828
+    metrics:
+      uses: 12
+      avg_elapsed_ms: 28.7
+      last_rows: 2
+  learned_b777138262:
+    path: templates/learned_b777138262.sql
+    description: Name schools in Riverside which the average of average math score
+      for SAT is grater than 400, what is the funding type of these schools?
+    grain: ''
+    fingerprint: b777138262
+    source: query_agent
+    spec: null
+    explain_cost: 1254.68
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: a1807938ea202e8b
+    last_rows: 8
+    last_elapsed_ms: 15.710733830928802
+    metrics:
+      uses: 4
+      avg_elapsed_ms: 15.81
+      last_rows: 8
+  learned_87d9585a9e:
+    path: templates/learned_87d9585a9e.sql
+    description: Rank schools by their average score in Writing where the score is
+      greater than 499, showing their charter numbers.
+    grain: charternum
+    fingerprint: 87d9585a9e
+    source: query_agent
+    spec:
+      from: satscores
+      joins:
+      - table: schools
+        left: cds
+        right: cdscode
+      group_by:
+      - table: schools
+        column: charternum
+      measures:
+      - agg: avg
+        table: satscores
+        column: avgscrwrite
+        alias: avg_writing_score
+      filters:
+      - column: avgscrwrite
+        op: '>'
+        value: 499
+      order:
+        by: avg_writing_score
+        dir: desc
+      limit: 10
+    explain_cost: 1302.56
+    status: ok
+    metrics:
+      uses: 15
+      avg_elapsed_ms: 55.797
+      last_rows: 0
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 9db208ec4337e5d6
+    last_rows: 10
+    last_elapsed_ms: 14.801235869526863
+  learned_3abd2da68f:
+    path: templates/learned_3abd2da68f.sql
+    description: Please list the codes of the schools with a total enrollment of over
+      500.
+    grain: ''
+    fingerprint: 3abd2da68f
+    source: query_agent
+    spec: null
+    explain_cost: 2055.48
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: af9fff08406f85fe
+    last_rows: 500
+    last_elapsed_ms: 29.696074314415455
+  learned_6b3520d5ec:
+    path: templates/learned_6b3520d5ec.sql
+    description: Under whose administration is the school with the highest number
+      of students scoring 1500 or more on the SAT? Indicate their full names.
+    grain: ''
+    fingerprint: 6b3520d5ec
+    source: query_agent
+    spec:
+      type: object
+      from: satscores
+      joins:
+      - table: schools
+        left: cds
+        right: cdscode
+      group_by: []
+      measures:
+      - agg: max
+        table: satscores
+        column: numge1500
+        alias: numge1500
+      - agg: max
+        table: schools
+        column: admfname3
+        alias: admfname3
+      - agg: max
+        table: schools
+        column: admlname3
+        alias: admlname3
+      filters: []
+      order:
+        by: numge1500
+        dir: desc
+      limit: 1
+    explain_cost: 1333.97
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 8a6f1cee2bfb211e
+    last_rows: 1
+    last_elapsed_ms: 16.422211192548275
+  learned_c4bcaaecb5:
+    path: templates/learned_c4bcaaecb5.sql
+    description: How many schools with an average score in Math greater than 400 in
+      the SAT test are exclusively virtual?
+    grain: ''
+    fingerprint: c4bcaaecb5
+    source: query_agent
+    spec:
+      from: schools
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      measure:
+        agg: count
+        column: '*'
+        table: schools
+        alias: virtual_schools_count
+      filters:
+      - table: schools
+        column: virtual
+        op: '='
+        value: '1'
+      - table: satscores
+        column: avgscrmath
+        op: '>'
+        value: 400
+      limit: 1
+    explain_cost: 1255.24
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 77e8f7e1a1b9b55e
+    last_rows: 1
+    last_elapsed_ms: 15.95753151923418
+    metrics:
+      uses: 2
+      avg_elapsed_ms: 17.361
+      last_rows: 1
+  learned_a10876c417:
+    path: templates/learned_a10876c417.sql
+    description: What is the average number of test takers from Fresno schools that
+      opened between 1/1/1980 and 12/31/1980?
+    grain: ''
+    fingerprint: a10876c417
+    source: query_agent
+    spec: null
+    explain_cost: 1346.0
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 47.648
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 4e8737987fea837d
+    last_rows: 1
+    last_elapsed_ms: 14.896570704877377
+  learned_037c600cfc:
+    path: templates/learned_037c600cfc.sql
+    description: Among the schools with an SAT excellence rate of over 0.3, what is
+      the highest eligible free rate for students aged 5-17?
+    grain: ''
+    fingerprint: 037c600cfc
+    source: query_agent
+    spec:
+      from: frpm
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      group_by: []
+      measures:
+      - agg: max
+        table: frpm
+        column: Percent (%) Eligible FRPM (Ages 5-17)
+        alias: highest_eligible_free_rate
+      filters:
+      - table: satscores
+        column: numtsttakr
+        op: '>'
+        value: 0.3
+      order:
+        by: highest_eligible_free_rate
+        dir: desc
+    explain_cost: 583.27
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 31.103
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: edbaac4986dd696c
+    last_rows: 1
+    last_elapsed_ms: 14.307542704045773
+  learned_654d5509f7:
+    path: templates/learned_654d5509f7.sql
+    description: What is the postal street address for the school with the 7th highest
+      Math average? Indicate the school's name.
+    grain: ''
+    fingerprint: 654d5509f7
+    source: query_agent
+    spec: null
+    explain_cost: 1360.14
+    status: ok
+    metrics:
+      uses: 8
+      avg_elapsed_ms: 17.056
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 7e55ecfd2884499f
+    last_rows: 1
+    last_elapsed_ms: 15.558439306914806
+  learned_ec435e8a9a:
+    path: templates/learned_ec435e8a9a.sql
+    description: Give the names of the schools with the percent eligible for free
+      meals in K-12 is more than 0.1 and test takers whose test score is greater than
+      or equal to 1500?
+    grain: school
+    fingerprint: ec435e8a9a
+    source: query_agent
+    spec:
+      from: schools
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      - table: frpm
+        left: cdscode
+        right: cdscode
+      group_by:
+      - table: schools
+        column: school
+      measures:
+      - agg: count
+        table: satscores
+        column: numge1500
+        alias: test_takers_1500
+      filters:
+      - table: frpm
+        column: Percent (%) Eligible Free (K-12)
+        op: '>'
+        value: 0.1
+      order:
+        by: test_takers_1500
+        dir: desc
+      limit: 100
+    explain_cost: 1936.93
+    status: ok
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 23.176
+      last_rows: 100
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: fc2d6ac04f50b490
+    last_rows: 100
+    last_elapsed_ms: 21.18995226919651
+  learned_c48ac3943d:
+    path: templates/learned_c48ac3943d.sql
+    description: Between San Diego and Santa Barbara, which county offers the most
+      number of schools that does not offer physical building? Indicate the amount.
+    grain: ''
+    fingerprint: c48ac3943d
+    source: query_agent
+    spec: null
+    explain_cost: 1225.34
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 18.5
+      last_rows: 0
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e3b0c44298fc1c14
+    last_rows: 0
+    last_elapsed_ms: 17.722574062645435
+  learned_a415f384c5:
+    path: templates/learned_a415f384c5.sql
+    description: What is the monthly average number of schools that opened in Alameda
+      County under the jurisdiction of the Elementary School District in 1980?
+    grain: ''
+    fingerprint: a415f384c5
+    source: query_agent
+    spec: null
+    explain_cost: 1313.74
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 68.05
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 92ceaa4862246206
+    last_rows: 1
+    last_elapsed_ms: 15.64021222293377
+  learned_433c6604ee:
+    path: templates/learned_433c6604ee.sql
+    description: What is the grade span offered in the school with the highest longitude?
+    grain: ''
+    fingerprint: 433c6604ee
+    source: query_agent
+    spec: null
+    explain_cost: 1930.66
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 26.566
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 5a959e986dcaa194
+    last_rows: 1
+    last_elapsed_ms: 25.541032664477825
+  learned_869cf4c396:
+    path: templates/learned_869cf4c396.sql
+    description: What are the valid e-mail addresses of the administrator of the school
+      located in the San Bernardino county, City of San Bernardino City Unified that
+      opened between 1/1/2009 to 12/31/2010 whose school
+    grain: ''
+    fingerprint: 869cf4c396
+    source: query_agent
+    spec: null
+    explain_cost: 1402.17
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 36.676
+      last_rows: 0
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e3b0c44298fc1c14
+    last_rows: 0
+    last_elapsed_ms: 15.182706527411938
+  learned_3df80de5be:
+    path: templates/learned_3df80de5be.sql
+    description: Name schools in Riverside which the average of average math score
+      for SAT is grater than 400, what is the funding type of these schools?
+    grain: School Name, fundingtype
+    fingerprint: 3df80de5be
+    source: query_agent
+    spec:
+      from: frpm
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      - table: schools
+        left: cdscode
+        right: cdscode
+      group_by:
+      - table: frpm
+        column: School Name
+      - table: schools
+        column: fundingtype
+      filters:
+      - table: frpm
+        column: County Name
+        op: '='
+        value: Riverside
+      - table: satscores
+        column: avgscrmath
+        op: '>'
+        value: 400
+      measures:
+      - agg: avg
+        table: satscores
+        column: avgscrmath
+        alias: avg_math_score
+      order:
+        by: avg_math_score
+        dir: desc
+    explain_cost: 1770.02
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 7f28ad58bdd44818
+    last_rows: 60
+    last_elapsed_ms: 15.447423793375492
+  verify_frpm_enrollment_source:
+    path: templates/verify_frpm_enrollment_source.sql
+    description: Check if frpm table has Enrollment (K-12) column or should use schools
+      enrollment
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 351358be39b9aa79
+    last_rows: 1
+    last_elapsed_ms: 17.05737318843603
+  satscores_numge1500_aggregate:
+    path: templates/satscores_numge1500_aggregate.sql
+    description: Query satscores table for numge1500 column statistics
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 624783784bcf0c66
+    last_rows: 1
+    last_elapsed_ms: 9.983922354876995
+  satscores_numge1500_aggregation:
+    path: templates/satscores_numge1500_aggregation.sql
+    description: Aggregates numge1500 counts by rtype in satscores table for school-level
+      analysis
+    grain: rtype
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 4a1273915a3c2266
+    last_rows: 2
+    last_elapsed_ms: 8.675279095768929
+  learned_ff1647870c:
+    path: templates/learned_ff1647870c.sql
+    description: What is the eligible free rate of the 10th and 11th schools with
+      the highest enrolment for students in grades 1 through 12?
+    grain: ''
+    fingerprint: ff1647870c
+    source: query_agent
+    spec: null
+    explain_cost: 503.01
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 81eb514123374d0c
+    last_rows: 2
+    last_elapsed_ms: 11.902673169970512
+  learned_006b272b53:
+    path: templates/learned_006b272b53.sql
+    description: List the names of schools with more than 30 difference in enrollements
+      between K-12 and ages 5-17? Please also give the full street adress of the schools.
+    grain: ''
+    fingerprint: 006b272b53
+    source: query_agent
+    spec: null
+    explain_cost: 1804.19
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: d6c5abe4c15be90a
+    last_rows: 500
+    last_elapsed_ms: 20.397662185132504
+  learned_4562c2c24a:
+    path: templates/learned_4562c2c24a.sql
+    description: Please list the codes of the schools with a total enrollment of over
+      500.
+    grain: ''
+    fingerprint: 4562c2c24a
+    source: query_agent
+    spec: null
+    explain_cost: 2055.48
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 86029667f7ca640a
+    last_rows: 500
+    last_elapsed_ms: 26.380007155239582
+  learned_ef1087c5ad:
+    path: templates/learned_ef1087c5ad.sql
+    description: Give the names of the schools with the percent eligible for free
+      meals in K-12 is more than 0.1 and test takers whose test score is greater than
+      or equal to 1500?
+    grain: ''
+    fingerprint: ef1087c5ad
+    source: query_agent
+    spec: null
+    explain_cost: 635.42
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 59e9ffccccea237a
+    last_rows: 500
+    last_elapsed_ms: 15.504156239330769
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 17.87
+      last_rows: 500
+  learned_35b05cc7a6:
+    path: templates/learned_35b05cc7a6.sql
+    description: What is the complete address of the school with the lowest excellence
+      rate? Indicate the Street, City, Zip and State.
+    grain: ''
+    fingerprint: 35b05cc7a6
+    source: query_agent
+    spec: null
+    explain_cost: 1362.91
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 99177d8107c77621
+    last_rows: 1
+    last_elapsed_ms: 14.32091649621725
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 15.445
+      last_rows: 1
+  learned_8afe338b7e:
+    path: templates/learned_8afe338b7e.sql
+    description: What is the average number of test takers from Fresno schools that
+      opened between 1/1/1980 and 12/31/1980?
+    grain: ''
+    fingerprint: 8afe338b7e
+    source: query_agent
+    spec: null
+    explain_cost: 1343.07
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 33971acd2f6603cb
+    last_rows: 1
+    last_elapsed_ms: 15.408468432724476
+  learned_878621a067:
+    path: templates/learned_878621a067.sql
+    description: Rank schools by their average score in Writing where the score is
+      greater than 499, showing their charter numbers.
+    grain: cds
+    fingerprint: 878621a067
+    source: query_agent
+    spec:
+      from: satscores
+      joins: []
+      group_by:
+      - table: satscores
+        column: cds
+      measures:
+      - agg: avg
+        table: satscores
+        column: avgscrwrite
+        alias: avg_write_score
+      filters:
+      - table: satscores
+        column: avgscrwrite
+        op: '>'
+        value: 499
+      order:
+        by: avg_write_score
+        dir: desc
+    explain_cost: 100.99
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: f8d8a59fb24573ce
+    last_rows: 500
+    last_elapsed_ms: 12.306666001677513
+  learned_255fdfefe3:
+    path: templates/learned_255fdfefe3.sql
+    description: Under whose administration is the school with the highest number
+      of students scoring 1500 or more on the SAT? Indicate their full names.
+    grain: ''
+    fingerprint: 255fdfefe3
+    source: query_agent
+    spec: null
+    explain_cost: 1366.71
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 009dae062e157a0f
+    last_rows: 1
+    last_elapsed_ms: 16.728263348340988
+  learned_3ea21ec067:
+    path: templates/learned_3ea21ec067.sql
+    description: What is the telephone number for the school with the lowest average
+      score in reading in Fresno Unified?
+    grain: ''
+    fingerprint: 3ea21ec067
+    source: query_agent
+    spec: null
+    explain_cost: 1271.99
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 67cc230db366e66c
+    last_rows: 1
+    last_elapsed_ms: 14.931478537619114
+  learned_a5521b9169:
+    path: templates/learned_a5521b9169.sql
+    description: Name schools in Riverside which the average of average math score
+      for SAT is grater than 400, what is the funding type of these schools?
+    grain: ''
+    fingerprint: a5521b9169
+    source: query_agent
+    spec: null
+    explain_cost: 1253.59
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 790b2668d23f3f9d
+    last_rows: 8
+    last_elapsed_ms: 15.655101276934147
+  learned_693e36ca8b:
+    path: templates/learned_693e36ca8b.sql
+    description: What is the average score in writing for the schools that were opened
+      after 1991 or closed before 2000? List the school names along with the score.
+      Also, list the communication number of the schools i
+    grain: ''
+    fingerprint: 693e36ca8b
+    source: query_agent
+    spec: null
+    explain_cost: 1377.83
+    status: ok
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 54.519
+      last_rows: 500
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 497ec48376c53c1e
+    last_rows: 500
+    last_elapsed_ms: 20.85404470562935
+  count_schools_with_non_null_numge1500_in_satscores:
+    path: templates/count_schools_with_non_null_numge1500_in_satscores.sql
+    description: Counts the number of schools with non-null numge1500 in the satscores
+      table.
+    grain: satscores
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 9abc940b57669e5e
+    last_rows: 1
+    last_elapsed_ms: 8.58239084482193
+  frpm_enrollment_rate_by_school_type:
+    path: templates/frpm_enrollment_rate_by_school_type.sql
+    description: Calculates FRPM enrollment rates by school funding type using verified
+      school-enrollment join
+    grain: school
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 51c46dd3198a23bd
+    last_rows: 500
+    last_elapsed_ms: 35.2583434432745
+  average_enrollment_by_funding_type:
+    path: templates/average_enrollment_by_funding_type.sql
+    description: Reusable metric template for calculating average enrollment by school
+      funding type using satscores enrollment data joined with schools table
+    grain: school
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e2e4d282968e570b
+    last_rows: 4
+    last_elapsed_ms: 15.210693702101707
+  discover_schools_enrollment_columns:
+    path: templates/discover_schools_enrollment_columns.sql
+    description: Template for discovering enrollment-related columns in schools tables
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 2d59ff792e8fa2b4
+    last_rows: 25
+    last_elapsed_ms: 16.090993769466877
+  learned_c0d03dd25f:
+    path: templates/learned_c0d03dd25f.sql
+    description: List the names of virtual schools that are among the top 5 in their
+      respective counties based on average reading scores.
+    grain: ''
+    fingerprint: c0d03dd25f
+    source: query_agent
+    spec: null
+    explain_cost: 68.41
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e3b0c44298fc1c14
+    last_rows: 0
+    last_elapsed_ms: 10.769500397145748
+  verify_column_in_table:
+    path: templates/verify_column_in_table.sql
+    description: Template to verify a specific column exists in the frpm table and
+      retrieve sample values
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 291747f4b498840c
+    last_rows: 1
+    last_elapsed_ms: 15.073157846927643
+  find_percent_columns_template:
+    path: templates/find_percent_columns_template.sql
+    description: Reusable SQL pattern for discovering percentage-related columns in
+      a table with specific naming patterns
+    grain: column
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: c1f25aaee2ca6391
+    last_rows: 4
+    last_elapsed_ms: 17.769431695342064
+  find_enrollment_columns_template:
+    path: templates/find_enrollment_columns_template.sql
+    description: Reusable SQL pattern for discovering enrollment-related columns in
+      satscores table
+    grain: column
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: b2bae1a3aa785e74
+    last_rows: 5
+    last_elapsed_ms: 16.224408522248268
+  schools_enrollment_columns_query:
+    path: templates/schools_enrollment_columns_query.sql
+    description: Reusable template for querying enrollment-related columns in the
+      schools table that can be used as alternatives to schools.total_enrollment
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 96edfae221e71ad6
+    last_rows: 43
+    last_elapsed_ms: 17.373579554259777
+77

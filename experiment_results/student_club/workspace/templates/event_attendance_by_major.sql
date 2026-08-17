@@ -1,1 +1,0 @@
-SELECT m2.major_name, COUNT(a.link_to_member) as total_attendance FROM member m INNER JOIN major m2 ON m.link_to_major = m2.major_id INNER JOIN attendance a ON m.member_id = a.link_to_member GROUP BY m2.major_name, m2.major_id ORDER BY total_attendance DESC;

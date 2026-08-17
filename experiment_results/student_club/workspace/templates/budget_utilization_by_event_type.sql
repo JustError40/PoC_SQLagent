@@ -1,1 +1,0 @@
-SELECT e.type, SUM(b.spent) as spent, SUM(b.amount) as budget, ROUND(SUM(b.spent)::numeric / SUM(b.amount)::numeric, 2) as utilization_percent FROM budget b JOIN event e ON b.link_to_event = e.event_id GROUP BY e.type ORDER BY utilization_percent DESC;

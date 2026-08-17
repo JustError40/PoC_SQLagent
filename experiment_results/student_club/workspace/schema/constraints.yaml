@@ -1,54 +1,6 @@
 constraints:
-- table_name: attendance
-  constraint_name: 2200_16616_1_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: attendance
-  constraint_name: 2200_16616_2_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: budget
-  constraint_name: 2200_16621_1_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: event
-  constraint_name: 2200_16626_1_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: expense
-  constraint_name: 2200_16631_1_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: income
-  constraint_name: 2200_16636_1_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: major
-  constraint_name: 2200_16641_1_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: member
-  constraint_name: 2200_16646_1_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: zip_code
-  constraint_name: 2200_16651_1_not_null
+- table_name: satscores
+  constraint_name: 2200_16560_1_not_null
   constraint_type: CHECK
   column_name: null
   foreign_table_name: null
