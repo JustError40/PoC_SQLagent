@@ -7,4 +7,4 @@
 
 | Run | Correct | Incorrect | Empty | Clarified | Pipeline failed | Time, min |
 |---|---|---|---|---|---|---|
-| control | 3 | 15 | 6 | 0 | 6 | 54.3 |
+| control | 3 | 18 | 6 | 0 | 3 | 24.5 |

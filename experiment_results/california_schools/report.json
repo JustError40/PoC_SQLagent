@@ -7,14 +7,14 @@
   "rows": [
     {
       "run": "control",
-      "elapsed_min": 54.3,
+      "elapsed_min": 24.5,
       "stages": {},
       "counts": {
         "correct": 3,
-        "incorrect": 15,
+        "incorrect": 18,
         "empty": 6,
         "clarified": 0,
-        "pipeline_failed": 6
+        "pipeline_failed": 3
       },
       "details": [
         {
@@ -22,14 +22,14 @@
           "question": "How many schools with an average score in Math greater than 400 in the SAT test are exclusively virtual?",
           "verdict": "incorrect",
           "error_type": null,
-          "sql": "SELECT COUNT(*) AS \"virtual_schools_count\" FROM \"schools\" JOIN \"satscores\" ON \"schools\".\"cdscode\" = \"satscores\".\"cds\" WHERE \"schools\".\"virtual\" = '1' AND \"satscores\".\"avgscrmath\" > 400 LIMIT 1"
+          "sql": "SELECT COUNT(\"satscores\".\"cds\") AS \"school_count\" FROM \"satscores\" WHERE \"satscores\".\"avgscrmath\" > 400 AND \"satscores\".\"rtype\" = 'virtual' ORDER BY \"school_count\" ASC"
         },
         {
           "id": "california_schools_11",
           "question": "Please list the codes of the schools with a total enrollment of over 500.",
           "verdict": "incorrect",
           "error_type": null,
-          "sql": "SELECT \"schools\".\"cdscode\" AS \"cdscode\", SUM(\"frpm\".\"Enrollment (K-12)\") AS \"total_enrollment\" FROM \"schools\" JOIN \"frpm\" ON \"schools\".\"cdscode\" = \"frpm\".\"cdscode\" GROUP BY \"schools\".\"cdscode\" HAVING SUM(\"frpm\".\"Enrollment (K-12)\") > 500"
+          "sql": "SELECT \"School Code\" FROM frpm WHERE \"Enrollment (K-12)\" > 500"
         },
         {
           "id": "california_schools_12",
@@ -48,16 +48,16 @@
         {
           "id": "california_schools_23",
           "question": "List the names of schools with more than 30 difference in enrollements between K-12 and ages 5-17? Please also give the full street adress of the schools.",
-          "verdict": "incorrect",
+          "verdict": "empty",
           "error_type": null,
-          "sql": "SELECT f.\"School Name\", s.street || ', ' || s.city || ', ' || s.state || ' ' || s.zip AS full_address FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE ABS(f.\"Enrollment (K-12)\" - f.\"Enrollment (Ages 5-17)\") > 30 ORDER BY ABS(f.\"Enrollment (K-12)\" - f.\"Enrollment (Ages 5-17)\") DESC"
+          "sql": "SELECT f.\"School Name\", s.street FROM frpm f JOIN schools s ON f.cdscode = s.school WHERE ABS(f.\"Enrollment (K-12)\" - f.\"Enrollment (Ages 5-17)\") > 30"
         },
         {
           "id": "california_schools_24",
           "question": "Give the names of the schools with the percent eligible for free meals in K-12 is more than 0.1 and test takers whose test score is greater than or equal to 1500?",
-          "verdict": "empty",
+          "verdict": "incorrect",
           "error_type": null,
-          "sql": ""
+          "sql": "SELECT \"schools\".\"school\" AS \"school\", COUNT(\"satscores\".\"numge1500\") AS \"test_takers_1500\" FROM \"schools\" JOIN \"satscores\" ON \"schools\".\"cdscode\" = \"satscores\".\"cds\" JOIN \"frpm\" ON \"schools\".\"cdscode\" = \"frpm\".\"cdscode\" WHERE \"frpm\".\"Percent (%) Eligible Free (K-12)\" > 0.1 GROUP BY \"schools\".\"school\" ORDER BY \"test_takers_1500\" DESC LIMIT 100"
         },
         {
           "id": "california_schools_25",
@@ -71,21 +71,21 @@
           "question": "State the names and full communication address of high schools in Monterey which has more than 800 free or reduced price meals for ages 15-17?",
           "verdict": "pipeline_failed",
           "error_type": "react_exhausted",
-          "sql": "SELECT f.\"School Name\", s.\"mailstreet\", s.\"mailstrabr\", s.\"mailcity\", s.\"mailzip\", s.\"mailstate\" FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE f.\"County Name\" = 'Monterey' AND f.\"School Type\" = 'High Schools (Public)' AND s.\"soctype\" = 'High Schools (Public)' AND f.\"FRPM Count (Ages 5-17)\" > 800"
+          "sql": "SELECT f.\"School Name\", s.mailstreet || ' ' || s.mailstrabr || ', ' || s.mailcity || ', ' || s.mailzip || ' ' || s.mailstate AS \"Full Communication Address\" FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE f.\"School Type\" = 'High Schools (Public)' AND s.county = 'Monterey' AND f.\"FRPM Count (Ages 5-17)\" > 800 ORDER BY f.\"FRPM Count (Ages 5-17)\" DESC"
         },
         {
           "id": "california_schools_27",
           "question": "What is the average score in writing for the schools that were opened after 1991 or closed before 2000? List the school names along with the score. Also, list the communication number of the schools if there is any.",
-          "verdict": "pipeline_failed",
-          "error_type": "llm_invalid_json",
-          "sql": "SELECT \"schools\".\"school\" AS \"school\", AVG(\"schools\".\"soc\") AS \"avg_soc\", COUNT(\"schools\".\"soc\") AS \"soc_count\" FROM \"schools\" WHERE \"schools\".\"opendate\" >= '1991-01-01' AND \"schools\".\"closeddate\" <= '2000-01-01' GROUP BY \"schools\".\"school\" ORDER BY \"avg_soc\" DESC"
+          "verdict": "incorrect",
+          "error_type": null,
+          "sql": "SELECT \"schools\".\"school\" AS \"school_name\", \"schools\".\"phone\" AS \"communication_number\", AVG(\"satscores\".\"avgscrwrite\") AS \"avg_writing_score\" FROM \"schools\" JOIN \"satscores\" ON \"schools\".\"cdscode\" = \"satscores\".\"cds\" WHERE \"schools\".\"opendate\" > '1991-01-01' OR \"schools\".\"closeddate\" < '2000-01-01' GROUP BY \"schools\".\"school\", \"schools\".\"phone\""
         },
         {
           "id": "california_schools_28",
           "question": "Consider the average difference between K-12 enrollment and 15-17 enrollment of schools that are locally funded, list the names and DOC type of schools which has a difference above this average.",
           "verdict": "pipeline_failed",
           "error_type": "react_exhausted",
-          "sql": "WITH avg_diff AS (SELECT AVG(\"Enrollment (K-12)\" - \"Enrollment (Ages 5-17)\") AS avg_difference FROM frpm WHERE \"Charter Funding Type\" = 'Locally funded'), school_diffs AS (SELECT frpm.\"School Name\", s.\"doctype\", frpm.\"Enrollment (K-12)\" - frpm.\"Enrollment (Ages 5-17) AS diff FROM frpm s ON frpm.\"School Code\" = s.\"nceschool\" WHERE \"Charter Funding Type\" = 'Locally funded') SELECT \"School Name\", \"doctype\" FROM school_diffs WHERE diff > (SELECT avg_difference FROM avg_diff) ORDER BY diff DESC"
+          "sql": "WITH avg_diff_calc AS (SELECT AVG(ABS(f.\"Enrollment (K-12)\" - f.\"Enrollment (Ages 5-17)\")) AS avg_diff FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE s.fundingtype = 'Locally funded') SELECT s.school, s.doctype FROM schools s WHERE s.cdscode IN (SELECT cdscode FROM frpm f WHERE f.cdscode IN (SELECT cdscode FROM frpm f2 WHERE ABS(f2.\"Enrollment (K-12)\" - f2.\"Enrollment (Ages 5-17)\" > (SELECT AVG(ABS(f3.\"Enrollment (K-12)\" - f3.\"Enrollment (Ages 5-17)\")) FROM frpm f3 JOIN schools s3 ON f3.cdscode = s3.cdscode WHERE s3.fundingtype = 'Locally funded')))"
         },
         {
           "id": "california_schools_31",
@@ -99,21 +99,21 @@
           "question": "What is the eligible free or reduced price meal rate for the top 5 schools in grades 1-12 with the highest free or reduced price meal count of the schools with the ownership code 66?",
           "verdict": "empty",
           "error_type": null,
-          "sql": ""
+          "sql": "SELECT f.\"School Name\", f.\"Percent (%) Eligible FRPM (K-12)\" FROM frpm f JOIN schools s ON f.\"School Code\" = s.\"school\" WHERE s.soc = '66' AND f.\"Low Grade\" >= '1'::text AND f.\"High Grade\" <= '12'::text ORDER BY f.\"FRPM Count (K-12)\" DESC LIMIT 5"
         },
         {
           "id": "california_schools_37",
           "question": "What is the complete address of the school with the lowest excellence rate? Indicate the Street, City, Zip and State.",
           "verdict": "pipeline_failed",
-          "error_type": "llm_schema_violation",
-          "sql": "SELECT s.street, s.city, s.zip, s.state FROM schools s JOIN satscores sc ON s.cdscode = sc.cds ORDER BY (sc.avgscrread + sc.avgscrmath + sc.avgscrwrite) / 3.0 ASC LIMIT 1"
+          "error_type": "critic_rejected",
+          "sql": "SELECT s.\"street\", s.\"city\", s.\"zip\", s.\"state\" FROM frpm f JOIN schools s ON f.cdscode = s.cdscode ORDER BY f.\"Percent (%) Eligible FRPM (K-12)\" ASC LIMIT 1"
         },
         {
           "id": "california_schools_36",
           "question": "Under whose administration is the school with the highest number of students scoring 1500 or more on the SAT? Indicate their full names.",
           "verdict": "incorrect",
           "error_type": null,
-          "sql": "SELECT MAX(\"satscores\".\"numge1500\") AS \"numge1500\", MAX(\"schools\".\"admfname3\") AS \"admfname3\", MAX(\"schools\".\"admlname3\") AS \"admlname3\" FROM \"satscores\" JOIN \"schools\" ON \"satscores\".\"cds\" = \"schools\".\"cdscode\" ORDER BY \"numge1500\" DESC LIMIT 1"
+          "sql": "SELECT s.admfname1, s.admlname1, s.admfname2, s.admlname2 FROM satscores sat JOIN schools s ON sat.cds = s.cdscode WHERE s.admfname1 IS NOT NULL ORDER BY sat.numge1500 DESC LIMIT 1"
         },
         {
           "id": "california_schools_39",
@@ -134,7 +134,7 @@
           "question": "List the names of virtual schools that are among the top 5 in their respective counties based on average reading scores.",
           "verdict": "empty",
           "error_type": null,
-          "sql": "WITH school_stats AS (\n    SELECT\n        s.school,\n        s.county,\n        AVG(sc.avgscrread) as avg_read\n    FROM schools s\n    JOIN satscores sc ON s.cdscode = sc.cds\n    WHERE s.virtual = '1'\n    GROUP BY s.school, s.county\n),\nranked_schools AS (\n    SELECT\n        school,\n        county,\n        avg_read,\n        ROW_NUMBER() OVER (PARTITION BY county ORDER BY avg_read DESC) as rank\n    FROM school_stats\n)\nSELECT school\nFROM ranked_schools\nWHERE rank <= 5\nORDER BY school"
+          "sql": "WITH top_schools AS (\n    SELECT\n        s.sname,\n        s.cname,\n        s.avgscrread,\n        ROW_NUMBER() OVER (PARTITION BY s.cname ORDER BY s.avgscrread DESC) as rn\n    FROM satscores s\n    JOIN schools sc ON s.cds = sc.cdscode\n    WHERE sc.virtual = 'TRUE'\n)\nSELECT sname FROM top_schools WHERE rn <= 5"
         },
         {
           "id": "california_schools_45",
@@ -146,16 +146,16 @@
         {
           "id": "california_schools_46",
           "question": "Which state special schools have the highest number of enrollees from grades 1 through 12?",
-          "verdict": "empty",
+          "verdict": "incorrect",
           "error_type": null,
-          "sql": "SELECT \"School Name\", \"District Type\", \"Enrollment (K-12)\" FROM frpm f WHERE \"District Type\" = 'State Special Schools' AND \"Low Grade\" = '1' AND \"High Grade\" = '12' ORDER BY \"Enrollment (K-12)\" DESC LIMIT 10"
+          "sql": "SELECT f.\"School Name\", f.\"Enrollment (K-12)\" FROM frpm f WHERE f.\"District Type\" = 'State Special Schools' AND f.\"Low Grade\" >= '1' AND f.\"High Grade\" <= '12' ORDER BY f.\"Enrollment (K-12)\" DESC LIMIT 10"
         },
         {
           "id": "california_schools_47",
           "question": "What is the monthly average number of schools that opened in Alameda County under the jurisdiction of the Elementary School District in 1980?",
-          "verdict": "pipeline_failed",
-          "error_type": "react_exhausted",
-          "sql": "SELECT \"schools\".\"opendate\" AS \"opendate\", AVG(\"schools\".\"opendate\") AS \"avg_opendate\" FROM \"schools\" WHERE \"schools\".\"county\" = 'Alameda County' AND \"schools\".\"district\" = 'Elementary School District' AND \"schools\".\"opendate\" >= '1980-01-01' AND \"schools\".\"opendate\" <= '1980-12-31' GROUP BY \"schools\".\"opendate\" ORDER BY \"opendate\" ASC LIMIT 100"
+          "verdict": "incorrect",
+          "error_type": null,
+          "sql": "SELECT CAST(COUNT(*) AS NUMERIC) / 12.0 AS monthly_average FROM \"schools\" WHERE \"schools\".\"county\" = 'Alameda County' AND \"schools\".\"district\" = 'Elementary School District' AND \"schools\".\"opendate\" >= '1980-01-01' AND \"schools\".\"opendate\" <= '1980-12-31'"
         },
         {
           "id": "california_schools_48",
@@ -204,7 +204,7 @@
           "question": "What is the grade span offered in the school with the highest longitude?",
           "verdict": "incorrect",
           "error_type": null,
-          "sql": "SELECT \"schools\".\"gsoffered\" FROM \"schools\" ORDER BY \"schools\".\"longitude\" DESC LIMIT 1"
+          "sql": "SELECT s.cdscode, f.\"High Grade\", f.\"Low Grade\" FROM schools s JOIN frpm f ON s.cdscode = f.cdscode ORDER BY s.longitude DESC LIMIT 1"
         },
         {
           "id": "california_schools_83",
@@ -218,14 +218,14 @@
           "question": "What is the Percent (%) Eligible Free (K-12) in the school administered by an administrator whose first name is Alusine. List the district code of the school.",
           "verdict": "incorrect",
           "error_type": null,
-          "sql": "SELECT \"District Code\", \"Percent (%) Eligible Free (K-12)\" FROM frpm JOIN schools ON frpm.cdscode = schools.cdscode WHERE schools.admfname1 = 'Alusine'"
+          "sql": "SELECT f.\"Percent (%) Eligible Free (K-12)\", f.\"District Code\" FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE s.admfname1 = 'Alusine' OR s.admfname2 = 'Alusine' OR s.admfname3 = 'Alusine'"
         },
         {
           "id": "california_schools_87",
           "question": "What are the valid e-mail addresses of the administrator of the school located in the San Bernardino county, City of San Bernardino City Unified that opened between 1/1/2009 to 12/31/2010 whose school types are public Intermediate/Middle Schools and Unified Schools?",
-          "verdict": "pipeline_failed",
-          "error_type": "react_exhausted",
-          "sql": "SELECT COUNT(DISTINCT \"schools\".\"admemail1\") AS \"admemail1\", COUNT(DISTINCT \"schools\".\"admemail2\") AS \"admemail2\", COUNT(DISTINCT \"schools\".\"admemail3\") AS \"admemail3\" FROM \"schools\" WHERE \"schools\".\"county\" = 'San Bernardino' AND \"schools\".\"district\" = 'City of San Bernardino City Unified' AND \"schools\".\"opendate\" >= '2009-01-01' AND \"schools\".\"opendate\" <= '2010-12-31' AND \"schools\".\"soctype\" = 'Intermediate/Middle Schools (Public)' AND \"schools\".\"doctype\" = 'Unified School District' ORDER BY \"admemail1\" ASC LIMIT 100"
+          "verdict": "empty",
+          "error_type": null,
+          "sql": "SELECT DISTINCT schools.admemail1, schools.admemail2, schools.admemail3\nFROM schools\nWHERE schools.city = 'San Bernardino'\n  AND schools.county = 'San Bernardino'\n  AND schools.district = 'City of San Bernardino City Unified'\n  AND schools.opendate BETWEEN '2009-01-01' AND '2010-12-31'\n  AND schools.soc IN ('INTMIDJR', 'U')"
         }
       ],
       "judge_on": false
