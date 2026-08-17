@@ -1,0 +1,1 @@
+SELECT "schools"."school" AS "school", COUNT("satscores"."numge1500") AS "test_takers_1500" FROM "schools" JOIN "satscores" ON "schools"."cdscode" = "satscores"."cds" JOIN "frpm" ON "schools"."cdscode" = "frpm"."cdscode" WHERE "frpm"."Percent (%) Eligible Free (K-12)" > 0.1 GROUP BY "schools"."school" ORDER BY "test_takers_1500" DESC LIMIT 100;

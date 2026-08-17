@@ -1,0 +1,1 @@
+SELECT (SELECT COUNT(*) FROM frpm WHERE "County Name" = 'Orange' AND "District Type" = 'Unified School District' AND "School Type" = 'Merged School')::float / NULLIF((SELECT COUNT(*) FROM frpm WHERE "County Name" = 'Orange' AND "District Type" = 'Elementary School District' AND "School Type" = 'Merged School')::float, 0) AS ratio;

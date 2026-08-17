@@ -1,0 +1,1 @@
+SELECT s.admfname1, s.admlname1, s.admfname2, s.admlname2, s.admfname3, s.admlname3, COUNT(sc.cds) AS sat_students_count FROM schools s JOIN satscores sc ON s.cdscode = sc.cds WHERE sc.numge1500 > 0 GROUP BY s.cdscode, s.admfname1, s.admlname1, s.admfname2, s.admlname2, s.admfname3, s.admlname3 ORDER BY sat_students_count DESC LIMIT 1;
