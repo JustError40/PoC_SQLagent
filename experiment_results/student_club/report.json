@@ -1370,6 +1370,349 @@
         }
       ],
       "judge_on": false
+    },
+    {
+      "run": "iteration 4",
+      "elapsed_min": 1.4,
+      "stages": {
+        "explore": "failed",
+        "optimize": "failed",
+        "evolve": "failed",
+        "promote": "start_failed: HTTP Error 409: Conflict",
+        "verify": "failed"
+      },
+      "counts": {
+        "correct": 0,
+        "incorrect": 0,
+        "empty": 0,
+        "clarified": 0,
+        "pipeline_failed": 46
+      },
+      "details": [
+        {
+          "id": "student_club_1312",
+          "question": "What's Angela Sanders's major?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1317",
+          "question": "Among the students from the Student_Club who attended the event \"Women's Soccer\", how many of them want a T-shirt that's in medium size?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1331",
+          "question": "What is the amount of the funds that the Vice President received?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1334",
+          "question": "List the full name of the Student_Club members that grew up in Illinois state.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1338",
+          "question": "Was each expense in October Meeting on October 8, 2019 approved?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1339",
+          "question": "Calculate the total average cost that Elijah Allen spent in the events on September and October.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1340",
+          "question": "Calculate the difference of the total amount spent in all events by the Student_Club in year 2019 and 2020.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1344",
+          "question": "What was the notes of the fundraising on 2019/9/14?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1346",
+          "question": "Tell the phone number of \"Carlo Jacobs\".",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1350",
+          "question": "What is the status of the event which bought \"Post Cards, Posters\" on 2019/8/20?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1351",
+          "question": "What was Brent Thomason's major?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1352",
+          "question": "For all the club members from \"Business\" major, how many of them wear medium size t-shirt?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1356",
+          "question": "Which department was the President of the club in?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1357",
+          "question": "State the date Connor Hilton paid his/her dues.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1359",
+          "question": "How many times was the budget in Advertisement for \"Yearly Kickoff\" meeting more than \"October Meeting\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1361",
+          "question": "What is the total cost of the pizzas for all the events?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1362",
+          "question": "How many cities are there in Orange County, Virginia?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1368",
+          "question": "What does the person with the phone number \"809-555-3360\" major in?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1371",
+          "question": "How many members attended the \"Women's Soccer\" event?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1375",
+          "question": "List all the members of the \"School of Applied Sciences, Technology and Education\" department.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1376",
+          "question": "Among all the closed events, which event has the highest spend-to-budget ratio?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1378",
+          "question": "What is the highest amount of budget spend for an event?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1380",
+          "question": "What is the total amount of money spent for food?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1381",
+          "question": "List the name of students that have attended more than 7 events.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1387",
+          "question": "Which student has been entrusted to manage the budget for the Yearly Kickoff?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1389",
+          "question": "Which event has the lowest cost?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1390",
+          "question": "Based on the total cost for all event, what is the percentage of cost for Yearly Kickoff event?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1392",
+          "question": "Indicate the top source of funds received in September 2019 based on their amount.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1394",
+          "question": "How many members of the Student_Club have major in 'Physics Teaching'?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1398",
+          "question": "Name the event with the highest amount spent on advertisement.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1399",
+          "question": "Did Maya Mclean attend the 'Women's Soccer' event?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1401",
+          "question": "Indicate the cost of posters for 'September Speaker' event.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1403",
+          "question": "Indicate the name of the closed event whose cost has exceeded the budget the most.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1404",
+          "question": "Identify the type of expenses and their total value approved for 'October Meeting' event.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1405",
+          "question": "Calculate the amount budgeted for 'April Speaker' event. List all the budgeted categories for said event in an ascending order based on their amount budgeted.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1409",
+          "question": "Mention the total expense used on 8/20/2019.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1410",
+          "question": "List out the full name and total cost that member id \"rec4BLdZHS2Blfp4v\" incurred?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1411",
+          "question": "State what kind of expenses that Sacha Harrison incurred?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1422",
+          "question": "State the category of events were held at MU 215.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1426",
+          "question": "List the last name of members with a major in environmental engineering and include its department and college name.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1427",
+          "question": "What are the budget category of the events located at MU 215 and a guest speaker type with a 0 budget spent?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1432",
+          "question": "Among the members with t-shirt size of medium, what is the percentage of the amount 50 received by the Student_Club?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1435",
+          "question": "List the names of closed event as \"game\" that was closed from 3/15/2019 to 3/20/2020.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1457",
+          "question": "Give the full name and contact number of members who had to spend more than average on each expense.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1460",
+          "question": "Write the full name of the member who spent money for water, veggie tray and supplies and include the cost of it.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "student_club_1464",
+          "question": "Write the full names of students who received funds on the date of 9/9/2019 and include the amount received.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        }
+      ],
+      "judge_on": false
     }
   ]
 }
