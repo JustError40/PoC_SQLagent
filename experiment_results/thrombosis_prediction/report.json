@@ -2966,6 +2966,377 @@
         }
       ],
       "judge_on": false
+    },
+    {
+      "run": "iteration 8",
+      "elapsed_min": 1.4,
+      "stages": {
+        "explore": "failed",
+        "optimize": "failed",
+        "evolve": "failed",
+        "promote": "start_failed: HTTP Error 409: Conflict",
+        "verify": "failed"
+      },
+      "counts": {
+        "correct": 0,
+        "incorrect": 0,
+        "empty": 0,
+        "clarified": 0,
+        "pipeline_failed": 50
+      },
+      "details": [
+        {
+          "id": "thrombosis_prediction_1149",
+          "question": "Are there more in-patient or outpatient who were male? What is the deviation in percentage?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1150",
+          "question": "What is the percentage of female patient were born after 1930?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1152",
+          "question": "What is the ratio of outpatient to inpatient followed up treatment among all the 'SLE' diagnosed patient?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1153",
+          "question": "What is the disease patient '30609' diagnosed with. List all the date of laboratory tests done for this patient.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1155",
+          "question": "List the patient ID, sex and birthday of patient with LDH beyond normal range.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1156",
+          "question": "State the ID and age of patient with positive degree of coagulation.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1157",
+          "question": "For patients with severe degree of thrombosis, list their ID, sex and disease the patient is diagnosed with.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1162",
+          "question": "How many female patients who came at the hospital in 1997 was immediately followed at the outpatient clinic?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1164",
+          "question": "How many of the patients with the most serious thrombosis cases examined in 1997 are women?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1166",
+          "question": "What are the symptoms observed by the youngest patient to ever did a medical examination? Identify their diagnosis.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1168",
+          "question": "The oldest SJS patient's medical laboratory work was completed on what date, and what age was the patient when they initially arrived at the hospital?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1169",
+          "question": "What is the ratio of male to female patients among all those with abnormal uric acid counts?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1171",
+          "question": "How many underage patients were examined during the course of the three-year period from 1990 to 1993?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1175",
+          "question": "How old was the patient who had the highest hemoglobin count at the time of the examination, and what is the doctor's diagnosis?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1179",
+          "question": "For the patient who was diagnosed with SLE on 1994/2/19, what was his/her anti-Cardiolipin antibody concentration status on 1993/11/12?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1185",
+          "question": "For the patient who was born on 1959/2/18, what is the decrease rate for his/her total cholesterol from November to December in 1981?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1187",
+          "question": "How many patients who were examined between 1987/7/6 and 1996/1/31 had a GPT level greater than 30 and an ALB level less than 4? List them by their ID.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1189",
+          "question": "What number of patients with a degree of thrombosis level 2 and ANA pattern of only S, have a level of anti-Cardiolip in antibody (IgM) 20% higher than average?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1192",
+          "question": "List all patients who were followed up at the outpatient clinic who underwent a laboratory test in October 1991 and had a total blood bilirubin level within the normal range.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1195",
+          "question": "What is the average blood albumin level for female patients with a PLT greater than 400 who have been diagnosed with SLE?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1198",
+          "question": "How many female patients were given an APS diagnosis?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1201",
+          "question": "What percentage of patients who were born in 1980 and were diagnosed with RA are women?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1205",
+          "question": "Was the patient with the number 57266's uric acid within a normal range?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1208",
+          "question": "Provide IDs for male patients with ALT glutamic pylvic transaminase (GPT) that have history of ALT glutamic pylvic transaminase (GPT) exceed the normal range.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1209",
+          "question": "Please provide the diagnosis of patients with ALT glutamic pylvic transaminase beyond the normal range by ascending order of their date of birth.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1220",
+          "question": "Provide all ID, sex and birthday of patients whose urea nitrogen (UN) just within the borderline of passing?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1225",
+          "question": "List and group all patients by sex for total bilirubin (T-BIL) level not within the normal range.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1227",
+          "question": "What is the average age of the male patient with high cholesterol?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1229",
+          "question": "For all patients with triglyceride (TG) level beyond the normal range, how many are age more than 50 years?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1231",
+          "question": "For patient born between 1936-1956, how many male patients have creatinine phosphokinase beyond the normal range?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1232",
+          "question": "Provide ID, sex and age of patient who has blood glucose (GLU) not within normal range but with total cholesterol(T-CHO) within normal range.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1235",
+          "question": "What are the patient's diagnosis for those who has lower red blood blood cell? State their ID and age.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1238",
+          "question": "Among the patients who were diagnosed with SLE, who is the oldest with normal hemoglobin level. Provide the ID and sex.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1239",
+          "question": "Name the ID and age of patient with two or more laboratory examinations which show their hematoclit level exceeded the normal range.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1241",
+          "question": "For patients with abnormal platelet level, state the number of patients with lower than normal range. How is it compare to the number of patients with higher than normal range?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1242",
+          "question": "For laboratory examinations take in 1984, list all patients below 50 years old with normal platelet level.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1243",
+          "question": "For all patients who are older than 55 years old, what is the percentage of female who has abnormal prothrombin time (PT)?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1247",
+          "question": "Among the male patients who have a normal level of white blood cells, how many of them have an abnormal fibrinogen level?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1251",
+          "question": "How many patients with an Ig G higher than normal?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1252",
+          "question": "Among the patients with a normal Ig G level, how many of them have symptoms?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1254",
+          "question": "How many patients with a normal Ig A level came to the hospital after 1990/1/1?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1255",
+          "question": "For the patients with an abnormal Ig M level, what is the most common disease they are diagnosed with?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1256",
+          "question": "How many patients with a abnormal C-reactive protein don't have their data recorded?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1257",
+          "question": "Among the patients whose creatinine level is abnormal, how many of them aren't 70 yet?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1265",
+          "question": "How many patients have a normal level of anti-ribonuclear protein and have been admitted to the hospital?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1267",
+          "question": "Among the patients with normal anti-SM, how many of them does not have thrombosis?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1270",
+          "question": "Among the patients who has a normal anti-scl70, how many of them are female and does not have any symptom?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1275",
+          "question": "Among the patients who has a normal level of anti-centromere and a normal level of anti-SSB, how many of them are male?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1281",
+          "question": "Among the patients who have an abnormal level of glutamic oxaloacetic transaminase, when was the youngest of them born?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "thrombosis_prediction_1302",
+          "question": "For the patients with a normal range of creatinine phosphokinase, how many of them have a positive measure of degree of coagulation?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        }
+      ],
+      "judge_on": false
     }
   ]
 }
