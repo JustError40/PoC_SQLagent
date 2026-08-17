@@ -26,24 +26,24 @@ templates:
     grain: School
     status: ok
     last_error: ''
-    verified_at: '2026-08-17T07:59:44.088144+00:00'
+    verified_at: '2026-08-17T08:26:13.576105+00:00'
     result_hash: c460b5bd51823378
     last_rows: 500
-    last_elapsed_ms: 22.680056281387806
+    last_elapsed_ms: 22.466255351901054
   satscore_avg_by_school_type:
     path: templates/satscore_avg_by_school_type.sql
     description: Calculate average number of tests taken per school type
     grain: school_type
     metrics:
-      uses: 5
-      avg_elapsed_ms: 18.998
+      uses: 8
+      avg_elapsed_ms: 65.342
       last_rows: 1
     status: ok
     last_error: ''
-    verified_at: '2026-08-17T07:59:44.088144+00:00'
+    verified_at: '2026-08-17T08:26:13.576105+00:00'
     result_hash: a4b506872b7cfa8d
     last_rows: 2
-    last_elapsed_ms: 10.677378624677658
+    last_elapsed_ms: 9.592496789991856
   learned_502f02c1cc:
     path: templates/learned_502f02c1cc.sql
     description: How many schools with an average score in Math greater than 400 in
@@ -76,13 +76,13 @@ templates:
     explain_cost: 74.06
     status: ok
     last_error: ''
-    verified_at: '2026-08-17T07:59:44.088144+00:00'
+    verified_at: '2026-08-17T08:26:13.576105+00:00'
     result_hash: 9905944daf20921f
     last_rows: 1
-    last_elapsed_ms: 10.578644461929798
+    last_elapsed_ms: 9.234587661921978
     metrics:
-      uses: 1
-      avg_elapsed_ms: 17.818
+      uses: 11
+      avg_elapsed_ms: 33.866
       last_rows: 0
   learned_18e282f69c:
     path: templates/learned_18e282f69c.sql
@@ -95,13 +95,13 @@ templates:
     explain_cost: 1811.7
     status: ok
     last_error: ''
-    verified_at: '2026-08-17T07:59:44.088144+00:00'
+    verified_at: '2026-08-17T08:26:13.576105+00:00'
     result_hash: e3b0c44298fc1c14
     last_rows: 0
-    last_elapsed_ms: 15.223412774503231
+    last_elapsed_ms: 19.600522704422474
     metrics:
-      uses: 2
-      avg_elapsed_ms: 21.514
+      uses: 9
+      avg_elapsed_ms: 44.836
       last_rows: 0
   learned_4499c86216:
     path: templates/learned_4499c86216.sql
@@ -140,4 +140,75 @@ templates:
         dir: desc
       limit: 10
     explain_cost: 1227.86
+    status: ok
+    metrics:
+      uses: 2
+      avg_elapsed_ms: 17.818
+      last_rows: 10
+    last_error: ''
+    verified_at: '2026-08-17T08:26:13.576105+00:00'
+    result_hash: b7486752d05df7e7
+    last_rows: 10
+    last_elapsed_ms: 16.146790236234665
+  learned_1aaa8d3fea:
+    path: templates/learned_1aaa8d3fea.sql
+    description: Please list the codes of the schools with a total enrollment of over
+      500.
+    grain: ''
+    fingerprint: 1aaa8d3fea
+    source: query_agent
+    spec: null
+    explain_cost: 477.82
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T08:26:13.576105+00:00'
+    result_hash: a660035cb892e9e6
+    last_rows: 500
+    last_elapsed_ms: 14.719734899699688
+    metrics:
+      uses: 1
+      avg_elapsed_ms: 13.846
+      last_rows: 500
+  learned_e33823ea13:
+    path: templates/learned_e33823ea13.sql
+    description: What is the telephone number for the school with the lowest average
+      score in reading in Fresno Unified?
+    grain: ''
+    fingerprint: e33823ea13
+    source: query_agent
+    spec: null
+    explain_cost: 1271.99
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T08:26:13.576105+00:00'
+    result_hash: 67cc230db366e66c
+    last_rows: 1
+    last_elapsed_ms: 15.893437899649143
+    metrics:
+      uses: 2
+      avg_elapsed_ms: 19.698
+      last_rows: 500
+  learned_837318fad5:
+    path: templates/learned_837318fad5.sql
+    description: What is the ratio of merged Unified School District schools in Orange
+      County to merged Elementary School District schools?
+    grain: ''
+    fingerprint: 837318fad5
+    source: query_agent
+    spec: null
+    explain_cost: 1055.56
+    status: ok
+    metrics:
+      uses: 1
+      avg_elapsed_ms: 91.832
+      last_rows: 1
+  learned_7102749e71:
+    path: templates/learned_7102749e71.sql
+    description: Under whose administration is the school with the highest number
+      of students scoring 1500 or more on the SAT? Indicate their full names.
+    grain: ''
+    fingerprint: 7102749e71
+    source: query_agent
+    spec: null
+    explain_cost: 1294.31
     status: ok
