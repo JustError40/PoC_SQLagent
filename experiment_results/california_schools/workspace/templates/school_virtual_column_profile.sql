@@ -1,1 +1,0 @@
-SELECT COUNT(*) AS total_schools, COUNT(CASE WHEN virtual IS NOT NULL THEN 1 END) AS virtual_count, COUNT(CASE WHEN virtual = 'Y' THEN 1 END) AS virtual_y_count, COUNT(CASE WHEN virtual = 'N' THEN 1 END) AS virtual_n_count, COUNT(CASE WHEN virtual IS NULL THEN 1 END) AS virtual_null_count FROM schools;

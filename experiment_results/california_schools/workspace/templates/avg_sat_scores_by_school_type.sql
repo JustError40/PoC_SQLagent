@@ -1,1 +1,0 @@
-SELECT sc.soc, AVG(s.avgscrread) as avg_read, AVG(s.avgscrmath) as avg_math, AVG(s.avgscrwrite) as avg_write, COUNT(*) as school_count FROM satscores s INNER JOIN schools sc ON s.cds = sc.cdscode WHERE s.avgscrread IS NOT NULL AND s.avgscrmath IS NOT NULL AND s.avgscrwrite IS NOT NULL GROUP BY sc.soc;

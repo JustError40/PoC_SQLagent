@@ -1,1 +1,0 @@
-SELECT DISTINCT admemail1 FROM schools WHERE county = 'San Bernardino' AND city = 'San Bernardino' AND opendate >= '2009-01-01' AND opendate <= '2010-12-31' AND soctype IN ('Intermediate/Middle Schools', 'Unified Schools') AND admemail1 IS NOT NULL;

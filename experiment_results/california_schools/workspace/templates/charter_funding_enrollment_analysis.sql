@@ -1,1 +1,0 @@
-SELECT s.charter, s.fundingtype, COUNT(f.cdscode) AS school_count, AVG(f."Enrollment (K-12)") AS avg_enrollment, AVG(f."FRPM Count (K-12)") AS avg_frpm_count FROM frpm f JOIN schools s ON f.cdscode = s.cdscode GROUP BY s.charter, s.fundingtype ORDER BY avg_enrollment DESC;

@@ -1,1 +1,0 @@
-SELECT f."School Type", s.charter, AVG(f."Enrollment (K-12)") AS avg_enrollment, COUNT(*) AS school_count FROM frpm f INNER JOIN schools s ON f.cdscode = s.cdscode WHERE f."Enrollment (K-12)" IS NOT NULL AND s.charter IS NOT NULL GROUP BY f."School Type", s.charter ORDER BY avg_enrollment DESC;

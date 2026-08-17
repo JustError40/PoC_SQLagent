@@ -1,1 +1,0 @@
-SELECT s.cdscode, s.virtual, f."Enrollment (K-12)", f."FRPM Count (K-12)", s.fundingtype, COUNT(*) as school_count FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE s.virtual = 'true' GROUP BY s.cdscode, s.virtual, f."Enrollment (K-12)", f."FRPM Count (K-12)", s.fundingtype ORDER BY s.virtual DESC;

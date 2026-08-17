@@ -1,1 +1,0 @@
-WITH enrollment_stats AS (SELECT "School Type" AS school_type, COUNT(*) AS school_count, AVG("Enrollment (K-12)") AS avg_enrollment FROM frpm WHERE "Enrollment (K-12)" IS NOT NULL GROUP BY "School Type") SELECT * FROM enrollment_stats ORDER BY school_count DESC;

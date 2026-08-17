@@ -1,15 +1,5 @@
 joins:
 - left: frpm.cdscode
-  right: schools.cdscode
-  cardinality: unknown
-  verified: true
-  verified_by: explorer
-- left: satscores.cds
-  right: schools.cdscode
-  cardinality: unknown
-  verified: true
-  verified_by: explorer
-- left: frpm.cdscode
   right: satscores.cds
   cardinality: unknown
   verified: true

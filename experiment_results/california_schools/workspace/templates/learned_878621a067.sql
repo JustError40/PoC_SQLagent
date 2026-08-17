@@ -1,1 +1,0 @@
-SELECT "satscores"."cds" AS "cds", AVG("satscores"."avgscrwrite") AS "avg_write_score" FROM "satscores" WHERE "satscores"."avgscrwrite" > 499 GROUP BY "satscores"."cds" ORDER BY "avg_write_score" DESC;

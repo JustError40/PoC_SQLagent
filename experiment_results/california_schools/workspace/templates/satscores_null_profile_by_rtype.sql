@@ -1,1 +1,0 @@
-SELECT rtype, COUNT(*) AS total_records, COUNT(CASE WHEN avgscrread IS NULL THEN 1 END) AS null_read, COUNT(CASE WHEN avgscrmath IS NULL THEN 1 END) AS null_math, COUNT(CASE WHEN avgscrwrite IS NULL THEN 1 END) AS null_write FROM satscores GROUP BY rtype;

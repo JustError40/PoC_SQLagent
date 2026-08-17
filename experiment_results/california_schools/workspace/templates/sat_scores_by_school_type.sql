@@ -1,1 +1,0 @@
-SELECT s.soctype, s.fundingtype, COUNT(DISTINCT sc.cds) as school_count, AVG(sc.avgscrread) as avg_read, AVG(sc.avgscrmath) as avg_math, AVG(sc.avgscrwrite) as avg_write FROM satscores sc JOIN schools s ON sc.cds = s.cdscode LEFT JOIN frpm f ON s.cdscode = f.cdscode GROUP BY s.soctype, s.fundingtype ORDER BY s.soctype, s.fundingtype;

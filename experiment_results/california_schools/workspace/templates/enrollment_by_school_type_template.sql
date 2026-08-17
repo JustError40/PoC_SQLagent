@@ -1,1 +1,0 @@
-WITH join_data AS (SELECT frpm.cdscode, frpm."Enrollment (K-12)" as enrollment, schools.soctype as school_type FROM frpm JOIN schools ON frpm.cdscode = schools.cdscode) SELECT school_type, COUNT(*) as school_count, AVG(enrollment) as avg_enrollment FROM join_data GROUP BY school_type;

@@ -1,1 +1,0 @@
-SELECT f."NSLP Provision Status", s."soctype", COUNT(*) as school_count, AVG(f."Enrollment (K-12)" ) as avg_enrollment FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE f."NSLP Provision Status" IS NOT NULL AND s."soctype" IS NOT NULL GROUP BY f."NSLP Provision Status", s."soctype" ORDER BY avg_enrollment DESC;

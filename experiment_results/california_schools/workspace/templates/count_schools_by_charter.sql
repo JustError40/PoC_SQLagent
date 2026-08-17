@@ -1,1 +1,0 @@
-SELECT COUNT(*) as school_count, frpm.cdscode, schools.charternum FROM frpm JOIN schools ON frpm.cdscode = schools.cdscode GROUP BY frpm.cdscode, schools.charternum ORDER BY school_count DESC LIMIT 10;

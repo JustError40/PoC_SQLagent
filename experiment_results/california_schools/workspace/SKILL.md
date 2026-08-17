@@ -11,11 +11,11 @@ Use `manifest.yaml` first, then load only the domain and artifact files selected
 - No one-to-many fanout joins detected during survey.
 
 ## Lessons from exploration
-- Explicitly link column references to their source tables in non-aggregate clauses.
-- Validate column scope visibility immediately after defining JOINs before referencing in WHERE or SELECT.
-- Prioritize explicit JOIN keywords over comma-separated table lists to ensure clear join intent.
-- Structure multi-step logic using Common Table Expressions (CTEs) to isolate filtering from aggregation.
-- Explicitly enumerate selected columns in the SELECT clause to avoid implicit wildcard selection.
-- Enforce PostgreSQL-specific placeholders (%s, %b, %t) in all dynamic string formatting to prevent syntax errors.
-- Prioritize static parameterized queries over dynamic string concatenation to reduce structural syntax risks.
-- Implement pre-execution validation for function arguments to catch placeholder mismatches before runtime.
+- Explicitly declare join types and use ON clauses instead of implicit joins.
+- Select only required columns to minimize network overhead and index usage.
+- Always run EXPLAIN (ANALYZE) on non-trivial queries to validate index strategy before execution.
+- Prefer Common Table Expressions (CTEs) over nested subqueries for improved readability and debugging.
+- Enforce a maximum row limit on all SELECT statements to prevent unbounded memory consumption.
+- Validate clause termination for ORDER BY and GROUP BY to prevent truncation errors.
+- Ensure column aliases are fully defined and unique to avoid parsing ambiguity.
+- Verify CTE column names match SELECT lists to resolve structural parse failures.

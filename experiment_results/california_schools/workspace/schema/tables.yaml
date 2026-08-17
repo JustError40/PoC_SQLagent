@@ -1,8 +1,8 @@
 tables:
 - name: frpm
-  description: Stores school-level enrollment, FRPM counts, and charter status for
-    the 2014-2015 academic year across multiple counties.
-  grain: one row per school per academic year
+  description: This table contains per-school enrollment, FRPM counts, and meal eligibility
+    statistics for a specific academic year across districts and counties.
+  grain: one row per school
   columns:
   - column_name: cdscode
     data_type: text
@@ -121,9 +121,10 @@ tables:
     is_nullable: 'YES'
     ordinal_position: 29
 - name: satscores
-  description: Stores SAT performance metrics including enrollment, test counts, and
-    average reading/math/writing scores for schools, districts, and counties.
-  grain: one row per school or district record
+  description: The satscores table contains school-level SAT statistics, including
+    average reading/math/writing scores and enrollment data, linked by school name,
+    district, and county.
+  grain: one row per school
   columns:
   - column_name: cds
     data_type: text
@@ -170,9 +171,9 @@ tables:
     is_nullable: 'YES'
     ordinal_position: 11
 - name: schools
-  description: This table stores educational records for California schools and districts,
-    including names, addresses, contact details, funding types, and operational status.
-  grain: one row per school or district record
+  description: Stores records for individual schools with attributes including identification
+    codes, addresses, status, funding, and administrative contacts.
+  grain: one row per school
   columns:
   - column_name: cdscode
     data_type: text

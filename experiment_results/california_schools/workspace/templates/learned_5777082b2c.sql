@@ -1,1 +1,0 @@
-SELECT s.school, s.phone, AVG(sa.avgscrwrite) as avg_score FROM schools s JOIN satscores sa ON s.school = sa.sname WHERE s.opendate > '1991-01-01' OR s.closeddate < '2000-01-01' GROUP BY s.school, s.phone;

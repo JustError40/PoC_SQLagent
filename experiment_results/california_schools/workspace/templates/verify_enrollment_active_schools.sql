@@ -1,1 +1,0 @@
-SELECT COUNT(DISTINCT s.cdscode) as active_schools, COUNT(DISTINCT f.cdscode) as frpm_schools FROM schools s LEFT JOIN frpm f ON s.cdscode = f.cdscode WHERE s.opendate IS NOT NULL AND s.closeddate IS NULL;

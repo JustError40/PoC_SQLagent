@@ -1,1 +1,0 @@
-SELECT f."School Type", s.charter, SUM(f."Enrollment (K-12)") AS total_enrollment, COUNT(*) AS school_count FROM frpm f JOIN schools s ON f.cdscode = s.cdscode WHERE f."Enrollment (K-12)" IS NOT NULL GROUP BY f."School Type", s.charter ORDER BY total_enrollment DESC;

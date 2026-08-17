@@ -1,1 +1,0 @@
-SELECT sc.charternum, sc.charter, sc.virtual, COUNT(*) as school_count, SUM(f."Enrollment (K-12)") as total_enrollment, SUM(f."FRPM Count (K-12)") as total_frpm FROM schools sc JOIN frpm f ON sc.cdscode = f.cdscode WHERE sc.charternum IS NOT NULL AND f."Charter School Number" IS NOT NULL GROUP BY sc.charternum, sc.charter, sc.virtual;

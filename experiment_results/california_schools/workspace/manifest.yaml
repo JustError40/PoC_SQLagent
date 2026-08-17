@@ -8,10 +8,10 @@ tables:
 domains:
   school_master:
   - schools
-  enrollment_funding:
-  - frpm
   academic_performance:
   - satscores
+  student_support:
+  - frpm
 artifacts:
   schema: schema/tables.yaml
   relationships: relationships/verified_joins.yaml
@@ -20,83 +20,36 @@ artifacts:
   invariants: evals/invariants.yaml
   templates: templates/
 templates:
-  enrollment_stats_k12:
-    path: templates/enrollment_stats_k12.sql
-    description: Template for calculating K-12 enrollment statistics from frpm table
-      using cdscode filter
-    grain: frpm
-    metrics:
-      uses: 84
-      avg_elapsed_ms: 33.973
-      last_rows: 1
+  frpm_participation_rate:
+    path: templates/frpm_participation_rate.sql
+    description: Calculate FRPM participation rate as a reusable metric template
+    grain: School
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 032c4ba0a960f7f0
-    last_rows: 1
-    last_elapsed_ms: 13.398339971899986
-  count_by_funding_type:
-    path: templates/count_by_funding_type.sql
-    description: Template for counting schools grouped by funding type from schools
-      table
-    grain: schools
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 3f3e01dc8f4df1a5
-    last_rows: 4
-    last_elapsed_ms: 62.99199629575014
-    metrics:
-      uses: 61
-      avg_elapsed_ms: 29.022
-      last_rows: 1
-  enrollment_profile:
-    path: templates/enrollment_profile.sql
-    description: Profile enrollment statistics including null distribution and average
-      values for K-12 enrollment data
-    grain: table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 1b97c2007b7c61c1
-    last_rows: 1
-    last_elapsed_ms: 12.53952644765377
-  enrollment_by_school_type:
-    path: templates/enrollment_by_school_type.sql
-    description: Get enrollment statistics grouped by school type including counts
-      and averages
+    verified_at: '2026-08-17T07:59:44.088144+00:00'
+    result_hash: c460b5bd51823378
+    last_rows: 500
+    last_elapsed_ms: 22.680056281387806
+  satscore_avg_by_school_type:
+    path: templates/satscore_avg_by_school_type.sql
+    description: Calculate average number of tests taken per school type
     grain: school_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: a72e916780612109
-    last_rows: 18
-    last_elapsed_ms: 13.184125535190105
     metrics:
-      uses: 9
-      avg_elapsed_ms: 23.091
-      last_rows: 0
-  enrollment_by_funding_type:
-    path: templates/enrollment_by_funding_type.sql
-    description: Calculate average K-12 enrollment and school count grouped by funding
-      type from frpm-schools join
-    grain: fundingtype
-    metrics:
-      uses: 3
-      avg_elapsed_ms: 34.357
+      uses: 5
+      avg_elapsed_ms: 18.998
       last_rows: 1
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 06e41aba6d39fc04
-    last_rows: 4
-    last_elapsed_ms: 23.287048563361168
-  learned_b0b1461061:
-    path: templates/learned_b0b1461061.sql
+    verified_at: '2026-08-17T07:59:44.088144+00:00'
+    result_hash: a4b506872b7cfa8d
+    last_rows: 2
+    last_elapsed_ms: 10.677378624677658
+  learned_502f02c1cc:
+    path: templates/learned_502f02c1cc.sql
     description: How many schools with an average score in Math greater than 400 in
       the SAT test are exclusively virtual?
     grain: ''
-    fingerprint: b0b1461061
+    fingerprint: 502f02c1cc
     source: query_agent
     spec:
       type: object
@@ -119,970 +72,72 @@ templates:
         value: virtual
       order:
         by: school_count
-        dir: desc
+        dir: asc
     explain_cost: 74.06
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
+    verified_at: '2026-08-17T07:59:44.088144+00:00'
     result_hash: 9905944daf20921f
     last_rows: 1
-    last_elapsed_ms: 8.950787596404552
+    last_elapsed_ms: 10.578644461929798
     metrics:
-      uses: 34
-      avg_elapsed_ms: 13.632
-      last_rows: 1
-  learned_45d71c139f:
-    path: templates/learned_45d71c139f.sql
-    description: What is the average score in writing for the schools that were opened
-      after 1991 or closed before 2000? List the school names along with the score.
-      Also, list the communication number of the schools i
-    grain: ''
-    fingerprint: 45d71c139f
-    source: query_agent
-    spec: null
-    explain_cost: 1427.42
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 399b21ee42b570cd
-    last_rows: 500
-    last_elapsed_ms: 19.00825835764408
-    metrics:
-      uses: 33
-      avg_elapsed_ms: 37.728
-      last_rows: 500
-  learned_5777082b2c:
-    path: templates/learned_5777082b2c.sql
-    description: What is the average score in writing for the schools that were opened
-      after 1991 or closed before 2000? List the school names along with the score.
-      Also, list the communication number of the schools i
-    grain: ''
-    fingerprint: 5777082b2c
-    source: query_agent
-    spec: null
-    explain_cost: 1441.7
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 3372a25fcf43d313
-    last_rows: 500
-    last_elapsed_ms: 19.875405356287956
-  learned_878621a067:
-    path: templates/learned_878621a067.sql
-    description: Rank schools by their average score in Writing where the score is
-      greater than 499, showing their charter numbers.
-    grain: cds
-    fingerprint: 878621a067
-    source: query_agent
-    spec:
-      type: object
-      from: satscores
-      joins: []
-      group_by:
-      - table: satscores
-        column: cds
-      measures:
-      - agg: avg
-        table: satscores
-        column: avgscrwrite
-        alias: avg_write_score
-      filters:
-      - table: satscores
-        column: avgscrwrite
-        op: '>'
-        value: 499
-      order:
-        by: avg_write_score
-        dir: desc
-    explain_cost: 100.99
-    status: ok
-    metrics:
-      uses: 18
-      avg_elapsed_ms: 30.897
-      last_rows: 500
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: f8d8a59fb24573ce
-    last_rows: 500
-    last_elapsed_ms: 12.69298791885376
-  learned_33c73b5826:
-    path: templates/learned_33c73b5826.sql
-    description: What is the telephone number for the school with the lowest average
-      score in reading in Fresno Unified?
-    grain: ''
-    fingerprint: 33c73b5826
-    source: query_agent
-    spec: null
-    explain_cost: 1254.45
-    status: ok
-    metrics:
-      uses: 19
-      avg_elapsed_ms: 19.12
-      last_rows: 1
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 67cc230db366e66c
-    last_rows: 1
-    last_elapsed_ms: 15.075319446623325
-  learned_339a52e24b:
-    path: templates/learned_339a52e24b.sql
-    description: List the names of virtual schools that are among the top 5 in their
-      respective counties based on average reading scores.
-    grain: ''
-    fingerprint: 339a52e24b
-    source: query_agent
-    spec: null
-    explain_cost: 1252.34
-    status: ok
-    metrics:
-      uses: 18
-      avg_elapsed_ms: 53.018
+      uses: 1
+      avg_elapsed_ms: 17.818
       last_rows: 0
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 16.84819720685482
-  learned_9c155e7213:
-    path: templates/learned_9c155e7213.sql
-    description: What is the postal street address for the school with the 7th highest
-      Math average? Indicate the school's name.
+  learned_18e282f69c:
+    path: templates/learned_18e282f69c.sql
+    description: List the names of schools with more than 30 difference in enrollements
+      between K-12 and ages 5-17? Please also give the full street adress of the schools.
     grain: ''
-    fingerprint: 9c155e7213
+    fingerprint: 18e282f69c
     source: query_agent
     spec: null
-    explain_cost: 2012.8
+    explain_cost: 1811.7
     status: ok
+    last_error: ''
+    verified_at: '2026-08-17T07:59:44.088144+00:00'
+    result_hash: e3b0c44298fc1c14
+    last_rows: 0
+    last_elapsed_ms: 15.223412774503231
     metrics:
-      uses: 19
-      avg_elapsed_ms: 48.174
+      uses: 2
+      avg_elapsed_ms: 21.514
       last_rows: 0
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 16.60580188035965
-  enrollment_metric_by_school_type:
-    path: templates/enrollment_metric_by_school_type.sql
-    description: Reusable enrollment metric template showing school count and average
-      enrollment by school type from frpm table
-    grain: School Type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: d7f21e88c04ca90b
-    last_rows: 10
-    last_elapsed_ms: 13.420473784208298
-  sat_score_distribution_with_nulls:
-    path: templates/sat_score_distribution_with_nulls.sql
-    description: Template for analyzing SAT score distributions across schools with
-      NULL pattern detection
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 43958f73f50e2fef
-    last_rows: 1
-    last_elapsed_ms: 9.565634652972221
-  enrollment_by_funding_type_template:
-    path: templates/enrollment_by_funding_type_template.sql
-    description: Aggregate enrollment statistics grouped by funding type from the
-      verified frpm-schools join
-    grain: school/fundingtype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 0f02c7c0190c8215
-    last_rows: 4
-    last_elapsed_ms: 46.96236830204725
-  school_virtual_distribution:
-    path: templates/school_virtual_distribution.sql
-    description: Analyze null and non-null virtual school distribution in schools
-      table
-    grain: table-level
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: c7ab06ea18ceb858
-    last_rows: 1
-    last_elapsed_ms: 16.423748806118965
-    metrics:
-      uses: 14
-      avg_elapsed_ms: 49.175
-      last_rows: 0
-  school_type_enrollment_metrics:
-    path: templates/school_type_enrollment_metrics.sql
-    description: Reusable metric template showing school count and average enrollment
-      by school type from frpm table
-    grain: table-level
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: f5231148d6621369
-    last_rows: 10
-    last_elapsed_ms: 13.631720095872879
-  sat_scores_aggregation_template:
-    path: templates/sat_scores_aggregation_template.sql
-    description: Reusable metric template for aggregating SAT score averages (reading,
-      math, writing) by school count and record type from satscores table
-    grain: satscores table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 6c0920c4118b8e43
-    last_rows: 1
-    last_elapsed_ms: 14.353727921843529
-    metrics:
-      uses: 7
-      avg_elapsed_ms: 64.025
-      last_rows: 1
-  virtual_school_enrollment_template:
-    path: templates/virtual_school_enrollment_template.sql
-    description: Reusable metric template showing K-12 enrollment statistics for virtual
-      schools from verified frpm-schools join
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 17.045557498931885
-  enrollment_by_school_type_template:
-    path: templates/enrollment_by_school_type_template.sql
-    description: Reusable metric template showing K-12 enrollment statistics grouped
-      by school type from frpm-schools join
-    grain: school_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 9014b2f16087a566
-    last_rows: 18
-    last_elapsed_ms: 25.082928128540516
-  sat_score_null_distribution:
-    path: templates/sat_score_null_distribution.sql
-    description: Reusable metric template for analyzing SAT score null distributions
-      grouped by school and record type with proper DOUBLE PRECISION casting for percentage
-      calculations
-    grain: school (cds) and record type (rtype)
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: b04952b6410ba5aa
-    last_rows: 500
-    last_elapsed_ms: 23.083089850842953
-  verify_funding_type_enrollment:
-    path: templates/verify_funding_type_enrollment.sql
-    description: Validates enrollment totals match across frpm-schools join for each
-      funding type by summing FRPM counts and comparing to school enrollment counts
-    grain: per funding type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: e83cf6ca649afaba
-    last_rows: 4
-    last_elapsed_ms: 52.53645870834589
-  enrollment_by_charter_funding:
-    path: templates/enrollment_by_charter_funding.sql
-    description: Average K-12 enrollment grouped by charter funding type from verified
-      frpm-schools join
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 29d04507d150f825
-    last_rows: 4
-    last_elapsed_ms: 22.87326753139496
-  profile_sat_score_patterns_by_type:
-    path: templates/profile_sat_score_patterns_by_type.sql
-    description: Profile SAT score null distributions by record type to identify data
-      quality patterns
-    grain: by_rtype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: afbc21a52e9bf0ec
-    last_rows: 2
-    last_elapsed_ms: 10.174517519772053
-  count_schools_by_charter:
-    path: templates/count_schools_by_charter.sql
-    description: Count schools grouped by Charter School Number using verified frpm-schools
-      join
-    grain: charternum
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 5115bf53710bbfe2
-    last_rows: 10
-    last_elapsed_ms: 26.150373741984367
-  charter_funding_type_profile:
-    path: templates/charter_funding_type_profile.sql
-    description: Profile Charter Funding Type distribution including null patterns
-      and value counts
-    grain: table-level aggregation
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: a0f38c55a2b8bd7a
-    last_rows: 3
-    last_elapsed_ms: 10.989713482558727
-  sat_scores_by_school_type:
-    path: templates/sat_scores_by_school_type.sql
-    description: Reusable metric template for average SAT scores grouped by school
-      type and funding type from frpm-schools join with satscores
-    grain: school_type,fundingtype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 91e4bc4f68a59c49
-    last_rows: 22
-    last_elapsed_ms: 25.44192783534527
-  verify_enrollment_active_schools:
-    path: templates/verify_enrollment_active_schools.sql
-    description: Reusable metric template for verifying enrollment counts against
-      schools with valid opendate/closeddate status
-    grain: table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 2e36541645a54fdb
-    last_rows: 1
-    last_elapsed_ms: 38.474041037261486
-  nslp_provision_status_distribution:
-    path: templates/nslp_provision_status_distribution.sql
-    description: Query template to get distribution of NSLP provision status across
-      schools in frpm table
-    grain: frpm table aggregated by program status
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 2f21522efa407fb6
-    last_rows: 8
-    last_elapsed_ms: 11.294622905552387
-  enrollment_metric_template:
-    path: templates/enrollment_metric_template.sql
-    description: Reusable metric query for analyzing school enrollment across funding
-      types using verified frpm-schools join
-    grain: fundingtype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 0f02c7c0190c8215
-    last_rows: 4
-    last_elapsed_ms: 23.72746169567108
-  sat_score_null_quality_template:
-    path: templates/sat_score_null_quality_template.sql
-    description: Reusable metric query for analyzing SAT score null patterns grouped
-      by record type to identify data quality issues
-    grain: rtype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 208c8ce25d1b6b9e
-    last_rows: 2
-    last_elapsed_ms: 10.272456333041191
-  enrollment_funding_statistics:
-    path: templates/enrollment_funding_statistics.sql
-    description: Reusable template for enrollment statistics by funding type using
-      verified frpm-schools join
-    grain: aggregated by funding type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 1aa770e8b18296fe
-    last_rows: 4
-    last_elapsed_ms: 22.20966015011072
-  sat_score_enrollment_template:
-    path: templates/sat_score_enrollment_template.sql
-    description: Reusable template for joining SAT scores with schools, calculating
-      average SAT scores by school type, virtual status, and funding type with enrollment
-      context
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 6ab5e743f6595a3f
-    last_rows: 500
-    last_elapsed_ms: 25.039448402822018
-    metrics:
-      uses: 11
-      avg_elapsed_ms: 41.599
-      last_rows: 1
-  charter_school_enrollment_validation:
-    path: templates/charter_school_enrollment_validation.sql
-    description: Reusable query template for validating charter school enrollment
-      data matches between schools and frpm tables
-    grain: charternum, charter, virtual
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 3bc216c3a8fafc7d
-    last_rows: 500
-    last_elapsed_ms: 21.423283964395523
-  school_status_distribution:
-    path: templates/school_status_distribution.sql
-    description: Query template for school status type distribution with data completeness
-      metrics across active/open vs closed schools
-    grain: statustype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: a4ee646905360d38
-    last_rows: 4
-    last_elapsed_ms: 15.717372298240662
-  virtual_school_enrollment_by_funding:
-    path: templates/virtual_school_enrollment_by_funding.sql
-    description: Template for calculating virtual school enrollment statistics grouped
-      by charter funding type
-    grain: funding_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 17.993725836277008
-  draft_sat_score_avg_by_school_type_template:
-    path: templates/draft_sat_score_avg_by_school_type_template.sql
-    description: Reusable metric for average SAT scores by school type joining satscores
-      with schools, filtering NULL soctype
-    grain: school_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 7f7136f543cd6bc8
-    last_rows: 11
-    last_elapsed_ms: 18.82155891507864
-  sat_funding_enrollment:
-    path: templates/sat_funding_enrollment.sql
-    description: Reusable metric template for average SAT scores by funding type joining
-      satscores with schools for K-12 enrollment context
-    grain: fundingtype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: ce28bcaae39ff80d
-    last_rows: 3
-    last_elapsed_ms: 18.465367145836353
-  school_type_enrollment_profile:
-    path: templates/school_type_enrollment_profile.sql
-    description: Query to get distribution of school types with their average K-12
-      enrollment
-    grain: school_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: d3ff7d9773755f17
-    last_rows: 18
-    last_elapsed_ms: 13.656064867973328
-  sat_score_analysis_by_school_characteristics:
-    path: templates/sat_score_analysis_by_school_characteristics.sql
-    description: Query to analyze SAT scores grouped by school type and funding type
-      with null handling
-    grain: satscores joined with schools
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 275983b0232e5ade
-    last_rows: 21
-    last_elapsed_ms: 17.798809334635735
-  enrollment_analysis_by_school_characteristics:
-    path: templates/enrollment_analysis_by_school_characteristics.sql
-    description: Query to analyze enrollment patterns grouped by school type and funding
-      type
-    grain: frpm joined with schools
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 5419f5b8cebfedfe
-    last_rows: 36
-    last_elapsed_ms: 25.556878186762333
-  enrollment_by_charter_status:
-    path: templates/enrollment_by_charter_status.sql
-    description: Query to get total K-12 enrollment count and average enrollment for
-      charter vs non-charter schools from verified frpm-schools join
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: a17b7b7299eff739
-    last_rows: 3
-    last_elapsed_ms: 21.432746201753616
-  sat_scores_by_virtual_status:
-    path: templates/sat_scores_by_virtual_status.sql
-    description: Query to get average SAT reading/math/writing score for virtual vs
-      non-virtual schools by joining satscores with schools
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 9b8564c7924d30d3
-    last_rows: 4
-    last_elapsed_ms: 17.222668044269085
-  charter_funding_enrollment_profile:
-    path: templates/charter_funding_enrollment_profile.sql
-    description: Aggregates K-12 enrollment by charter status and funding type across
-      schools in frpm and schools tables
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: fa2b367ad1eeecb1
-    last_rows: 7
-    last_elapsed_ms: 24.293075315654278
-  enrollment_aggregation_by_school_type:
-    path: templates/enrollment_aggregation_by_school_type.sql
-    description: Aggregates K-12 enrollment by school type and charter status from
-      FRPM and schools tables
-    grain: school_level
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 0b271014dd3ceb16
-    last_rows: 27
-    last_elapsed_ms: 24.12677090615034
-  school_virtual_profile:
-    path: templates/school_virtual_profile.sql
-    description: Profile query for schools table virtual column showing total count,
-      virtual/ non-virtual/null distribution
-    grain: schools
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: dcc9a2d7ad50bab3
-    last_rows: 1
-    last_elapsed_ms: 15.808848664164543
-  learned_4ca137e4ca:
-    path: templates/learned_4ca137e4ca.sql
-    description: What are the valid e-mail addresses of the administrator of the school
-      located in the San Bernardino county, City of San Bernardino City Unified that
-      opened between 1/1/2009 to 12/31/2010 whose school
-    grain: ''
-    fingerprint: 4ca137e4ca
-    source: query_agent
-    spec: null
-    explain_cost: 1357.95
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 17.75606907904148
-    metrics:
-      uses: 9
-      avg_elapsed_ms: 29.731
-      last_rows: 0
-  sat_scores_by_school_type_and_funding:
-    path: templates/sat_scores_by_school_type_and_funding.sql
-    description: Reusable template for calculating average SAT scores by school type
-      and charter funding type using verified satscores-schools-frpm joins with enrollment
-      context
-    grain: school_type, charter_funding_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 1cc0c9d67071b843
-    last_rows: 21
-    last_elapsed_ms: 19.986269995570183
-  column_null_distribution_check:
-    path: templates/column_null_distribution_check.sql
-    description: Template for checking null distribution across specific table columns
-      to assess data quality
-    grain: table.column
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 50eda06273dc5dd4
-    last_rows: 5
-    last_elapsed_ms: 13.041123747825623
-  enrollment_data_quality_check:
-    path: templates/enrollment_data_quality_check.sql
-    description: Reusable data quality check for enrollment columns to identify null
-      distribution patterns
-    grain: single_table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 4e3ee2305b622cd0
-    last_rows: 3
-    last_elapsed_ms: 19.98636405915022
-  sat_score_data_quality_check:
-    path: templates/sat_score_data_quality_check.sql
-    description: Query to verify SAT score data completeness by record type (S, D,
-      etc.) with averages across reading, math, writing
-    grain: satscores table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: e1c1e8191da9306c
-    last_rows: 2
-    last_elapsed_ms: 9.365454316139221
-  frpm_enrollment_pattern_check:
-    path: templates/frpm_enrollment_pattern_check.sql
-    description: Query to analyze K-12 enrollment patterns across school types for
-      enrollment validation
-    grain: frpm table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: d3ff7d9773755f17
-    last_rows: 18
-    last_elapsed_ms: 13.898768462240696
-  schools_status_completeness_check:
-    path: templates/schools_status_completeness_check.sql
-    description: Query to verify school status data completeness (Active, Closed,
-      Merged) for data quality assessment
-    grain: schools table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 7e1558188b9835e0
-    last_rows: 4
-    last_elapsed_ms: 15.892382711172104
-  sat_score_metrics_by_school_type:
-    path: templates/sat_score_metrics_by_school_type.sql
-    description: Calculate average SAT scores by school type and virtual status for
-      educational analytics
-    grain: school_type, virtual
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 49377e350dbb924f
-    last_rows: 20
-    last_elapsed_ms: 18.039237707853317
-  enrollment_by_school_type_charter_template:
-    path: templates/enrollment_by_school_type_charter_template.sql
-    description: Query template to analyze enrollment distribution by school type
-      and charter status from frpm-schools join
-    grain: ''
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 7cf61aaa853e03da
-    last_rows: 27
-    last_elapsed_ms: 22.900105454027653
-  sat_score_null_distribution_template:
-    path: templates/sat_score_null_distribution_template.sql
-    description: Query template to assess data quality by examining null patterns
-      in SAT scores grouped by record type
-    grain: ''
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 4a79c2f2b1639b5b
-    last_rows: 2
-    last_elapsed_ms: 9.136655367910862
-  sat_score_avg_by_school_type:
-    path: templates/sat_score_avg_by_school_type.sql
-    description: Reusable query to calculate average SAT reading/math/write scores
-      by school virtual status, filtering for valid records with verified CDS keys
-    grain: school_virtual_status
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 4897356d36cfb13b
-    last_rows: 3
-    last_elapsed_ms: 18.78177747130394
-  sat_score_enrollment_correlation_template:
-    path: templates/sat_score_enrollment_correlation_template.sql
-    description: Query to analyze enrollment correlation between SAT scores and school
-      enrollment
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: e321f17b0f0388a1
-    last_rows: 1
-    last_elapsed_ms: 15.500001609325409
-  sat_scores_avg_by_school_type_template:
-    path: templates/sat_scores_avg_by_school_type_template.sql
-    description: Reusable metric template for average SAT reading/math/writing scores
-      by school type using verified satscores-schools join on cds keys
-    grain: school type (soc, charter)
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 317dd74531d0fa42
-    last_rows: 16
-    last_elapsed_ms: 19.847305491566658
-  sat_score_null_pattern_by_rtype:
-    path: templates/sat_score_null_pattern_by_rtype.sql
-    description: Reusable metric query for null distribution pattern for SAT score
-      columns grouped by record type to identify data quality issues
-    grain: record type (rtype)
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 17b81b7cbb29bc84
-    last_rows: 2
-    last_elapsed_ms: 10.157134383916855
-  sat_score_avg_by_funding_type_template:
-    path: templates/sat_score_avg_by_funding_type_template.sql
-    description: Average SAT scores by funding type joining satscores with schools
-      on verified cds keys
-    grain: schools
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 49f3bb330c74d33b
-    last_rows: 3
-    last_elapsed_ms: 17.98716001212597
-  avg_enrollment_by_charter_status:
-    path: templates/avg_enrollment_by_charter_status.sql
-    description: Calculate average K-12 enrollment grouped by school type and charter
-      status
-    grain: frpm.school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 6f6c278ecfcd5777
-    last_rows: 26
-    last_elapsed_ms: 26.125614531338215
-  charter_funding_type_distribution:
-    path: templates/charter_funding_type_distribution.sql
-    description: Query to profile charter funding type distribution in schools table
-      to verify funding category completeness and null patterns
-    grain: fundingtype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 1d264736b2e66b99
-    last_rows: 3
-    last_elapsed_ms: 14.610041864216328
-  enrollment_sat_correlation_analysis:
-    path: templates/enrollment_sat_correlation_analysis.sql
-    description: Join frpm with satscores to calculate percentile metrics for enrollment
-      vs SAT score correlation analysis
-    grain: frpm
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 382424051641c473
-    last_rows: 1
-    last_elapsed_ms: 14.669381082057953
-  satscore_completeness_by_type:
-    path: templates/satscore_completeness_by_type.sql
-    description: Profiles SAT score completeness metrics by record type and identifies
-      columns with high NULL rates
-    grain: record_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 9188a836f5619805
-    last_rows: 2
-    last_elapsed_ms: 10.12448500841856
-  virtual_school_enrollment:
-    path: templates/virtual_school_enrollment.sql
-    description: Reusable metric template for virtual school enrollment statistics
-      from verified frpm-schools join showing count, average enrollment, and charter
-      status
-    grain: virtual_schools
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: a4685efaeedd5c6b
-    last_rows: 1
-    last_elapsed_ms: 17.306575551629066
-  null_profile_generic:
-    path: templates/null_profile_generic.sql
-    description: Reusable pattern for profiling null distributions across specific
-      columns in a table to identify data quality patterns
-    grain: column
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 7c5e37229bf8d21f
-    last_rows: 3
-    last_elapsed_ms: 11.226230300962925
-  sat_scores_by_funding_type_template:
-    path: templates/sat_scores_by_funding_type_template.sql
-    description: Reusable metric template for average SAT scores by funding type joining
-      satscores with schools for K-12 enrollment context
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: b0cbfa3596efa924
-    last_rows: 25
-    last_elapsed_ms: 16.593588516116142
-  school_virtual_column_profile:
-    path: templates/school_virtual_column_profile.sql
-    description: Profiles the null distribution of the virtual column in schools table
-      to understand data completeness for virtual school identification
-    grain: total
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 243dba78ac93a4c4
-    last_rows: 1
-    last_elapsed_ms: 14.79431428015232
-  satscores_null_profile_by_rtype:
-    path: templates/satscores_null_profile_by_rtype.sql
-    description: Profiles null distribution patterns across SAT score columns grouped
-      by record type to identify data quality patterns
-    grain: rtype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 208c8ce25d1b6b9e
-    last_rows: 2
-    last_elapsed_ms: 8.008791133761406
-  avg_sat_scores_by_school_type:
-    path: templates/avg_sat_scores_by_school_type.sql
-    description: Calculate average SAT scores grouped by school type with null filtering
-    grain: school_type
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 80274b32055dd179
-    last_rows: 9
-    last_elapsed_ms: 13.595238327980042
-  sat_scores_by_funding:
-    path: templates/sat_scores_by_funding.sql
-    description: Reusable query to analyze SAT scores grouped by record type and school
-      funding characteristics
-    grain: ''
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 4a5f0adb3d1f212c
-    last_rows: 11
-    last_elapsed_ms: 14.042573049664497
-  learned_8e768defd8:
-    path: templates/learned_8e768defd8.sql
+  learned_4499c86216:
+    path: templates/learned_4499c86216.sql
     description: Of the schools that offers a magnet program serving a grade span
       of Kindergarten to 8th grade, how many offers Multiple Provision Types? List
       the number of cities that offers a Kindergarten to 8th gra
-    grain: ''
-    fingerprint: 8e768defd8
+    grain: city
+    fingerprint: 4499c86216
     source: query_agent
-    spec: null
-    explain_cost: 1709.97
+    spec:
+      from: schools
+      joins: []
+      group_by:
+      - table: schools
+        column: city
+      measures:
+      - agg: count
+        table: schools
+        column: '*'
+        alias: total_schools
+      - agg: count_distinct
+        table: schools
+        column: fundingtype
+        alias: multiple_provision_types
+      filters:
+      - table: schools
+        column: magnet
+        op: '='
+        value: 1
+      - table: schools
+        column: gsoffered
+        op: '='
+        value: K-8
+      order:
+        by: multiple_provision_types
+        dir: desc
+      limit: 10
+    explain_cost: 1227.86
     status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 17.884673550724983
-    metrics:
-      uses: 1
-      avg_elapsed_ms: 20.475
-      last_rows: 0
-  sat_enrollment_correlation:
-    path: templates/sat_enrollment_correlation.sql
-    description: Reusable metric template for joining SAT scores with enrollment data
-      to analyze correlation patterns between SAT performance and school enrollment
-      metrics
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 2da0e4c95ebc4d91
-    last_rows: 1
-    last_elapsed_ms: 17.254761420190334
-  sat_scores_null_distribution_by_type:
-    path: templates/sat_scores_null_distribution_by_type.sql
-    description: Profiles null distribution across SAT score columns by record type
-      for data quality assessment
-    grain: satscores
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 5a85bec96f2811c6
-    last_rows: 2
-    last_elapsed_ms: 10.040252469480038
-  enrollment_by_nslp_school_type:
-    path: templates/enrollment_by_nslp_school_type.sql
-    description: Average K-12 enrollment by NSLP provision status and school type
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 86956ba6aa297c56
-    last_rows: 42
-    last_elapsed_ms: 19.009778276085854
-  sat_avg_by_funding:
-    path: templates/sat_avg_by_funding.sql
-    description: Reusable metric for average SAT scores (read, math, write) grouped
-      by funding type and school size
-    grain: fundingtype, soc
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 7f92cf11b65ac678
-    last_rows: 10
-    last_elapsed_ms: 17.092456109821796
-  charter_funding_enrollment_analysis:
-    path: templates/charter_funding_enrollment_analysis.sql
-    description: Analyze enrollment distribution by charter status and funding type
-      using frpm-schools join
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 01b6fad531ae1f42
-    last_rows: 7
-    last_elapsed_ms: 20.143349654972553
-  sat_score_null_profile:
-    path: templates/sat_score_null_profile.sql
-    description: Profile SAT score null distributions by school type and funding
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: c936091b10a8fed2
-    last_rows: 22
-    last_elapsed_ms: 16.031377017498016
-  sat_score_by_school_type_template:
-    path: templates/sat_score_by_school_type_template.sql
-    description: Template for analyzing SAT score distribution by school type and
-      code, useful for educational performance comparison
-    grain: school_type,school_code,student_rtype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 73c1ee02954a9c59
-    last_rows: 12
-    last_elapsed_ms: 15.049340203404427
-  enrollment_completeness_check:
-    path: templates/enrollment_completeness_check.sql
-    description: Check enrollment column null patterns and data completeness in frpm
-      table
-    grain: table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 43a19183043f162a
-    last_rows: 1
-    last_elapsed_ms: 11.794173158705235
-  virtual_school_enrollment_by_charter:
-    path: templates/virtual_school_enrollment_by_charter.sql
-    description: Reusable metric template for virtual school enrollment statistics
-      grouped by charter status and funding type
-    grain: frpm-schools join
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 15.368723310530186
-  enrollment_funding_template:
-    path: templates/enrollment_funding_template.sql
-    description: Reusable template for enrollment statistics grouped by funding type
-      using verified frpm-schools join with proper column qualification
-    grain: school
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 9448fd2961db7e1e
-    last_rows: 4
-    last_elapsed_ms: 21.758719347417355
-  sat_score_avg_by_school_type_funding:
-    path: templates/sat_score_avg_by_school_type_funding.sql
-    description: Reusable metric template for average SAT scores (reading, math, writing)
-      grouped by school type and charter funding type
-    grain: school_type, fundingtype
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T14:18:42.880297+00:00'
-    result_hash: 05be7c75c539875c
-    last_rows: 22
-    last_elapsed_ms: 15.349519439041615
