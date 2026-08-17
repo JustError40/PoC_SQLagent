@@ -1,20 +1,13 @@
 {
-  "campaign_ts": "smoke-20260817-074714",
-  "branch": "campaign/smoke-20260817-074714",
-  "status": "california_schools control committed",
-  "db_total": 11,
+  "campaign_ts": "smoke2-20260817-083523",
+  "branch": "campaign/smoke2-20260817-083523",
+  "status": "loading california_schools",
+  "db_total": 1,
   "db_index": 1,
-  "runs_per_db": 11,
+  "runs_per_db": 1,
   "current_db": "california_schools",
-  "run_label": "control",
-  "run_index": 1,
-  "eta_min": 1092.0,
-  "updated_at": "2026-08-17T08:30:46.245988+00:00",
-  "last_counts": {
-    "correct": 1,
-    "incorrect": 9,
-    "empty": 5,
-    "clarified": 0,
-    "pipeline_failed": 15
-  }
+  "run_label": "-",
+  "run_index": 0,
+  "eta_min": null,
+  "updated_at": "2026-08-17T08:35:23.911764+00:00"
 }
