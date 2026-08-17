@@ -1,20 +1,20 @@
 {
   "campaign_ts": "smoke3-20260817-085834",
   "branch": "campaign/smoke3-20260817-085834",
-  "status": "california_schools iteration 3 committed",
+  "status": "california_schools iteration 4 committed",
   "db_total": 11,
   "db_index": 1,
   "runs_per_db": 11,
   "current_db": "california_schools",
-  "run_label": "iteration 3",
-  "run_index": 4,
-  "eta_min": 3828.8,
-  "updated_at": "2026-08-17T13:46:22.071115+00:00",
+  "run_label": "iteration 4",
+  "run_index": 5,
+  "eta_min": 3067.0,
+  "updated_at": "2026-08-17T13:47:47.677886+00:00",
   "last_counts": {
-    "correct": 1,
-    "incorrect": 8,
-    "empty": 2,
+    "correct": 0,
+    "incorrect": 0,
+    "empty": 0,
     "clarified": 0,
-    "pipeline_failed": 19
+    "pipeline_failed": 30
   }
 }
