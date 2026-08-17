@@ -1,0 +1,10 @@
+notes:
+- wrong: cds
+  correct: cdscode
+  source: repair
+- wrong: cdscode
+  correct: cds
+  source: repair
+- wrong: cdscode
+  correct: numge1500
+  source: repair

@@ -1,0 +1,1 @@
+SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'satscores' AND column_name LIKE '%enroll%' OR column_name LIKE '%numtst%' OR column_name LIKE '%avgsc%' ORDER BY column_name;

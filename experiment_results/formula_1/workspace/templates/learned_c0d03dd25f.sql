@@ -1,0 +1,1 @@
+WITH ranked_schools AS (SELECT "satscores"."sname" AS "sname", "satscores"."cname" AS "cname", "satscores"."avgscrread" AS "avg_read_score", ROW_NUMBER() OVER (PARTITION BY "satscores"."cname" ORDER BY "satscores"."avgscrread" DESC) AS rn FROM "satscores" WHERE "satscores"."rtype" = 'virtual') SELECT "sname", "cname", "avg_read_score" FROM ranked_schools WHERE rn <= 5;

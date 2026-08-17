@@ -1,0 +1,1 @@
+SELECT COUNT(*) FROM satscores WHERE numge1500 IS NOT NULL;
