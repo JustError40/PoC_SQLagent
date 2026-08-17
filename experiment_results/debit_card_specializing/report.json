@@ -2308,6 +2308,237 @@
         }
       ],
       "judge_on": false
+    },
+    {
+      "run": "iteration 10",
+      "elapsed_min": 1.3,
+      "stages": {
+        "explore": "failed",
+        "optimize": "failed",
+        "evolve": "failed",
+        "promote": "start_failed: HTTP Error 409: Conflict",
+        "verify": "failed"
+      },
+      "counts": {
+        "correct": 0,
+        "incorrect": 0,
+        "empty": 0,
+        "clarified": 0,
+        "pipeline_failed": 30
+      },
+      "details": [
+        {
+          "id": "debit_card_specializing_1471",
+          "question": "What is the ratio of customers who pay in EUR against customers who pay in CZK?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1472",
+          "question": "In 2012, who had the least consumption in LAM?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1473",
+          "question": "What was the average monthly consumption of customers in SME for the year 2013?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1476",
+          "question": "What was the difference in gas consumption between CZK-paying customers and EUR-paying customers in 2012?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1479",
+          "question": "Which year recorded the most consumption of gas paid in CZK?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1480",
+          "question": "What was the gas consumption peak month for SME customers in 2013?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1481",
+          "question": "What is the difference in the annual average consumption of the customers with the least amount of consumption paid in CZK for 2013 between SME and LAM, LAM and KAM, and KAM and SME?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1482",
+          "question": "Which of the three segments—SME, LAM and KAM—has the biggest and lowest percentage increases in consumption paid in EUR between 2012 and 2013?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1483",
+          "question": "How much did customer 6 consume in total between August and November 2013?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1484",
+          "question": "How many more \"discount\" gas stations does the Czech Republic have compared to Slovakia?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1486",
+          "question": "Is it true that more SMEs pay in Czech koruna than in euros? If so, how many more?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1490",
+          "question": "How many percent of LAM customer consumed more than 46.73?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1493",
+          "question": "In February 2012, what percentage of customers consumed more than 528.3?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1498",
+          "question": "What is the highest monthly consumption in the year 2012?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1500",
+          "question": "Please list the product description of the products consumed in September, 2013.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1501",
+          "question": "Please list the countries of the gas stations with transactions taken place in June, 2013.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1505",
+          "question": "Among the customers who paid in euro, how many of them have a monthly consumption of over 1000?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1506",
+          "question": "Please list the product descriptions of the transactions taken place in the gas stations in the Czech Republic.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1507",
+          "question": "Please list the disparate time of the transactions taken place in the gas stations from chain no. 11.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1509",
+          "question": "Among the transactions made in the gas stations in the Czech Republic, how many of them are taken place after 2012/1/1?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1514",
+          "question": "What kind of currency did the customer paid at 16:25:00 in 2012/8/24?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1515",
+          "question": "What segment did the customer have at 2012/8/23 21:20:00?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1521",
+          "question": "For all the transactions happened during 8:00-9:00 in 2012/8/26, how many happened in CZE?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1524",
+          "question": "What's the nationality of the customer who spent 548.4 in 2012/8/24?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1525",
+          "question": "What is the percentage of the customers who used EUR in 2012/8/25?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1526",
+          "question": "For the customer who paid 634.8 in 2012/8/25, what was the consumption decrease rate from Year 2012 to 2013?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1528",
+          "question": "What is the percentage of \"premium\" against the overall segment in Country = \"SVK\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1529",
+          "question": "What is the amount spent by customer \"38508\" at the gas stations? How much had the customer spent in January 2012?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1531",
+          "question": "Who is the top spending customer and how much is the average price per single item purchased by this customer? What currency was being used?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "debit_card_specializing_1533",
+          "question": "For all the people who paid more than 29.00 per unit of product id No.5. Give their consumption status in the August of 2012.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        }
+      ],
+      "judge_on": false
     }
   ]
 }
