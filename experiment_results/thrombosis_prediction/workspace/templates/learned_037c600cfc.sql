@@ -1,0 +1,1 @@
+SELECT MAX("frpm"."Percent (%) Eligible FRPM (Ages 5-17)") AS "highest_eligible_free_rate" FROM "frpm" JOIN "satscores" ON "frpm"."cdscode" = "satscores"."cds" WHERE "satscores"."numtsttakr" > 0.3 ORDER BY "highest_eligible_free_rate" DESC;

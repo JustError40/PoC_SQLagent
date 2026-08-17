@@ -1,0 +1,1 @@
+SELECT column_name, data_type, character_maximum_length FROM information_schema.columns WHERE table_name = 'schools' AND column_name LIKE '%enroll%' OR column_name LIKE '%count%' OR column_name LIKE '%total%';
