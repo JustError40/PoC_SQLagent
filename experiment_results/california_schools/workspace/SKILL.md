@@ -11,11 +11,11 @@ Use `manifest.yaml` first, then load only the domain and artifact files selected
 - No one-to-many fanout joins detected during survey.
 
 ## Lessons from exploration
-- Explicitly declare join types and use ON clauses instead of implicit joins.
-- Select only required columns to minimize network overhead and index usage.
-- Always run EXPLAIN (ANALYZE) on non-trivial queries to validate index strategy before execution.
-- Prefer Common Table Expressions (CTEs) over nested subqueries for improved readability and debugging.
-- Enforce a maximum row limit on all SELECT statements to prevent unbounded memory consumption.
-- Validate clause termination for ORDER BY and GROUP BY to prevent truncation errors.
-- Ensure column aliases are fully defined and unique to avoid parsing ambiguity.
-- Verify CTE column names match SELECT lists to resolve structural parse failures.
+- Qualify all columns in `ORDER BY` and `GROUP BY` clauses with their table alias to prevent ambiguity and sorting errors.
+- Use `INNER JOIN` by default and add `LEFT JOIN` only when null values from the left side are required.
+- Apply SARGable predicates to WHERE clauses to maintain index efficiency without function wrapping.
+- Utilize Common Table Expressions (CTEs) to modularize complex logic and improve query plan readability.
+- Prefer EXISTS over IN for existence checks to reduce memory consumption and improve join performance.
+- Order joins by descending table cardinality to minimize intermediate result size.
+- Enforce explicit column aliases in all SELECT clauses to prevent ambiguity.
+- Apply aggregation filters using HAVING instead of WHERE.

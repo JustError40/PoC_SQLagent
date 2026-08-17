@@ -3,3 +3,71 @@ rules:
     (K-12)"
   source: explorer
   confidence: 0.7
+- rule: 'Use specific frpm percent column names: ''Percent (%) Eligible Free (K-12)'',
+    ''Percent (%) Eligible FRPM (K-12)'', ''Percent (%) Eligible Free (Ages 5-17)''
+    instead of generic ''Percent'''
+  source: explorer
+  confidence: 0.7
+- rule: SELECT DISTINCT column_name FROM information_schema.columns WHERE table_name
+    = 'frpm' AND column_name LIKE '%Percent%' ORDER BY column_name
+  source: explorer
+  confidence: 0.7
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'frpm'
+    AND column_name LIKE '%Percent%' AND column_name LIKE '%Eligible%'
+  source: explorer
+  confidence: 0.7
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'satscores'
+    AND column_name LIKE '%enroll%'
+  source: explorer
+  confidence: 0.7
+- rule: 'USE exact column names from frpm table for percentage metrics: ''Percent
+    (%) Eligible FRPM (Ages 5-17)'', ''Percent (%) Eligible FRPM (K-12)'', ''Percent
+    (%) Eligible Free (Ages 5-17)'' - avoid bare ''Percent'' identifier'
+  source: explorer
+  confidence: 0.7
+- rule: admfname1 column exists in schools table as text type - can be safely used
+    in queries
+  source: explorer
+  confidence: 0.7
+- rule: SELECT admfname1 FROM schools WHERE cdscode = 'target_cd'
+  source: explorer
+  confidence: 0.7
+- rule: 'Enrollment K-12 metric: Use satscores.enroll12 column for K-12 enrollment
+    data. Join satscores.cds with schools.cdscode for school context. Exclude NULL
+    enrollment values for accurate averages.'
+  source: explorer
+  confidence: 0.7
+- rule: SELECT COUNT(*) FROM schools s LEFT JOIN satscores sc ON s.cdscode = sc.cds
+    WHERE s.cdscode IS NOT NULL
+  source: explorer
+  confidence: 0.7
+- rule: SELECT COUNT(DISTINCT admfname1), COUNT(*) FROM schools WHERE admfname1 IS
+    NOT NULL LIMIT 1 -- Verify administrator name column has data in schools table
+  source: explorer
+  confidence: 0.7
+- rule: Always validate metric column null counts before calculating averages to avoid
+    division by zero errors
+  source: explorer
+  confidence: 0.7
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'frpm'
+    AND column_name LIKE '%Percent%' ORDER BY column_name
+  source: explorer
+  confidence: 0.7
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'schools'
+    AND (column_name LIKE '%enroll%' OR column_name LIKE '%count%' OR column_name
+    LIKE '%grade%') ORDER BY column_name
+  source: explorer
+  confidence: 0.7
+- rule: SELECT column_name, data_type FROM information_schema.columns WHERE table_name
+    = 'target_table' AND column_name LIKE '%enroll%' OR column_name LIKE '%numtst%'
+    OR column_name LIKE '%avgsc%'
+  source: explorer
+  confidence: 0.7
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'frpm'
+    AND (column_name LIKE '%Percent%' OR column_name LIKE '%Eligible%')
+  source: explorer
+  confidence: 0.7
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'schools'
+    AND column_name = 'admfname1'
+  source: explorer
+  confidence: 0.7
