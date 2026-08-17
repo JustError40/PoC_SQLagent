@@ -1,1 +1,0 @@
-SELECT g.country, c.segment, COUNT(*) as transaction_count, SUM(t.amount) as total_value FROM transactions_1k t INNER JOIN gasstations g ON t.gasstationid = g.gasstationid INNER JOIN customers c ON t.customerid = c.customerid GROUP BY g.country, c.segment ORDER BY total_value DESC;

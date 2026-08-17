@@ -1,1 +1,0 @@
-SELECT p.productid, p.description, ym.date, COUNT(*) as purchase_count FROM transactions_1k t JOIN products p ON t.productid = p.productid JOIN yearmonth ym ON t.customerid = ym.customerid WHERE ym.date >= '2013-01-01' GROUP BY p.productid, p.description, ym.date ORDER BY purchase_count DESC;

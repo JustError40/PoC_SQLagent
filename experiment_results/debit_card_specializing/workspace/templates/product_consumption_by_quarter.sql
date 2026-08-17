@@ -1,1 +1,0 @@
-SELECT p.description, COUNT(*) as purchase_count, EXTRACT(quarter FROM t.date) as quarter, EXTRACT(year FROM t.date) as year FROM transactions_1k t JOIN products p ON t.productid = p.productid GROUP BY p.description, EXTRACT(quarter FROM t.date), EXTRACT(year FROM t.date) ORDER BY purchase_count DESC LIMIT 20;

@@ -1,1 +1,0 @@
-SELECT c.segment, gm.country, AVG(y.consumption) as avg_consumption, COUNT(DISTINCT y.customerid) as active_customers FROM yearmonth y JOIN customers c ON y.customerid = c.customerid JOIN transactions_1k t ON y.customerid = t.customerid JOIN gasstations gm ON t.gasstationid = gm.gasstationid GROUP BY c.segment, gm.country ORDER BY avg_consumption DESC LIMIT 10;

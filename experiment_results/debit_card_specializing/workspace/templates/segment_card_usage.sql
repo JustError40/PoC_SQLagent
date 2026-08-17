@@ -1,1 +1,0 @@
-SELECT c.segment, t.cardid, COUNT(*) as card_usage_count, MIN(t.date) as first_use, MAX(t.date) as last_use FROM transactions_1k t INNER JOIN customers c ON t.customerid::BIGINT = c.customerid GROUP BY c.segment, t.cardid ORDER BY card_usage_count DESC;

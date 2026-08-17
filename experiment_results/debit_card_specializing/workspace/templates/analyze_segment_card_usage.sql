@@ -1,1 +1,0 @@
-SELECT t.cardid, c.segment, COUNT(DISTINCT t.transactionid) as transaction_count FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY t.cardid, c.segment ORDER BY transaction_count DESC LIMIT 100;

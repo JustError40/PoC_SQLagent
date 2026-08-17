@@ -1,2 +1,0 @@
-rules:
-  - avoid_unbounded_one_to_many_joins: true

@@ -1,1 +1,0 @@
-SELECT p.productid, COUNT(*) as transaction_count, SUM(t.amount) as total_value FROM transactions_1k t JOIN products p ON t.productid = p.productid GROUP BY p.productid ORDER BY transaction_count DESC;

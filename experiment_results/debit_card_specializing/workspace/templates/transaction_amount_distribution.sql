@@ -1,1 +1,0 @@
-SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY amount) AS median_amount, PERCENTILE_CONT(0.25) WITHIN GROUP (ORDER BY amount) AS q25_amount, PERCENTILE_CONT(0.75) WITHIN GROUP (ORDER BY amount) AS q75_amount, COUNT(*) AS total_transactions, SUM(amount) AS total_value FROM transactions_1k WHERE amount > 0;

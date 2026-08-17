@@ -1,0 +1,1 @@
+SELECT MAX("satscores"."numge1500") AS "numge1500", MAX("schools"."admfname3") AS "admfname3", MAX("schools"."admlname3") AS "admlname3" FROM "satscores" JOIN "schools" ON "satscores"."cds" = "schools"."cdscode" ORDER BY "numge1500" DESC LIMIT 1;

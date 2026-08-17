@@ -1,1 +1,0 @@
-SELECT COUNT(*) as transaction_count, MIN(amount) as min_amount, MAX(amount) as max_amount, AVG(amount) as avg_amount, MIN(price) as min_price, MAX(price) as max_price, AVG(price) as avg_price FROM transactions_1k;

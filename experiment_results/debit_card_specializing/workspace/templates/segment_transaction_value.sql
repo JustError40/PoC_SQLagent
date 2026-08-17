@@ -1,1 +1,0 @@
-SELECT c.segment, AVG(t.amount) as avg_transaction_value, COUNT(DISTINCT t.customerid) as unique_customers, COUNT(*) as transaction_count FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY c.segment ORDER BY avg_transaction_value DESC;

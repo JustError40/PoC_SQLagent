@@ -1,1 +1,0 @@
-SELECT t.gasstationid, g.country, COUNT(*) as transaction_count FROM transactions_1k t JOIN gasstations g ON t.gasstationid = g.gasstationid GROUP BY t.gasstationid, g.country ORDER BY transaction_count DESC;

@@ -1,192 +1,73 @@
 rules:
-- rule: Verify all customers have at least one transaction record
+- rule: SELECT COUNT(*) FROM frpm WHERE frpm."FRPM Count (K-12)" > frpm."Enrollment
+    (K-12)"
   source: explorer
   confidence: 0.7
-- rule: SELECT COUNT(*) AS null_consumption_count FROM yearmonth WHERE yearmonth.consumption
-    IS NULL
+- rule: 'Use specific frpm percent column names: ''Percent (%) Eligible Free (K-12)'',
+    ''Percent (%) Eligible FRPM (K-12)'', ''Percent (%) Eligible Free (Ages 5-17)''
+    instead of generic ''Percent'''
   source: explorer
   confidence: 0.7
-- rule: For segment-based analytics, always cast customerid to BIGINT before joining
-    with customers table to ensure proper type matching
+- rule: SELECT DISTINCT column_name FROM information_schema.columns WHERE table_name
+    = 'frpm' AND column_name LIKE '%Percent%' ORDER BY column_name
   source: explorer
   confidence: 0.7
-- rule: SELECT p.productid, p.description, COUNT(t.transactionid) as transaction_count
-    FROM transactions_1k t JOIN products p ON t.productid = p.productid GROUP BY p.productid,
-    p.description ORDER BY transaction_count DESC LIMIT 20
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'frpm'
+    AND column_name LIKE '%Percent%' AND column_name LIKE '%Eligible%'
   source: explorer
   confidence: 0.7
-- rule: SELECT gs.segment, c.segment, COUNT(*) as mismatch_count FROM transactions_1k
-    t JOIN gasstations gs ON t.gasstationid = gs.gasstationid JOIN customers c ON
-    t.customerid = c.customerid WHERE gs.segment != c.segment GROUP BY gs.segment,
-    c.segment ORDER BY mismatch_count DESC
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'satscores'
+    AND column_name LIKE '%enroll%'
   source: explorer
   confidence: 0.7
-- rule: Ensure transactions_1k table is indexed on productid and customerid columns
-    for efficient joins with products and customers tables
+- rule: 'USE exact column names from frpm table for percentage metrics: ''Percent
+    (%) Eligible FRPM (Ages 5-17)'', ''Percent (%) Eligible FRPM (K-12)'', ''Percent
+    (%) Eligible Free (Ages 5-17)'' - avoid bare ''Percent'' identifier'
   source: explorer
   confidence: 0.7
-- rule: When analyzing segment activity, use transactions_1k with customers join to
-    get accurate segment counts
+- rule: admfname1 column exists in schools table as text type - can be safely used
+    in queries
   source: explorer
   confidence: 0.7
-- rule: Ensure gasstationid exists in gasstations table before joining for transaction
-    analysis
+- rule: SELECT admfname1 FROM schools WHERE cdscode = 'target_cd'
   source: explorer
   confidence: 0.7
-- rule: USE EXTRACT(quarter FROM date) for quarterly grouping when analyzing time-based
-    metrics on date columns
+- rule: 'Enrollment K-12 metric: Use satscores.enroll12 column for K-12 enrollment
+    data. Join satscores.cds with schools.cdscode for school context. Exclude NULL
+    enrollment values for accurate averages.'
   source: explorer
   confidence: 0.7
-- rule: SELECT p.productid, p.description, c.segment, COUNT(*) as transaction_count,
-    SUM(t.amount) as total_value FROM transactions_1k t JOIN products p ON t.productid
-    = p.productid JOIN customers c ON t.customerid = c.customerid GROUP BY p.productid,
-    p.description, c.segment ORDER BY total_value DESC
+- rule: SELECT COUNT(*) FROM schools s LEFT JOIN satscores sc ON s.cdscode = sc.cds
+    WHERE s.cdscode IS NOT NULL
   source: explorer
   confidence: 0.7
-- rule: SELECT segment, COUNT(*) as transaction_count FROM transactions_1k t JOIN
-    customers c ON t.customerid = c.customerid GROUP BY c.segment ORDER BY transaction_count
-    DESC LIMIT 20
+- rule: SELECT COUNT(DISTINCT admfname1), COUNT(*) FROM schools WHERE admfname1 IS
+    NOT NULL LIMIT 1 -- Verify administrator name column has data in schools table
   source: explorer
   confidence: 0.7
-- rule: SELECT DISTINCT g.country, COUNT(t.transactionid) AS transaction_count FROM
-    transactions_1k t JOIN gasstations g ON t.gasstationid = g.gasstationid WHERE
-    t.gasstationid IS NOT NULL GROUP BY g.country ORDER BY transaction_count DESC
+- rule: Always validate metric column null counts before calculating averages to avoid
+    division by zero errors
   source: explorer
   confidence: 0.7
-- rule: SELECT c.segment, COUNT(DISTINCT c.customerid) as customers_with_yearmonth,
-    COUNT(DISTINCT t.customerid) as customers_with_transactions FROM customers c LEFT
-    JOIN yearmonth y ON c.customerid = y.customerid LEFT JOIN transactions_1k t ON
-    c.customerid = t.customerid GROUP BY c.segment
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'frpm'
+    AND column_name LIKE '%Percent%' ORDER BY column_name
   source: explorer
   confidence: 0.7
-- rule: Validate currency column against known values (CZK, EUR, USD) before segment
-    analysis to prevent invalid currency aggregation
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'schools'
+    AND (column_name LIKE '%enroll%' OR column_name LIKE '%count%' OR column_name
+    LIKE '%grade%') ORDER BY column_name
   source: explorer
   confidence: 0.7
-- rule: SELECT * FROM transactions_1k WHERE amount IS NOT NULL
+- rule: SELECT column_name, data_type FROM information_schema.columns WHERE table_name
+    = 'target_table' AND column_name LIKE '%enroll%' OR column_name LIKE '%numtst%'
+    OR column_name LIKE '%avgsc%'
   source: explorer
   confidence: 0.7
-- rule: 'Use verified join pattern: transactions_1k.customerid = customers.customerid
-    for segment-based analysis queries'
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'frpm'
+    AND (column_name LIKE '%Percent%' OR column_name LIKE '%Eligible%')
   source: explorer
   confidence: 0.7
-- rule: transactions_1k.productid must match products.productid for join verification
-  source: explorer
-  confidence: 0.7
-- rule: Validate transactions_1k joins with dimension tables on foreign key columns
-    (gasstationid, customerid, productid) before profiling queries
-  source: explorer
-  confidence: 0.7
-- rule: JOIN transactions_1k.gasstationid to gasstations.gasstationid before aggregating
-    by country for transaction metrics
-  source: explorer
-  confidence: 0.7
-- rule: SELECT segment, currency FROM customers GROUP BY segment, currency HAVING
-    COUNT(*) > 0
-  source: explorer
-  confidence: 0.7
-- rule: SELECT MIN(amount) as min_amount, MAX(amount) as max_amount, PERCENTILE_CONT(0.50)
-    WITHIN GROUP (ORDER BY amount) as median_amount FROM transactions_1k WHERE amount
-    >= 0 AND amount <= 264
-  source: explorer
-  confidence: 0.7
-- rule: yearmonth.date column format is YYYYMM (e.g., 201112, 201201)
-  source: explorer
-  confidence: 0.7
-- rule: SELECT MIN(amount), MAX(amount), AVG(amount), SUM(amount), COUNT(*), COUNT(amount)
-    FROM transactions_1k
-  source: explorer
-  confidence: 0.7
-- rule: 'Check segment consistency between customers and gasstations for transactions:
-    SELECT c.segment, g.segment, COUNT(*) FROM transactions_1k t JOIN customers c
-    ON t.customerid = c.customerid JOIN gasstations g ON t.gasstationid = g.gasstationid
-    WHERE c.segment != g.segment GROUP BY c.segment, g.segment;'
-  source: explorer
-  confidence: 0.7
-- rule: SELECT segment, COUNT(*) as customer_count, COUNT(*) FILTER (WHERE segment
-    IS NOT NULL) as valid_count FROM customers GROUP BY segment ORDER BY customer_count
-    DESC
-  source: explorer
-  confidence: 0.7
-- rule: Ensure transactions_1k.customerid matches customers.customerid before joining
-    transaction analysis queries
-  source: explorer
-  confidence: 0.7
-- rule: transactions_1k.customerid = customers.customerid is the primary key join
-    for customer segment analysis
-  source: explorer
-  confidence: 0.7
-- rule: SELECT c.segment, c.currency, COUNT(*) as transaction_count FROM transactions_1k
-    t JOIN customers c ON t.customerid = c.customerid GROUP BY c.segment, c.currency
-    ORDER BY transaction_count DESC
-  source: explorer
-  confidence: 0.7
-- rule: Verify numeric columns have expected value ranges before aggregation
-  source: explorer
-  confidence: 0.7
-- rule: Check if date columns are properly formatted before filtering
-  source: explorer
-  confidence: 0.7
-- rule: Always validate cross-table joins before using multi-table fanout queries
-    to ensure data integrity
-  source: explorer
-  confidence: 0.7
-- rule: Verify amount column is numeric and not NULL in transactions_1k using MIN/MAX/AVG/NULL_COUNT
-    aggregation checks
-  source: explorer
-  confidence: 0.7
-- rule: Ensure yearmonth.consumption has no NULL values before performing aggregation
-    or range analysis
-  source: explorer
-  confidence: 0.7
-- rule: Ensure transactions_1k.gasstationid is not null before joining with gasstations
-    table
-  source: explorer
-  confidence: 0.7
-- rule: Verify transactions_1k.gasstationid to gasstations.gasstationid join returns
-    valid country counts before aggregation queries
-  source: explorer
-  confidence: 0.7
-- rule: SELECT c.segment, g.country, COUNT(*) as transaction_count, SUM(t.amount)
-    as total_volume, AVG(t.amount) as avg_amount FROM transactions_1k t JOIN customers
-    c ON t.customerid = c.customerid JOIN gasstations g ON t.gasstationid = g.gasstationid
-    GROUP BY c.segment, g.country
-  source: explorer
-  confidence: 0.7
-- rule: Ensure amount and price columns in transactions table are numeric with consistent
-    distributions before aggregating
-  source: explorer
-  confidence: 0.7
-- rule: SELECT COUNT(*) as null_count, COUNT(*) as total_count FROM products WHERE
-    description IS NULL; -- Check for missing product descriptions
-  source: explorer
-  confidence: 0.7
-- rule: SELECT COUNT(*) as valid_records, COUNT(*) as total_records FROM yearmonth
-    WHERE consumption IS NOT NULL; -- Check consumption data completeness
-  source: explorer
-  confidence: 0.7
-- rule: SELECT MIN(amount), MAX(amount), COUNT(*), AVG(amount), STDDEV(amount) FROM
-    transactions_1k
-  source: explorer
-  confidence: 0.7
-- rule: SELECT COUNT(*) FROM transactions_1k WHERE gasstationid IS NOT NULL AND EXISTS
-    (SELECT 1 FROM gasstations WHERE gasstationid = transactions_1k.gasstationid)
-  source: explorer
-  confidence: 0.7
-- rule: SELECT c.segment, c.currency, SUM(t.amount) AS total_value, COUNT(*) AS transaction_count
-    FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY
-    c.segment, c.currency HAVING SUM(t.amount) > 1000 ORDER BY total_value DESC
-  source: explorer
-  confidence: 0.7
-- rule: SELECT c.segment, COUNT(DISTINCT t.date) as unique_dates, COUNT(t.transactionid)
-    as transactions FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid
-    GROUP BY c.segment ORDER BY unique_dates DESC
-  source: explorer
-  confidence: 0.7
-- rule: 'CHECK_CONSUMPTION_RANGE: Ensure yearmonth.consumption values stay within
-    -582093 to 2052188 range'
-  source: explorer
-  confidence: 0.7
-- rule: CZE/SVK transactions exist in gasstations table for country filtering
+- rule: SELECT column_name FROM information_schema.columns WHERE table_name = 'schools'
+    AND column_name = 'admfname1'
   source: explorer
   confidence: 0.7

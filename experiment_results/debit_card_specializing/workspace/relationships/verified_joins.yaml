@@ -1,26 +1,16 @@
 joins:
-- left: transactions_1k.customerid
-  right: customers.customerid
+- left: frpm.cdscode
+  right: satscores.cds
   cardinality: unknown
   verified: true
   verified_by: explorer
-- left: customers.customerid
-  right: yearmonth.customerid
+- left: satscores.cds
+  right: schools.cdscode
   cardinality: unknown
   verified: true
   verified_by: explorer
-- left: transactions_1k.productid
-  right: products.productid
-  cardinality: unknown
-  verified: true
-  verified_by: explorer
-- left: transactions_1k.gasstationid
-  right: gasstations.gasstationid
-  cardinality: unknown
-  verified: true
-  verified_by: explorer
-- left: transactions_1k.customerid
-  right: yearmonth.customerid
+- left: schools.cdscode
+  right: frpm.cdscode
   cardinality: unknown
   verified: true
   verified_by: explorer

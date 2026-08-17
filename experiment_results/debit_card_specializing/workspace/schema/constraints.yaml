@@ -1,24 +1,6 @@
 constraints:
-- table_name: customers
-  constraint_name: 2200_16589_1_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: gasstations
-  constraint_name: 2200_16594_1_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: products
-  constraint_name: 2200_16599_1_not_null
-  constraint_type: CHECK
-  column_name: null
-  foreign_table_name: null
-  foreign_column_name: null
-- table_name: transactions_1k
-  constraint_name: 2200_16604_1_not_null
+- table_name: satscores
+  constraint_name: 2200_16560_1_not_null
   constraint_type: CHECK
   column_name: null
   foreign_table_name: null

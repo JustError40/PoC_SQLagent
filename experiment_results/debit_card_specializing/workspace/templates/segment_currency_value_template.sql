@@ -1,1 +1,0 @@
-WITH segment_currency_value AS (SELECT c.segment, c.currency, SUM(t.amount) AS total_value, COUNT(*) AS transaction_count FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY c.segment, c.currency) SELECT segment, currency, total_value, transaction_count FROM segment_currency_value ORDER BY total_value DESC;

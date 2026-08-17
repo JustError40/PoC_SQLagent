@@ -1,9 +1,6 @@
-customer:
-- customers
-- yearmonth
-station:
-- gasstations
-product:
-- products
-transaction:
-- transactions_1k
+school_master:
+- schools
+academic_performance:
+- satscores
+student_support:
+- frpm

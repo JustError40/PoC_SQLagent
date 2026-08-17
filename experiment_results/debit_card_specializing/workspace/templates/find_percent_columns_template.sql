@@ -1,0 +1,1 @@
+SELECT DISTINCT column_name, data_type FROM information_schema.columns WHERE table_name = 'target_table' AND column_name LIKE '%Percent%' OR column_name LIKE '%Eligible%' OR column_name LIKE '%Score%' OR column_name LIKE '%Avg%' ORDER BY column_name;

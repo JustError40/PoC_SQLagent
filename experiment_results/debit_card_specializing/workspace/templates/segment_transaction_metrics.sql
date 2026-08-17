@@ -1,1 +1,0 @@
-SELECT c.segment, p.productid, COUNT(*) as transaction_count, AVG(t.amount) as avg_amount FROM transactions_1k t INNER JOIN products p ON t.productid = p.productid INNER JOIN customers c ON t.customerid = c.customerid GROUP BY c.segment, p.productid ORDER BY c.segment, transaction_count DESC;

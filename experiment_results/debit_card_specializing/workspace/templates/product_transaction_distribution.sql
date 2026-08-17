@@ -1,1 +1,0 @@
-SELECT p.productid, p.description, COUNT(*) as transaction_count, ROUND(100.0 * COUNT(*) / (SELECT COUNT(*) FROM transactions_1k), 2) as percentage FROM transactions_1k t JOIN products p ON t.productid = p.productid GROUP BY p.productid, p.description ORDER BY transaction_count DESC LIMIT 100;

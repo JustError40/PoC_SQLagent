@@ -1,1 +1,0 @@
-SELECT COUNT(*) AS "transaction_count" FROM "transactions_1k" JOIN "gasstations" ON "transactions_1k"."gasstationid" = "gasstations"."gasstationid" WHERE "gasstations"."country" = 'Czech Republic' AND "transactions_1k"."date" >= '2012-01-01' ORDER BY "transaction_count" DESC;

@@ -1,1 +1,0 @@
-SELECT c.segment, COUNT(DISTINCT t.cardid) as unique_cards, COUNT(*) as total_transactions FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY c.segment ORDER BY total_transactions DESC LIMIT 10;

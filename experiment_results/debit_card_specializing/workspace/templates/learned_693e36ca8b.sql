@@ -1,0 +1,1 @@
+SELECT "schools"."school" AS "school", AVG("satscores"."avgscrwrite") AS "avg_writing_score", MAX("schools"."phone") AS "communication_number" FROM "schools" JOIN "satscores" ON "schools"."cdscode" = "satscores"."cds" WHERE "schools"."opendate" >= DATE '1991-01-01' OR "schools"."closeddate" < DATE '2000-01-01' GROUP BY "schools"."school", "schools"."phone";

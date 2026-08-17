@@ -2,21 +2,16 @@ version: 1
 workspace: skill
 generated_by: surveyor
 tables:
-- customers
-- gasstations
-- products
-- transactions_1k
-- yearmonth
+- frpm
+- satscores
+- schools
 domains:
-  customer:
-  - customers
-  - yearmonth
-  station:
-  - gasstations
-  product:
-  - products
-  transaction:
-  - transactions_1k
+  school_master:
+  - schools
+  academic_performance:
+  - satscores
+  student_support:
+  - frpm
 artifacts:
   schema: schema/tables.yaml
   relationships: relationships/verified_joins.yaml
@@ -25,1189 +20,974 @@ artifacts:
   invariants: evals/invariants.yaml
   templates: templates/
 templates:
-  monthly_consumption_by_segment:
-    path: templates/monthly_consumption_by_segment.sql
-    description: Reusable metric for total consumption per customer segment per month
-    grain: customer_segment_date
-    metrics:
-      uses: 28
-      avg_elapsed_ms: 116.392
-      last_rows: 1
+  frpm_participation_rate:
+    path: templates/frpm_participation_rate.sql
+    description: Calculate FRPM participation rate as a reusable metric template
+    grain: School
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 1a243db1e5a2e8a0
-    last_rows: 63
-    last_elapsed_ms: 103.05419005453587
-  segment_transaction_analysis:
-    path: templates/segment_transaction_analysis.sql
-    description: Aggregates transaction counts by customer segment to analyze activity
-      distribution
-    grain: segment
-    metrics:
-      uses: 4
-      avg_elapsed_ms: 13.893
-      last_rows: 1
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: a943bd7a2a086386
-    last_rows: 3
-    last_elapsed_ms: 19.049550406634808
-  segment_currency_analysis:
-    path: templates/segment_currency_analysis.sql
-    description: Analyzes currency patterns across customer segments with transaction
-      volume metrics
-    grain: segment, currency
-    metrics:
-      uses: 45
-      avg_elapsed_ms: 35.493
-      last_rows: 3
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: f29da8f839c381fc
-    last_rows: 6
-    last_elapsed_ms: 19.017335027456284
-  segment_card_usage:
-    path: templates/segment_card_usage.sql
-    description: Tracks card usage frequency and tenure patterns by customer segment
-    grain: segment, cardid
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 54370316deb3ba95
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: c460b5bd51823378
     last_rows: 500
-    last_elapsed_ms: 18.994051963090897
-  segment_consumption_summary:
-    path: templates/segment_consumption_summary.sql
-    description: Aggregates consumption metrics by segment across time periods
-    grain: segment
+    last_elapsed_ms: 16.736255027353764
     metrics:
-      uses: 15
-      avg_elapsed_ms: 135.083
-      last_rows: 3
+      uses: 24
+      avg_elapsed_ms: 30.17
+      last_rows: 1
+  satscore_avg_by_school_type:
+    path: templates/satscore_avg_by_school_type.sql
+    description: Calculate average number of tests taken per school type
+    grain: school_type
+    metrics:
+      uses: 8
+      avg_elapsed_ms: 65.342
+      last_rows: 1
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: f2c072cc76a2b53b
-    last_rows: 3
-    last_elapsed_ms: 499.81329683214426
-  learned_765ac750ce:
-    path: templates/learned_765ac750ce.sql
-    description: Please list the product description of the products consumed in September,
-      2013.
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: a4b506872b7cfa8d
+    last_rows: 2
+    last_elapsed_ms: 9.8594194278121
+  learned_502f02c1cc:
+    path: templates/learned_502f02c1cc.sql
+    description: How many schools with an average score in Math greater than 400 in
+      the SAT test are exclusively virtual?
     grain: ''
-    fingerprint: 765ac750ce
-    source: query_agent
-    spec: null
-    explain_cost: 41.17
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 16.46491326391697
-    metrics:
-      uses: 14
-      avg_elapsed_ms: 37.272
-      last_rows: 0
-  learned_9d82c7955d:
-    path: templates/learned_9d82c7955d.sql
-    description: Please list the product descriptions of the transactions taken place
-      in the gas stations in the Czech Republic.
-    grain: ''
-    fingerprint: 9d82c7955d
-    source: query_agent
-    spec: null
-    explain_cost: 154.37
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: e3b0c44298fc1c14
-    last_rows: 0
-    last_elapsed_ms: 13.50602600723505
-    metrics:
-      uses: 18
-      avg_elapsed_ms: 41.551
-      last_rows: 0
-  learned_33572b4c70:
-    path: templates/learned_33572b4c70.sql
-    description: Among the transactions made in the gas stations in the Czech Republic,
-      how many of them are taken place after 2012/1/1?
-    grain: ''
-    fingerprint: 33572b4c70
+    fingerprint: 502f02c1cc
     source: query_agent
     spec:
       type: object
-      from: transactions_1k
-      joins:
-      - table: gasstations
-        left: gasstationid
-        right: gasstationid
+      from: satscores
+      joins: []
       group_by: []
       measures:
       - agg: count
-        table: transactions_1k
-        column: '*'
-        alias: transaction_count
+        table: satscores
+        column: cds
+        alias: school_count
       filters:
-      - table: gasstations
-        column: country
+      - table: satscores
+        column: avgscrmath
+        op: '>'
+        value: 400
+      - table: satscores
+        column: rtype
         op: '='
-        value: Czech Republic
-      - table: transactions_1k
-        column: date
-        op: '>='
-        value: '2012-01-01'
+        value: virtual
       order:
-        by: transaction_count
-        dir: desc
-    explain_cost: 143.75
+        by: school_count
+        dir: asc
+    explain_cost: 74.06
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: afdce9692fc4bc66
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 9905944daf20921f
     last_rows: 1
-    last_elapsed_ms: 11.827833019196987
+    last_elapsed_ms: 8.87319166213274
     metrics:
-      uses: 32
-      avg_elapsed_ms: 22.966
+      uses: 17
+      avg_elapsed_ms: 25.636
       last_rows: 1
-  learned_a01a0a8f0f:
-    path: templates/learned_a01a0a8f0f.sql
-    description: Please list the countries of the gas stations with transactions taken
-      place in June, 2013.
+  learned_18e282f69c:
+    path: templates/learned_18e282f69c.sql
+    description: List the names of schools with more than 30 difference in enrollements
+      between K-12 and ages 5-17? Please also give the full street adress of the schools.
     grain: ''
-    fingerprint: a01a0a8f0f
+    fingerprint: 18e282f69c
     source: query_agent
     spec: null
-    explain_cost: 149.62
+    explain_cost: 1811.7
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
     result_hash: e3b0c44298fc1c14
     last_rows: 0
-    last_elapsed_ms: 10.016441345214844
+    last_elapsed_ms: 19.614072516560555
     metrics:
-      uses: 15
-      avg_elapsed_ms: 21.882
+      uses: 22
+      avg_elapsed_ms: 31.429
       last_rows: 0
-  product_frequency_analysis:
-    path: templates/product_frequency_analysis.sql
-    description: Query to identify most frequently purchased products with transaction
-      counts
-    grain: product
+  learned_4499c86216:
+    path: templates/learned_4499c86216.sql
+    description: Of the schools that offers a magnet program serving a grade span
+      of Kindergarten to 8th grade, how many offers Multiple Provision Types? List
+      the number of cities that offers a Kindergarten to 8th gra
+    grain: city
+    fingerprint: 4499c86216
+    source: query_agent
+    spec:
+      from: schools
+      joins: []
+      group_by:
+      - table: schools
+        column: city
+      measures:
+      - agg: count
+        table: schools
+        column: '*'
+        alias: total_schools
+      - agg: count_distinct
+        table: schools
+        column: fundingtype
+        alias: multiple_provision_types
+      filters:
+      - table: schools
+        column: magnet
+        op: '='
+        value: 1
+      - table: schools
+        column: gsoffered
+        op: '='
+        value: K-8
+      order:
+        by: multiple_provision_types
+        dir: desc
+      limit: 10
+    explain_cost: 1227.86
     status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: a9ec984a2e1cebf7
-    last_rows: 20
-    last_elapsed_ms: 9.638073854148388
-  country_volume_analysis:
-    path: templates/country_volume_analysis.sql
-    description: Query to analyze transaction volume by country at gas stations
-    grain: country
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 51245352a189ba45
-    last_rows: 2
-    last_elapsed_ms: 11.551004834473133
-  segment_value_analysis:
-    path: templates/segment_value_analysis.sql
-    description: Query to analyze total transaction value by customer segment
-    grain: segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 20dba8508522cecb
-    last_rows: 3
-    last_elapsed_ms: 16.687054187059402
-  product_transaction_distribution:
-    path: templates/product_transaction_distribution.sql
-    description: Calculate percentage of transactions per product with verification
-      of productid join
-    grain: product
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 01f79131bff45675
-    last_rows: 28
-    last_elapsed_ms: 10.005451738834381
-  yearmonth_consumption_profile:
-    path: templates/yearmonth_consumption_profile.sql
-    description: Distribution of consumption values across customers in yearmonth
-      table
-    grain: consumption
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 07516a91a31297dc
-    last_rows: 100
-    last_elapsed_ms: 553.5567263141274
-    metrics:
-      uses: 39
-      avg_elapsed_ms: 88.326
-      last_rows: 1
-  segment_transaction_frequency:
-    path: templates/segment_transaction_frequency.sql
-    description: Transaction frequency per customer segment with unique customer count
-    grain: segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 7405c6f048b825c0
-    last_rows: 3
-    last_elapsed_ms: 48.04519843310118
-  card_usage_pattern_analysis:
-    path: templates/card_usage_pattern_analysis.sql
-    description: Reusable query to analyze card usage patterns across transactions,
-      identifying which cards are most frequently used and by how many unique customers
-    grain: transactions_1k
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: b7a37eec13b6d266
-    last_rows: 20
-    last_elapsed_ms: 12.07845751196146
-  product_value_distribution:
-    path: templates/product_value_distribution.sql
-    description: Calculate total transaction value and count per product to analyze
-      consumption patterns
-    grain: product
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 6d498372c37600f1
-    last_rows: 28
-    last_elapsed_ms: 11.624542064964771
-  segment_transaction_value:
-    path: templates/segment_transaction_value.sql
-    description: Calculate average transaction value per customer segment to analyze
-      segment spending patterns
-    grain: segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 7ccf63e6163a3db4
-    last_rows: 3
-    last_elapsed_ms: 17.220363952219486
-    metrics:
-      uses: 2
-      avg_elapsed_ms: 18.037
-      last_rows: 1
-  country_transaction_volume:
-    path: templates/country_transaction_volume.sql
-    description: Calculate total transaction volume per country to analyze geographic
-      transaction distribution
-    grain: country
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 71b5f4f2fb387098
-    last_rows: 2
-    last_elapsed_ms: 11.453870683908463
-  card_usage_by_segment:
-    path: templates/card_usage_by_segment.sql
-    description: Card usage frequency analysis by customer segment, validates cardid
-      to customerid relationships
-    grain: cardid, segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: b9d778edbd8b1ebb
-    last_rows: 500
-    last_elapsed_ms: 17.775822430849075
-  monthly_product_consumption:
-    path: templates/monthly_product_consumption.sql
-    description: Product consumption metrics grouped by year-month period with purchase
-      counts
-    grain: productid, description, date
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: c4c3a13e5d30af09
-    last_rows: 271
-    last_elapsed_ms: 62.22211755812168
-  segment_date_consumption_profile:
-    path: templates/segment_date_consumption_profile.sql
-    description: Customer segment consumption profile across time with active customer
-      counts
-    grain: segment, date
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 0b2fdb394819a89d
-    last_rows: 63
-    last_elapsed_ms: 830.9035198763013
-  product_transaction_summary:
-    path: templates/product_transaction_summary.sql
-    description: Get transaction count and total value per product
-    grain: product_id
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 144d4e7e464ac941
-    last_rows: 28
-    last_elapsed_ms: 14.629052951931953
-  consumption_profile:
-    path: templates/consumption_profile.sql
-    description: Get consumption distribution and customer count
-    grain: consumption_value
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 77c52be4c5e4e4b8
-    last_rows: 20
-    last_elapsed_ms: 83.0228989943862
-    metrics:
-      uses: 12
-      avg_elapsed_ms: 80.871
-      last_rows: 1
-  segment_value_template:
-    path: templates/segment_value_template.sql
-    description: Reusable metric template for total transaction value by customer
-      segment
-    grain: customer_segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 4942f4758cebce80
-    last_rows: 3
-    last_elapsed_ms: 20.609885454177856
-  country_transaction_template:
-    path: templates/country_transaction_template.sql
-    description: Reusable metric template for country-level transaction counts
-    grain: country
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: af93fe65affd335b
-    last_rows: 2
-    last_elapsed_ms: 12.776785530149937
-  amount_distribution_template:
-    path: templates/amount_distribution_template.sql
-    description: Reusable metric template for transaction amount distribution and
-      value ranges
-    grain: global
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: e25fd857897fc795
-    last_rows: 1
-    last_elapsed_ms: 8.672541938722134
-  product_distribution_by_transaction_count:
-    path: templates/product_distribution_by_transaction_count.sql
-    description: Query to get distribution of products by transaction count
-    grain: transaction_count
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 055c6b54e70c8b52
-    last_rows: 20
-    last_elapsed_ms: 9.830774739384651
-  segment_metrics_by_currency:
-    path: templates/segment_metrics_by_currency.sql
-    description: Query to get segment and currency distribution from transactions
-    grain: segment,currency
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 595b257497385ec3
-    last_rows: 6
-    last_elapsed_ms: 17.667874693870544
-  transaction_country_analysis:
-    path: templates/transaction_country_analysis.sql
-    description: Query to analyze transactions by gasstation country with aggregation
-    grain: gasstationid, country
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 47f209356f229a5a
-    last_rows: 437
-    last_elapsed_ms: 13.281924650073051
-  consumption_segment_profile:
-    path: templates/consumption_segment_profile.sql
-    description: Query to build consumption profiles by customer segment and date
-    grain: segment, date
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: e9bd230ff1fcccb5
-    last_rows: 63
-    last_elapsed_ms: 947.8655764833093
-    metrics:
-      uses: 13
-      avg_elapsed_ms: 50.975
-      last_rows: 1
-  product_consumption_by_quarter:
-    path: templates/product_consumption_by_quarter.sql
-    description: Query to find most frequently purchased products by quarter, useful
-      for seasonal analysis
-    grain: quarterly
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 84abecbdde827b9d
-    last_rows: 20
-    last_elapsed_ms: 11.77507359534502
-  transaction_amount_percentiles:
-    path: templates/transaction_amount_percentiles.sql
-    description: Calculate spending distribution percentiles to understand amount
-      patterns
-    grain: aggregated
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 3b0c5f7d72076294
-    last_rows: 1
-    last_elapsed_ms: 9.855149313807487
-  segment_consumption_by_geography:
-    path: templates/segment_consumption_by_geography.sql
-    description: Query to analyze average consumption per customer segment by country
-    grain: geographic
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 523fe232fe1bd572
-    last_rows: 6
-    last_elapsed_ms: 42.28660836815834
-  card_usage_analysis:
-    path: templates/card_usage_analysis.sql
-    description: Template query to analyze card usage distribution by transaction
-      count and unique customers
-    grain: cardid
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: b7a37eec13b6d266
-    last_rows: 20
-    last_elapsed_ms: 11.471566744148731
-  consumption_distribution_profile:
-    path: templates/consumption_distribution_profile.sql
-    description: Profile consumption values by grouping and aggregating statistics
-      for consumption column
-    grain: yearmonth
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 9fa598de90faea69
-    last_rows: 500
-    last_elapsed_ms: 378.0507640913129
-    metrics:
-      uses: 6
-      avg_elapsed_ms: 69.427
-      last_rows: 1
-  segment_monthly_transaction_volume:
-    path: templates/segment_monthly_transaction_volume.sql
-    description: Reusable metric template for tracking monthly transaction volume
-      by customer segment
-    grain: segment, month
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: f94861b6cf6784a5
-    last_rows: 3
-    last_elapsed_ms: 19.47974693030119
-  transaction_amount_distribution:
-    path: templates/transaction_amount_distribution.sql
-    description: Query to analyze spending patterns and verify amount column in transactions_1k
-    grain: transactions_1k
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 9ef696678e4903b4
-    last_rows: 1
-    last_elapsed_ms: 10.37950161844492
-  transaction_volume_by_segment_country:
-    path: templates/transaction_volume_by_segment_country.sql
-    description: Multi-table join pattern to get transaction volume grouped by customer
-      segment and country
-    grain: segment_country
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 3d1890e4456bbbee
-    last_rows: 6
-    last_elapsed_ms: 17.979489639401436
-  segment_monthly_consumption_template:
-    path: templates/segment_monthly_consumption_template.sql
-    description: Reusable CTE-based query for monthly consumption aggregated by customer
-      segment, joining yearmonth and customers tables
-    grain: customer_segment, date
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: ad5678043785b1e1
-    last_rows: 63
-    last_elapsed_ms: 825.7378796115518
     metrics:
       uses: 10
-      avg_elapsed_ms: 119.987
-      last_rows: 2
-  transaction_amount_profile:
-    path: templates/transaction_amount_profile.sql
-    description: Profile numeric amount column in transactions to understand spending
-      patterns and verify it's a numeric column
-    grain: transactions_1k
-    status: ok
+      avg_elapsed_ms: 27.149
+      last_rows: 10
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: dba430cc727c4201
-    last_rows: 1
-    last_elapsed_ms: 17.29404181241989
-  transaction_date_distribution:
-    path: templates/transaction_date_distribution.sql
-    description: Profile date column patterns in transaction tables to verify date
-      format and distribution
-    grain: date
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: dbb9c2d585d1a956
-    last_rows: 1
-    last_elapsed_ms: 11.060324497520924
-    metrics:
-      uses: 8
-      avg_elapsed_ms: 10.689
-      last_rows: 2
-  profile_currency_by_segment:
-    path: templates/profile_currency_by_segment.sql
-    description: Reusable metric query for currency distribution across customer segments
-      with consumption analysis
-    grain: segment, currency
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: dee632946dfd57c9
-    last_rows: 6
-    last_elapsed_ms: 106.79199267178774
-    metrics:
-      uses: 6
-      avg_elapsed_ms: 96.54
-      last_rows: 1
-  segment_transaction_value_by_currency:
-    path: templates/segment_transaction_value_by_currency.sql
-    description: Reusable metric template for transaction value analysis by segment
-      and currency
-    grain: segment, currency
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 5333f0feed416617
-    last_rows: 6
-    last_elapsed_ms: 21.60106599330902
-    metrics:
-      uses: 16
-      avg_elapsed_ms: 15.318
-      last_rows: 1
-  transaction_distribution_by_country:
-    path: templates/transaction_distribution_by_country.sql
-    description: Query to analyze transaction distribution by country using gasstation
-      metadata
-    grain: country
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 56b0fa17d8053744
-    last_rows: 2
-    last_elapsed_ms: 14.399513602256775
-  segment_transaction_date_template:
-    path: templates/segment_transaction_date_template.sql
-    description: Reusable metric template for transaction date distribution by customer
-      segment
-    grain: segment, year
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 644c0c146b6702a8
-    last_rows: 3
-    last_elapsed_ms: 17.03748106956482
-    metrics:
-      uses: 4
-      avg_elapsed_ms: 13.857
-      last_rows: 1
-  date_column_profile_transactions:
-    path: templates/date_column_profile_transactions.sql
-    description: Template for profiling date column distribution patterns in transactions
-      table
-    grain: date
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 996af3827600c4ef
-    last_rows: 4
-    last_elapsed_ms: 10.091684758663177
-  gasstations_country_distribution:
-    path: templates/gasstations_country_distribution.sql
-    description: Profile the gasstations table by country to understand geographic
-      distribution patterns
-    grain: gasstations
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 2692ee4b233c9572
-    last_rows: 2
-    last_elapsed_ms: 10.879900306463242
-  segment_customerjoin_metric:
-    path: templates/segment_customerjoin_metric.sql
-    description: Monthly consumption by customer segment metric
-    grain: monthly consumption by customer segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: a31d4dad9a5b4ec4
-    last_rows: 3
-    last_elapsed_ms: 464.7447597235441
-  country_transaction_analysis:
-    path: templates/country_transaction_analysis.sql
-    description: Reusable metric template for country-level transaction analysis with
-      aggregation by country and segment
-    grain: country,segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 945c61d4ce0a9022
-    last_rows: 6
-    last_elapsed_ms: 21.50004170835018
-  customer_segment_distribution:
-    path: templates/customer_segment_distribution.sql
-    description: Profile customer segments with counts and unique customer counts
-      for segmentation analysis
-    grain: segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 47a8e58ee190c991
-    last_rows: 3
-    last_elapsed_ms: 34.96607858687639
-  gasstation_country_profile:
-    path: templates/gasstation_country_profile.sql
-    description: Profile gas stations by country with station counts and unique station
-      counts for geographic analysis
-    grain: country
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 729c6baf82c3780b
-    last_rows: 2
-    last_elapsed_ms: 14.027472585439682
-    metrics:
-      uses: 10
-      avg_elapsed_ms: 18.238
-      last_rows: 1
-  learned_bb982560c1:
-    path: templates/learned_bb982560c1.sql
-    description: What is the amount spent by customer "38508" at the gas stations?
-      How much had the customer spent in January 2012?
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: b7486752d05df7e7
+    last_rows: 10
+    last_elapsed_ms: 15.81489760428667
+  learned_1aaa8d3fea:
+    path: templates/learned_1aaa8d3fea.sql
+    description: Please list the codes of the schools with a total enrollment of over
+      500.
     grain: ''
-    fingerprint: bb982560c1
+    fingerprint: 1aaa8d3fea
     source: query_agent
     spec: null
-    explain_cost: 152.13
+    explain_cost: 477.82
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: b2ee50795359cb13
-    last_rows: 1
-    last_elapsed_ms: 10.09137462824583
-    metrics:
-      uses: 13
-      avg_elapsed_ms: 13.677
-      last_rows: 0
-  product_transaction_metric_template:
-    path: templates/product_transaction_metric_template.sql
-    description: Reusable metric template for product transaction analysis with transaction
-      counts and value totals grouped by product
-    grain: product
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 6d498372c37600f1
-    last_rows: 28
-    last_elapsed_ms: 9.866832755506039
-  segment_consumption_profile:
-    path: templates/segment_consumption_profile.sql
-    description: Profile consumption metrics by customer segment with date grouping
-      for trend analysis
-    grain: yearmonth
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 14b149036938956b
-    last_rows: 63
-    last_elapsed_ms: 103.16760372370481
-    metrics:
-      uses: 2
-      avg_elapsed_ms: 203.947
-      last_rows: 1
-  segment_country_volume:
-    path: templates/segment_country_volume.sql
-    description: Transaction volume by customer segment and gasstation country
-    grain: segment, country
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 39fc5dd0e2294a35
-    last_rows: 6
-    last_elapsed_ms: 17.221921123564243
-  segment_card_usage_metric:
-    path: templates/segment_card_usage_metric.sql
-    description: Count unique cards and transactions per customer segment
-    grain: segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 2b9ecd497719101f
-    last_rows: 3
-    last_elapsed_ms: 16.15513302385807
-  product_segment_consumption:
-    path: templates/product_segment_consumption.sql
-    description: Reusable metric template for product consumption by customer segment
-      combining transactions, products, and customers tables with transaction counts
-      and total values
-    grain: segment, currency, productid
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: d248dd6e6e42ef41
-    last_rows: 6
-    last_elapsed_ms: 17.881030216813087
-  currency_distribution_by_segment:
-    path: templates/currency_distribution_by_segment.sql
-    description: Query to analyze customer currency patterns grouped by segment
-    grain: segment, currency
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: f86324e00cc805ef
-    last_rows: 6
-    last_elapsed_ms: 16.88947156071663
-    metrics:
-      uses: 15
-      avg_elapsed_ms: 48.336
-      last_rows: 1
-  transaction_date_profile:
-    path: templates/transaction_date_profile.sql
-    description: Query to analyze transaction date patterns and frequency distribution
-    grain: date
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 996af3827600c4ef
-    last_rows: 4
-    last_elapsed_ms: 8.92604049295187
-  station_country_distribution:
-    path: templates/station_country_distribution.sql
-    description: Query to analyze gas station geographic distribution by country
-    grain: country
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 2692ee4b233c9572
-    last_rows: 2
-    last_elapsed_ms: 10.454143397510052
-  transaction_numeric_profile:
-    path: templates/transaction_numeric_profile.sql
-    description: Profile numeric columns in transactions table for range and distribution
-      analysis
-    grain: table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 3cf386ed3df928bd
-    last_rows: 1
-    last_elapsed_ms: 7.55003746598959
-  segment_transaction_template:
-    path: templates/segment_transaction_template.sql
-    description: Reusable metric template for total transaction value per customer
-      segment with join verification
-    grain: per customer segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 6167afec9982f094
-    last_rows: 3
-    last_elapsed_ms: 15.438905917108059
-  monthly_segment_consumption_template:
-    path: templates/monthly_segment_consumption_template.sql
-    description: Reusable metric template for monthly consumption aggregated by customer
-      segment joining yearmonth and customers tables with proper date grouping
-    grain: segment_month
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 7295c8bd2cc865fb
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: a660035cb892e9e6
     last_rows: 500
-    last_elapsed_ms: 768.183252774179
+    last_elapsed_ms: 12.81549409031868
     metrics:
-      uses: 1
-      avg_elapsed_ms: 61.067
+      uses: 8
+      avg_elapsed_ms: 13.775
+      last_rows: 500
+  learned_e33823ea13:
+    path: templates/learned_e33823ea13.sql
+    description: What is the telephone number for the school with the lowest average
+      score in reading in Fresno Unified?
+    grain: ''
+    fingerprint: e33823ea13
+    source: query_agent
+    spec: null
+    explain_cost: 1271.99
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 67cc230db366e66c
+    last_rows: 1
+    last_elapsed_ms: 14.473828487098217
+    metrics:
+      uses: 12
+      avg_elapsed_ms: 18.241
       last_rows: 1
-  productid_distribution_template:
-    path: templates/productid_distribution_template.sql
-    description: Reusable metric template for product purchase frequency analysis
-      with unique customer tracking
-    grain: product
+  learned_837318fad5:
+    path: templates/learned_837318fad5.sql
+    description: What is the ratio of merged Unified School District schools in Orange
+      County to merged Elementary School District schools?
+    grain: ''
+    fingerprint: 837318fad5
+    source: query_agent
+    spec: null
+    explain_cost: 1055.56
+    status: ok
+    metrics:
+      uses: 8
+      avg_elapsed_ms: 40.534
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: fe76e12ae4d573a6
+    last_rows: 1
+    last_elapsed_ms: 14.110386371612549
+  learned_7102749e71:
+    path: templates/learned_7102749e71.sql
+    description: Under whose administration is the school with the highest number
+      of students scoring 1500 or more on the SAT? Indicate their full names.
+    grain: ''
+    fingerprint: 7102749e71
+    source: query_agent
+    spec: null
+    explain_cost: 1294.31
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: c4319dadaf75e048
-    last_rows: 20
-    last_elapsed_ms: 9.00475587695837
-  validate_column_pattern_with_join:
-    path: templates/validate_column_pattern_with_join.sql
-    description: Template for validating numeric column patterns and join relationships
-      between transaction and customer tables
-    grain: per_transaction
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 2666030e62128c0b
-    last_rows: 500
-    last_elapsed_ms: 16.46830514073372
-  analyze_segment_card_usage:
-    path: templates/analyze_segment_card_usage.sql
-    description: Template for analyzing card usage patterns by customer segment with
-      transaction counts
-    grain: per_cardid_per_segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: ff943becfbe7d8e5
-    last_rows: 100
-    last_elapsed_ms: 17.159368842840195
-  validate_date_format_distribution:
-    path: templates/validate_date_format_distribution.sql
-    description: Template for validating date format consistency and distribution
-      in transaction data
-    grain: per_date
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: a1874174002eb490
-    last_rows: 4
-    last_elapsed_ms: 9.797800332307816
-  segment_transaction_metrics:
-    path: templates/segment_transaction_metrics.sql
-    description: Query to analyze product transactions grouped by customer segment
-      with transaction counts and average amounts
-    grain: customer_segment, product
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: d447d47543038c68
-    last_rows: 62
-    last_elapsed_ms: 14.836781658232212
-  country_segment_volume:
-    path: templates/country_segment_volume.sql
-    description: Query to analyze transaction volume by gas station country and customer
-      segment
-    grain: country, customer_segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 945c61d4ce0a9022
-    last_rows: 6
-    last_elapsed_ms: 18.385457806289196
-  card_usage_profile:
-    path: templates/card_usage_profile.sql
-    description: Profile card usage patterns and frequency distribution from transactions
-      table
-    grain: cardid
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 08aebb020d6ca052
-    last_rows: 50
-    last_elapsed_ms: 9.043793193995953
-  segment_temporal_profile:
-    path: templates/segment_temporal_profile.sql
-    description: Profile transaction activity by customer segment and date
-    grain: segment,date
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 1187248509ddf668
-    last_rows: 12
-    last_elapsed_ms: 16.767055727541447
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e321fbbeacee221b
+    last_rows: 1
+    last_elapsed_ms: 20.15695907175541
     metrics:
       uses: 6
-      avg_elapsed_ms: 11.225
+      avg_elapsed_ms: 25.542
       last_rows: 1
-  country_transaction_metrics:
-    path: templates/country_transaction_metrics.sql
-    description: Count transactions per country by joining transactions_1k with gasstations
-    grain: country
+  learned_a40b2e5121:
+    path: templates/learned_a40b2e5121.sql
+    description: List the names of schools with more than 30 difference in enrollements
+      between K-12 and ages 5-17? Please also give the full street adress of the schools.
+    grain: ''
+    fingerprint: a40b2e5121
+    source: query_agent
+    spec: null
+    explain_cost: 2075.5
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 51245352a189ba45
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 7cf3936f00ccd042
+    last_rows: 500
+    last_elapsed_ms: 19.878100603818893
+  learned_f6f2fe6f05:
+    path: templates/learned_f6f2fe6f05.sql
+    description: What is the eligible free rate of the 10th and 11th schools with
+      the highest enrolment for students in grades 1 through 12?
+    grain: ''
+    fingerprint: f6f2fe6f05
+    source: query_agent
+    spec: null
+    explain_cost: 675.55
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 65ba9f8c67323c33
     last_rows: 2
-    last_elapsed_ms: 10.554139502346516
-  segment_consumption_metrics:
-    path: templates/segment_consumption_metrics.sql
-    description: Count consumption records per customer segment by joining customers
-      with yearmonth
-    grain: segment
+    last_elapsed_ms: 11.85025367885828
+    metrics:
+      uses: 12
+      avg_elapsed_ms: 28.7
+      last_rows: 2
+  learned_b777138262:
+    path: templates/learned_b777138262.sql
+    description: Name schools in Riverside which the average of average math score
+      for SAT is grater than 400, what is the funding type of these schools?
+    grain: ''
+    fingerprint: b777138262
+    source: query_agent
+    spec: null
+    explain_cost: 1254.68
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 7deda09de62e51da
-    last_rows: 3
-    last_elapsed_ms: 67.93568655848503
-  product_consumption_segment_template:
-    path: templates/product_consumption_segment_template.sql
-    description: Reusable metric template for product consumption by customer segment
-      joining transactions, customers, and products tables
-    grain: segment, productid
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 2af6021d9826fb76
-    last_rows: 62
-    last_elapsed_ms: 15.293247066438198
-  productid_column_profile:
-    path: templates/productid_column_profile.sql
-    description: Basic template for profiling productid column distribution and transaction
-      metrics
-    grain: database_level
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 44f1218d87db3c48
-    last_rows: 1
-    last_elapsed_ms: 8.444440551102161
-  verify_customer_segment_consumption:
-    path: templates/verify_customer_segment_consumption.sql
-    description: Query to count consumption records per customer segment from the
-      customers and yearmonth tables
-    grain: customer segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 829bc5f747cc4a42
-    last_rows: 3
-    last_elapsed_ms: 98.85078482329845
-  card_distribution_profile:
-    path: templates/card_distribution_profile.sql
-    description: Profile card distribution patterns in a transactions table
-    grain: transactions_1k
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 0b01b590acfe5a08
-    last_rows: 1
-    last_elapsed_ms: 12.249407358467579
-  temporal_pattern_analysis:
-    path: templates/temporal_pattern_analysis.sql
-    description: Analyze date and time patterns in transaction data
-    grain: transactions_1k
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 2cc6ffae0bf53967
-    last_rows: 100
-    last_elapsed_ms: 11.117220856249332
-  product_consumption_metric:
-    path: templates/product_consumption_metric.sql
-    description: Reusable metric template for product consumption analysis including
-      transaction counts, total values, and value percentages
-    grain: product
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: cce243f2b49e33c5
-    last_rows: 28
-    last_elapsed_ms: 10.023312643170357
-  transaction_profile_by_segment:
-    path: templates/transaction_profile_by_segment.sql
-    description: Reusable metric template for aggregating transaction amounts by customer
-      segment with count, average, and sum calculations
-    grain: customer_segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 51abaffbf32125cf
-    last_rows: 3
-    last_elapsed_ms: 13.730844482779503
-  product_consumption_by_segment:
-    path: templates/product_consumption_by_segment.sql
-    description: Reusable metric template for tracking product consumption patterns
-      across customer segments with purchase counts and values
-    grain: product_segment
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 352bb541f094c053
-    last_rows: 60
-    last_elapsed_ms: 17.51597411930561
-  consumption_trends_by_segment:
-    path: templates/consumption_trends_by_segment.sql
-    description: Reusable metric template for tracking consumption trends over time
-      by customer segment with date and consumption metrics
-    grain: segment_date
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: c5049a0fab26539f
-    last_rows: 63
-    last_elapsed_ms: 86.80374827235937
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: a1807938ea202e8b
+    last_rows: 8
+    last_elapsed_ms: 15.710733830928802
     metrics:
       uses: 4
-      avg_elapsed_ms: 80.23
+      avg_elapsed_ms: 15.81
+      last_rows: 8
+  learned_87d9585a9e:
+    path: templates/learned_87d9585a9e.sql
+    description: Rank schools by their average score in Writing where the score is
+      greater than 499, showing their charter numbers.
+    grain: charternum
+    fingerprint: 87d9585a9e
+    source: query_agent
+    spec:
+      from: satscores
+      joins:
+      - table: schools
+        left: cds
+        right: cdscode
+      group_by:
+      - table: schools
+        column: charternum
+      measures:
+      - agg: avg
+        table: satscores
+        column: avgscrwrite
+        alias: avg_writing_score
+      filters:
+      - column: avgscrwrite
+        op: '>'
+        value: 499
+      order:
+        by: avg_writing_score
+        dir: desc
+      limit: 10
+    explain_cost: 1302.56
+    status: ok
+    metrics:
+      uses: 15
+      avg_elapsed_ms: 55.797
       last_rows: 0
-  station_segment_volume_template:
-    path: templates/station_segment_volume_template.sql
-    description: Reusable metric for transaction volume by customer segment and gas
-      station country, combining verified geographic consumption analysis
-    grain: segment, country
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 9db208ec4337e5d6
+    last_rows: 10
+    last_elapsed_ms: 14.801235869526863
+  learned_3abd2da68f:
+    path: templates/learned_3abd2da68f.sql
+    description: Please list the codes of the schools with a total enrollment of over
+      500.
+    grain: ''
+    fingerprint: 3abd2da68f
+    source: query_agent
+    spec: null
+    explain_cost: 2055.48
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: d3cd58eb9eee06ad
-    last_rows: 6
-    last_elapsed_ms: 19.578877836465836
-  transaction_metrics_by_segment:
-    path: templates/transaction_metrics_by_segment.sql
-    description: Reusable metric for transaction counts and totals grouped by product
-      and customer segment
-    grain: transaction by product and customer segment
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: af9fff08406f85fe
+    last_rows: 500
+    last_elapsed_ms: 29.696074314415455
+  learned_6b3520d5ec:
+    path: templates/learned_6b3520d5ec.sql
+    description: Under whose administration is the school with the highest number
+      of students scoring 1500 or more on the SAT? Indicate their full names.
+    grain: ''
+    fingerprint: 6b3520d5ec
+    source: query_agent
+    spec:
+      type: object
+      from: satscores
+      joins:
+      - table: schools
+        left: cds
+        right: cdscode
+      group_by: []
+      measures:
+      - agg: max
+        table: satscores
+        column: numge1500
+        alias: numge1500
+      - agg: max
+        table: schools
+        column: admfname3
+        alias: admfname3
+      - agg: max
+        table: schools
+        column: admlname3
+        alias: admlname3
+      filters: []
+      order:
+        by: numge1500
+        dir: desc
+      limit: 1
+    explain_cost: 1333.97
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 8e452a7c4433fdb7
-    last_rows: 62
-    last_elapsed_ms: 17.19141099601984
-  verify_amount_price_relationship:
-    path: templates/verify_amount_price_relationship.sql
-    description: Verifies numeric integrity and distribution consistency between amount
-      and price columns
-    grain: table-level statistics
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 25328bbbf7d4ebbc
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 8a6f1cee2bfb211e
     last_rows: 1
-    last_elapsed_ms: 8.877809159457684
-  country_station_query:
-    path: templates/country_station_query.sql
-    description: Query to get station counts grouped by country
-    grain: table
+    last_elapsed_ms: 16.422211192548275
+  learned_c4bcaaecb5:
+    path: templates/learned_c4bcaaecb5.sql
+    description: How many schools with an average score in Math greater than 400 in
+      the SAT test are exclusively virtual?
+    grain: ''
+    fingerprint: c4bcaaecb5
+    source: query_agent
+    spec:
+      from: schools
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      measure:
+        agg: count
+        column: '*'
+        table: schools
+        alias: virtual_schools_count
+      filters:
+      - table: schools
+        column: virtual
+        op: '='
+        value: '1'
+      - table: satscores
+        column: avgscrmath
+        op: '>'
+        value: 400
+      limit: 1
+    explain_cost: 1255.24
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 44cb511ef8589364
-    last_rows: 2
-    last_elapsed_ms: 9.273731149733067
-  profile_customer_segment_distribution:
-    path: templates/profile_customer_segment_distribution.sql
-    description: Retrieves customer segment distribution in the customers table
-    grain: table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 1a0aa11cf676eb2e
-    last_rows: 3
-    last_elapsed_ms: 15.33341035246849
-  profile_gasstation_segment_distribution:
-    path: templates/profile_gasstation_segment_distribution.sql
-    description: Retrieves gasstation segment distribution in the gasstations table
-    grain: table
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 652142cc69264ea3
-    last_rows: 5
-    last_elapsed_ms: 9.181023575365543
-  country_transaction_volume_template:
-    path: templates/country_transaction_volume_template.sql
-    description: Reusable metric query for transaction volume and count grouped by
-      gas station country
-    grain: country
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: c33baece67ca7281
-    last_rows: 2
-    last_elapsed_ms: 12.932680547237396
-  segment_currency_value_template:
-    path: templates/segment_currency_value_template.sql
-    description: Reusable metric template for transaction value by customer segment
-      and currency
-    grain: segment.currency
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: c1c5ea598abbf6a7
-    last_rows: 6
-    last_elapsed_ms: 18.085083924233913
-  segment_currency_distribution_template:
-    path: templates/segment_currency_distribution_template.sql
-    description: Reusable query for transaction distribution across segments and currencies
-    grain: segment.currency
-    status: ok
-    last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 595b257497385ec3
-    last_rows: 6
-    last_elapsed_ms: 17.08131842315197
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 77e8f7e1a1b9b55e
+    last_rows: 1
+    last_elapsed_ms: 15.95753151923418
     metrics:
       uses: 2
-      avg_elapsed_ms: 26.526
+      avg_elapsed_ms: 17.361
       last_rows: 1
-  segment_transaction_by_value:
-    path: templates/segment_transaction_by_value.sql
-    description: Reusable metric query for transaction value by customer segment and
-      currency
-    grain: by_segment_currency
+  learned_a10876c417:
+    path: templates/learned_a10876c417.sql
+    description: What is the average number of test takers from Fresno schools that
+      opened between 1/1/1980 and 12/31/1980?
+    grain: ''
+    fingerprint: a10876c417
+    source: query_agent
+    spec: null
+    explain_cost: 1346.0
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 47.648
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 4e8737987fea837d
+    last_rows: 1
+    last_elapsed_ms: 14.896570704877377
+  learned_037c600cfc:
+    path: templates/learned_037c600cfc.sql
+    description: Among the schools with an SAT excellence rate of over 0.3, what is
+      the highest eligible free rate for students aged 5-17?
+    grain: ''
+    fingerprint: 037c600cfc
+    source: query_agent
+    spec:
+      from: frpm
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      group_by: []
+      measures:
+      - agg: max
+        table: frpm
+        column: Percent (%) Eligible FRPM (Ages 5-17)
+        alias: highest_eligible_free_rate
+      filters:
+      - table: satscores
+        column: numtsttakr
+        op: '>'
+        value: 0.3
+      order:
+        by: highest_eligible_free_rate
+        dir: desc
+    explain_cost: 583.27
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 31.103
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: edbaac4986dd696c
+    last_rows: 1
+    last_elapsed_ms: 14.307542704045773
+  learned_654d5509f7:
+    path: templates/learned_654d5509f7.sql
+    description: What is the postal street address for the school with the 7th highest
+      Math average? Indicate the school's name.
+    grain: ''
+    fingerprint: 654d5509f7
+    source: query_agent
+    spec: null
+    explain_cost: 1360.14
+    status: ok
+    metrics:
+      uses: 8
+      avg_elapsed_ms: 17.056
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 7e55ecfd2884499f
+    last_rows: 1
+    last_elapsed_ms: 15.558439306914806
+  learned_ec435e8a9a:
+    path: templates/learned_ec435e8a9a.sql
+    description: Give the names of the schools with the percent eligible for free
+      meals in K-12 is more than 0.1 and test takers whose test score is greater than
+      or equal to 1500?
+    grain: school
+    fingerprint: ec435e8a9a
+    source: query_agent
+    spec:
+      from: schools
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      - table: frpm
+        left: cdscode
+        right: cdscode
+      group_by:
+      - table: schools
+        column: school
+      measures:
+      - agg: count
+        table: satscores
+        column: numge1500
+        alias: test_takers_1500
+      filters:
+      - table: frpm
+        column: Percent (%) Eligible Free (K-12)
+        op: '>'
+        value: 0.1
+      order:
+        by: test_takers_1500
+        dir: desc
+      limit: 100
+    explain_cost: 1936.93
+    status: ok
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 23.176
+      last_rows: 100
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: fc2d6ac04f50b490
+    last_rows: 100
+    last_elapsed_ms: 21.18995226919651
+  learned_c48ac3943d:
+    path: templates/learned_c48ac3943d.sql
+    description: Between San Diego and Santa Barbara, which county offers the most
+      number of schools that does not offer physical building? Indicate the amount.
+    grain: ''
+    fingerprint: c48ac3943d
+    source: query_agent
+    spec: null
+    explain_cost: 1225.34
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 18.5
+      last_rows: 0
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e3b0c44298fc1c14
+    last_rows: 0
+    last_elapsed_ms: 17.722574062645435
+  learned_a415f384c5:
+    path: templates/learned_a415f384c5.sql
+    description: What is the monthly average number of schools that opened in Alameda
+      County under the jurisdiction of the Elementary School District in 1980?
+    grain: ''
+    fingerprint: a415f384c5
+    source: query_agent
+    spec: null
+    explain_cost: 1313.74
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 68.05
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 92ceaa4862246206
+    last_rows: 1
+    last_elapsed_ms: 15.64021222293377
+  learned_433c6604ee:
+    path: templates/learned_433c6604ee.sql
+    description: What is the grade span offered in the school with the highest longitude?
+    grain: ''
+    fingerprint: 433c6604ee
+    source: query_agent
+    spec: null
+    explain_cost: 1930.66
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 26.566
+      last_rows: 1
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 5a959e986dcaa194
+    last_rows: 1
+    last_elapsed_ms: 25.541032664477825
+  learned_869cf4c396:
+    path: templates/learned_869cf4c396.sql
+    description: What are the valid e-mail addresses of the administrator of the school
+      located in the San Bernardino county, City of San Bernardino City Unified that
+      opened between 1/1/2009 to 12/31/2010 whose school
+    grain: ''
+    fingerprint: 869cf4c396
+    source: query_agent
+    spec: null
+    explain_cost: 1402.17
+    status: ok
+    metrics:
+      uses: 5
+      avg_elapsed_ms: 36.676
+      last_rows: 0
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e3b0c44298fc1c14
+    last_rows: 0
+    last_elapsed_ms: 15.182706527411938
+  learned_3df80de5be:
+    path: templates/learned_3df80de5be.sql
+    description: Name schools in Riverside which the average of average math score
+      for SAT is grater than 400, what is the funding type of these schools?
+    grain: School Name, fundingtype
+    fingerprint: 3df80de5be
+    source: query_agent
+    spec:
+      from: frpm
+      joins:
+      - table: satscores
+        left: cdscode
+        right: cds
+      - table: schools
+        left: cdscode
+        right: cdscode
+      group_by:
+      - table: frpm
+        column: School Name
+      - table: schools
+        column: fundingtype
+      filters:
+      - table: frpm
+        column: County Name
+        op: '='
+        value: Riverside
+      - table: satscores
+        column: avgscrmath
+        op: '>'
+        value: 400
+      measures:
+      - agg: avg
+        table: satscores
+        column: avgscrmath
+        alias: avg_math_score
+      order:
+        by: avg_math_score
+        dir: desc
+    explain_cost: 1770.02
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 517e4a94341e63b6
-    last_rows: 6
-    last_elapsed_ms: 14.603495597839355
-  amount_distribution_profile:
-    path: templates/amount_distribution_profile.sql
-    description: Template for profiling numeric amount column distribution in transactions
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 7f28ad58bdd44818
+    last_rows: 60
+    last_elapsed_ms: 15.447423793375492
+  verify_frpm_enrollment_source:
+    path: templates/verify_frpm_enrollment_source.sql
+    description: Check if frpm table has Enrollment (K-12) column or should use schools
+      enrollment
     grain: table
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: e2995b4cb3acf35e
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 351358be39b9aa79
     last_rows: 1
-    last_elapsed_ms: 9.391454979777336
-  yearmonth_consumption_distribution:
-    path: templates/yearmonth_consumption_distribution.sql
-    description: Profile yearmonth table consumption metric distribution including
-      min/max/avg and record count
-    grain: yearmonth.consumption
+    last_elapsed_ms: 17.05737318843603
+  satscores_numge1500_aggregate:
+    path: templates/satscores_numge1500_aggregate.sql
+    description: Query satscores table for numge1500 column statistics
+    grain: table
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 885cfcbf0515ce98
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 624783784bcf0c66
     last_rows: 1
-    last_elapsed_ms: 35.450223833322525
-  segment_country_transaction:
-    path: templates/segment_country_transaction.sql
-    description: Reusable metric template for transaction counts grouped by customer
-      segment and gas station country
-    grain: customer_segment, gas_station_country
+    last_elapsed_ms: 9.983922354876995
+  satscores_numge1500_aggregation:
+    path: templates/satscores_numge1500_aggregation.sql
+    description: Aggregates numge1500 counts by rtype in satscores table for school-level
+      analysis
+    grain: rtype
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: 39fc5dd0e2294a35
-    last_rows: 6
-    last_elapsed_ms: 16.171704977750778
-  product_transaction_frequency:
-    path: templates/product_transaction_frequency.sql
-    description: Reusable metric template for product transaction counts and average
-      amounts
-    grain: product_id
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 4a1273915a3c2266
+    last_rows: 2
+    last_elapsed_ms: 8.675279095768929
+  learned_ff1647870c:
+    path: templates/learned_ff1647870c.sql
+    description: What is the eligible free rate of the 10th and 11th schools with
+      the highest enrolment for students in grades 1 through 12?
+    grain: ''
+    fingerprint: ff1647870c
+    source: query_agent
+    spec: null
+    explain_cost: 503.01
     status: ok
     last_error: ''
-    verified_at: '2026-08-15T20:44:37.347826+00:00'
-    result_hash: bc7bbdd241c1df47
-    last_rows: 28
-    last_elapsed_ms: 8.991348557174206
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 81eb514123374d0c
+    last_rows: 2
+    last_elapsed_ms: 11.902673169970512
+  learned_006b272b53:
+    path: templates/learned_006b272b53.sql
+    description: List the names of schools with more than 30 difference in enrollements
+      between K-12 and ages 5-17? Please also give the full street adress of the schools.
+    grain: ''
+    fingerprint: 006b272b53
+    source: query_agent
+    spec: null
+    explain_cost: 1804.19
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: d6c5abe4c15be90a
+    last_rows: 500
+    last_elapsed_ms: 20.397662185132504
+  learned_4562c2c24a:
+    path: templates/learned_4562c2c24a.sql
+    description: Please list the codes of the schools with a total enrollment of over
+      500.
+    grain: ''
+    fingerprint: 4562c2c24a
+    source: query_agent
+    spec: null
+    explain_cost: 2055.48
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 86029667f7ca640a
+    last_rows: 500
+    last_elapsed_ms: 26.380007155239582
+  learned_ef1087c5ad:
+    path: templates/learned_ef1087c5ad.sql
+    description: Give the names of the schools with the percent eligible for free
+      meals in K-12 is more than 0.1 and test takers whose test score is greater than
+      or equal to 1500?
+    grain: ''
+    fingerprint: ef1087c5ad
+    source: query_agent
+    spec: null
+    explain_cost: 635.42
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 59e9ffccccea237a
+    last_rows: 500
+    last_elapsed_ms: 15.504156239330769
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 17.87
+      last_rows: 500
+  learned_35b05cc7a6:
+    path: templates/learned_35b05cc7a6.sql
+    description: What is the complete address of the school with the lowest excellence
+      rate? Indicate the Street, City, Zip and State.
+    grain: ''
+    fingerprint: 35b05cc7a6
+    source: query_agent
+    spec: null
+    explain_cost: 1362.91
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 99177d8107c77621
+    last_rows: 1
+    last_elapsed_ms: 14.32091649621725
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 15.445
+      last_rows: 1
+  learned_8afe338b7e:
+    path: templates/learned_8afe338b7e.sql
+    description: What is the average number of test takers from Fresno schools that
+      opened between 1/1/1980 and 12/31/1980?
+    grain: ''
+    fingerprint: 8afe338b7e
+    source: query_agent
+    spec: null
+    explain_cost: 1343.07
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 33971acd2f6603cb
+    last_rows: 1
+    last_elapsed_ms: 15.408468432724476
+  learned_878621a067:
+    path: templates/learned_878621a067.sql
+    description: Rank schools by their average score in Writing where the score is
+      greater than 499, showing their charter numbers.
+    grain: cds
+    fingerprint: 878621a067
+    source: query_agent
+    spec:
+      from: satscores
+      joins: []
+      group_by:
+      - table: satscores
+        column: cds
+      measures:
+      - agg: avg
+        table: satscores
+        column: avgscrwrite
+        alias: avg_write_score
+      filters:
+      - table: satscores
+        column: avgscrwrite
+        op: '>'
+        value: 499
+      order:
+        by: avg_write_score
+        dir: desc
+    explain_cost: 100.99
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: f8d8a59fb24573ce
+    last_rows: 500
+    last_elapsed_ms: 12.306666001677513
+  learned_255fdfefe3:
+    path: templates/learned_255fdfefe3.sql
+    description: Under whose administration is the school with the highest number
+      of students scoring 1500 or more on the SAT? Indicate their full names.
+    grain: ''
+    fingerprint: 255fdfefe3
+    source: query_agent
+    spec: null
+    explain_cost: 1366.71
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 009dae062e157a0f
+    last_rows: 1
+    last_elapsed_ms: 16.728263348340988
+  learned_3ea21ec067:
+    path: templates/learned_3ea21ec067.sql
+    description: What is the telephone number for the school with the lowest average
+      score in reading in Fresno Unified?
+    grain: ''
+    fingerprint: 3ea21ec067
+    source: query_agent
+    spec: null
+    explain_cost: 1271.99
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 67cc230db366e66c
+    last_rows: 1
+    last_elapsed_ms: 14.931478537619114
+  learned_a5521b9169:
+    path: templates/learned_a5521b9169.sql
+    description: Name schools in Riverside which the average of average math score
+      for SAT is grater than 400, what is the funding type of these schools?
+    grain: ''
+    fingerprint: a5521b9169
+    source: query_agent
+    spec: null
+    explain_cost: 1253.59
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 790b2668d23f3f9d
+    last_rows: 8
+    last_elapsed_ms: 15.655101276934147
+  learned_693e36ca8b:
+    path: templates/learned_693e36ca8b.sql
+    description: What is the average score in writing for the schools that were opened
+      after 1991 or closed before 2000? List the school names along with the score.
+      Also, list the communication number of the schools i
+    grain: ''
+    fingerprint: 693e36ca8b
+    source: query_agent
+    spec: null
+    explain_cost: 1377.83
+    status: ok
+    metrics:
+      uses: 3
+      avg_elapsed_ms: 54.519
+      last_rows: 500
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 497ec48376c53c1e
+    last_rows: 500
+    last_elapsed_ms: 20.85404470562935
+  count_schools_with_non_null_numge1500_in_satscores:
+    path: templates/count_schools_with_non_null_numge1500_in_satscores.sql
+    description: Counts the number of schools with non-null numge1500 in the satscores
+      table.
+    grain: satscores
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 9abc940b57669e5e
+    last_rows: 1
+    last_elapsed_ms: 8.58239084482193
+  frpm_enrollment_rate_by_school_type:
+    path: templates/frpm_enrollment_rate_by_school_type.sql
+    description: Calculates FRPM enrollment rates by school funding type using verified
+      school-enrollment join
+    grain: school
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 51c46dd3198a23bd
+    last_rows: 500
+    last_elapsed_ms: 35.2583434432745
+  average_enrollment_by_funding_type:
+    path: templates/average_enrollment_by_funding_type.sql
+    description: Reusable metric template for calculating average enrollment by school
+      funding type using satscores enrollment data joined with schools table
+    grain: school
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e2e4d282968e570b
+    last_rows: 4
+    last_elapsed_ms: 15.210693702101707
+  discover_schools_enrollment_columns:
+    path: templates/discover_schools_enrollment_columns.sql
+    description: Template for discovering enrollment-related columns in schools tables
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 2d59ff792e8fa2b4
+    last_rows: 25
+    last_elapsed_ms: 16.090993769466877
+  learned_c0d03dd25f:
+    path: templates/learned_c0d03dd25f.sql
+    description: List the names of virtual schools that are among the top 5 in their
+      respective counties based on average reading scores.
+    grain: ''
+    fingerprint: c0d03dd25f
+    source: query_agent
+    spec: null
+    explain_cost: 68.41
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: e3b0c44298fc1c14
+    last_rows: 0
+    last_elapsed_ms: 10.769500397145748
+  verify_column_in_table:
+    path: templates/verify_column_in_table.sql
+    description: Template to verify a specific column exists in the frpm table and
+      retrieve sample values
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 291747f4b498840c
+    last_rows: 1
+    last_elapsed_ms: 15.073157846927643
+  find_percent_columns_template:
+    path: templates/find_percent_columns_template.sql
+    description: Reusable SQL pattern for discovering percentage-related columns in
+      a table with specific naming patterns
+    grain: column
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: c1f25aaee2ca6391
+    last_rows: 4
+    last_elapsed_ms: 17.769431695342064
+  find_enrollment_columns_template:
+    path: templates/find_enrollment_columns_template.sql
+    description: Reusable SQL pattern for discovering enrollment-related columns in
+      satscores table
+    grain: column
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: b2bae1a3aa785e74
+    last_rows: 5
+    last_elapsed_ms: 16.224408522248268
+  schools_enrollment_columns_query:
+    path: templates/schools_enrollment_columns_query.sql
+    description: Reusable template for querying enrollment-related columns in the
+      schools table that can be used as alternatives to schools.total_enrollment
+    grain: table
+    status: ok
+    last_error: ''
+    verified_at: '2026-08-17T13:40:09.879510+00:00'
+    result_hash: 96edfae221e71ad6
+    last_rows: 43
+    last_elapsed_ms: 17.373579554259777
+77

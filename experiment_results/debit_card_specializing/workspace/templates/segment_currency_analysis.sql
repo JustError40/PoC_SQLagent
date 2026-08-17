@@ -1,1 +1,0 @@
-SELECT c.segment, c.currency, COUNT(*) as transaction_count, SUM(t.amount) as total_amount FROM transactions_1k t INNER JOIN customers c ON t.customerid::BIGINT = c.customerid GROUP BY c.segment, c.currency ORDER BY transaction_count DESC;

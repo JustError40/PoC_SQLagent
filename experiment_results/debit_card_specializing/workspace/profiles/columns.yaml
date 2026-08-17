@@ -1,202 +1,1206 @@
-customers:
-  customerid:
-    total: 32461
+frpm:
+  cdscode:
+    total: 9986
     nulls: 0
-    distinct: 32461
-    min: '3'
-    max: '53314'
-  segment:
-    total: 32461
+    distinct: 9986
+    min: 01100170109835
+    max: '58727695838305'
+  Academic Year:
+    total: 9986
     nulls: 0
-    distinct: 3
-    min: KAM
-    max: SME
+    distinct: 1
+    min: 2014-2015
+    max: 2014-2015
     top_values:
-    - value: SME
-      count: 26763
-    - value: LAM
-      count: 3658
-    - value: KAM
-      count: 2040
-  currency:
-    total: 32461
+    - value: 2014-2015
+      count: 9986
+  County Code:
+    total: 9986
     nulls: 0
-    distinct: 2
-    min: CZK
-    max: EUR
-    top_values:
-    - value: CZK
-      count: 30459
-    - value: EUR
-      count: 2002
-gasstations:
-  gasstationid:
-    total: 5716
+    distinct: 58
+    min: '01'
+    max: '58'
+  District Code:
+    total: 9986
     nulls: 0
-    distinct: 5716
-    min: '44'
-    max: '5772'
-  chainid:
-    total: 5716
+    distinct: 1012
+    min: '10017'
+    max: '76901'
+  School Code:
+    total: 9986
     nulls: 0
-    distinct: 233
-    min: '1'
-    max: '290'
-  country:
-    total: 5716
+    distinct: 9942
+    min: '0000000'
+    max: '9010745'
+  County Name:
+    total: 9986
     nulls: 0
-    distinct: 2
-    min: CZE
-    max: SVK
-    top_values:
-    - value: CZE
-      count: 4836
-    - value: SVK
-      count: 880
-  segment:
-    total: 5716
-    nulls: 0
-    distinct: 5
-    min: Discount
-    max: Value for money
-    top_values:
-    - value: Other
-      count: 2392
-    - value: Premium
-      count: 1428
-    - value: Noname
-      count: 1005
-    - value: Value for money
-      count: 597
-    - value: Discount
-      count: 294
-products:
-  productid:
-    total: 591
-    nulls: 0
-    distinct: 591
-    min: '1'
-    max: '630'
-  description:
-    total: 591
-    nulls: 0
-    distinct: 529
-    min: 55 - Acquirer Simple Fee
-    max: Zprostredk.p
-transactions_1k:
-  transactionid:
-    total: 1000
+    distinct: 58
+    min: Alameda
+    max: Yuba
+  District Name:
+    total: 9986
     nulls: 0
     distinct: 1000
+    min: ABC Unified
+    max: Yucaipa-Calimesa Joint Unified
+  School Name:
+    total: 9986
+    nulls: 0
+    distinct: 8652
+    min: 21st Century Learning Institute
+    max: Zupanic High
+  District Type:
+    total: 9986
+    nulls: 0
+    distinct: 8
+    min: County Office of Education (COE)
+    max: Unified School District
+    top_values:
+    - value: Unified School District
+      count: 6744
+    - value: Elementary School District
+      count: 2356
+    - value: High School District
+      count: 529
+    - value: County Office of Education (COE)
+      count: 334
+    - value: State Board of Education
+      count: 10
+    - value: Statewide Benefit Charter
+      count: 6
+    - value: Non-School Locations
+      count: 4
+    - value: State Special Schools
+      count: 3
+  School Type:
+    total: 9986
+    nulls: 45
+    distinct: 17
+    min: Alternative Schools of Choice
+    max: Youth Authority Facilities
+    top_values:
+    - value: Elementary Schools (Public)
+      count: 5584
+    - value: High Schools (Public)
+      count: 1331
+    - value: Intermediate/Middle Schools (Public)
+      count: 1299
+    - value: Continuation High Schools
+      count: 459
+    - value: Alternative Schools of Choice
+      count: 259
+    - value: K-12 Schools (Public)
+      count: 240
+    - value: Elemen Schools In 1 School Dist. (Public)
+      count: 206
+    - value: District Community Day Schools
+      count: 203
+    - value: Special Education Schools (Public)
+      count: 132
+    - value: County Community
+      count: 75
+    - value: Juvenile Court Schools
+      count: 74
+    - value: Junior High Schools (Public)
+      count: 46
+    - value: Opportunity Schools
+      count: 23
+    - value: Youth Authority Facilities
+      count: 4
+    - value: State Special Schools
+      count: 3
+    - value: Preschool
+      count: 2
+    - value: High Schools In 1 School Dist. (Public)
+      count: 1
+  Educational Option Type:
+    total: 9986
+    nulls: 45
+    distinct: 12
+    min: Alternative School of Choice
+    max: Youth Authority School
+    top_values:
+    - value: Traditional
+      count: 8696
+    - value: Continuation School
+      count: 459
+    - value: Alternative School of Choice
+      count: 259
+    - value: Community Day School
+      count: 203
+    - value: Special Education School
+      count: 128
+    - value: County Community School
+      count: 84
+    - value: Juvenile Court School
+      count: 74
+    - value: Opportunity School
+      count: 24
+    - value: District Special Education Consortia School
+      count: 4
+    - value: Youth Authority School
+      count: 4
+    - value: Home and Hospital
+      count: 3
+    - value: State Special School
+      count: 3
+  NSLP Provision Status:
+    total: 9986
+    nulls: 8139
+    distinct: 7
+    min: Breakfast Provision 2
+    max: Provision 3
+    top_values:
+    - value: Provision 2
+      count: 1365
+    - value: Breakfast Provision 2
+      count: 285
+    - value: CEP
+      count: 172
+    - value: Multiple Provision Types
+      count: 11
+    - value: Provision 1
+      count: 7
+    - value: Lunch Provision 2
+      count: 5
+    - value: Provision 3
+      count: 2
+  Charter School (Y/N):
+    total: 9986
+    nulls: 45
+    distinct: 2
+    min: '0'
+    max: '1'
+  Charter School Number:
+    total: 9986
+    nulls: 8819
+    distinct: 1152
+    min: '0001'
+    max: '1700'
+  Charter Funding Type:
+    total: 9986
+    nulls: 8819
+    distinct: 3
+    min: Directly funded
+    max: Not in CS funding model
+    top_values:
+    - value: Directly funded
+      count: 838
+    - value: Locally funded
+      count: 328
+    - value: Not in CS funding model
+      count: 1
+  irc:
+    total: 9986
+    nulls: 45
+    distinct: 2
+    min: '0'
+    max: '1'
+  Low Grade:
+    total: 9986
+    nulls: 0
+    distinct: 15
     min: '1'
-    max: '1000'
-  date:
-    total: 1000
+    max: P
+    top_values:
+    - value: K
+      count: 6057
+    - value: '9'
+      count: 1733
+    - value: '6'
+      count: 1024
+    - value: '7'
+      count: 651
+    - value: P
+      count: 181
+    - value: '5'
+      count: 99
+    - value: '4'
+      count: 68
+    - value: '10'
+      count: 44
+    - value: '1'
+      count: 42
+    - value: '3'
+      count: 38
+    - value: '2'
+      count: 19
+    - value: '11'
+      count: 14
+    - value: '8'
+      count: 10
+    - value: '12'
+      count: 3
+    - value: Adult
+      count: 3
+  High Grade:
+    total: 9986
+    nulls: 0
+    distinct: 17
+    min: '1'
+    max: Post Secondary
+    top_values:
+    - value: '12'
+      count: 2641
+    - value: '5'
+      count: 2534
+    - value: '8'
+      count: 2401
+    - value: '6'
+      count: 2091
+    - value: '3'
+      count: 68
+    - value: '4'
+      count: 65
+    - value: '2'
+      count: 40
+    - value: Adult
+      count: 35
+    - value: '7'
+      count: 30
+    - value: '1'
+      count: 22
+    - value: '9'
+      count: 19
+    - value: K
+      count: 18
+    - value: '10'
+      count: 13
+    - value: '11'
+      count: 5
+    - value: P
+      count: 2
+    - value: '13'
+      count: 1
+    - value: Post Secondary
+      count: 1
+  Enrollment (K-12):
+    total: 9986
+    nulls: 0
+    distinct: 1882
+    min: '1'
+    max: '5333'
+  Free Meal Count (K-12):
+    total: 9986
+    nulls: 56
+    distinct: 1216
+    min: '1'
+    max: '3927'
+  Percent (%) Eligible Free (K-12):
+    total: 9986
+    nulls: 56
+    distinct: 8658
+    min: '0.0017605633'
+    max: '1'
+  FRPM Count (K-12):
+    total: 9986
+    nulls: 50
+    distinct: 1361
+    min: '1'
+    max: '4419'
+  Percent (%) Eligible FRPM (K-12):
+    total: 9986
+    nulls: 50
+    distinct: 8623
+    min: '0.0022050717'
+    max: '1'
+  Enrollment (Ages 5-17):
+    total: 9986
+    nulls: 14
+    distinct: 1845
+    min: '1'
+    max: '5271'
+  Free Meal Count (Ages 5-17):
+    total: 9986
+    nulls: 78
+    distinct: 1205
+    min: '1'
+    max: '3864'
+  Percent (%) Eligible Free (Ages 5-17):
+    total: 9986
+    nulls: 78
+    distinct: 8552
+    min: '0.0017985612'
+    max: '1'
+  FRPM Count (Ages 5-17):
+    total: 9986
+    nulls: 72
+    distinct: 1330
+    min: '1'
+    max: '4347'
+  Percent (%) Eligible FRPM (Ages 5-17):
+    total: 9986
+    nulls: 72
+    distinct: 8557
+    min: '0.0022050717'
+    max: '1'
+  2013-14 CALPADS Fall 1 Certification Status:
+    total: 9986
+    nulls: 0
+    distinct: 1
+    min: '1'
+    max: '1'
+satscores:
+  cds:
+    total: 2269
+    nulls: 0
+    distinct: 2269
+    min: '01100170000000'
+    max: '58727695838305'
+  rtype:
+    total: 2269
+    nulls: 0
+    distinct: 2
+    min: D
+    max: S
+    top_values:
+    - value: S
+      count: 1749
+    - value: D
+      count: 520
+  sname:
+    total: 2269
+    nulls: 520
+    distinct: 1665
+    min: 21st Century Learning Institute
+    max: Zupanic High
+  dname:
+    total: 2269
+    nulls: 0
+    distinct: 520
+    min: ABC Unified
+    max: Yucaipa-Calimesa Joint Unified
+  cname:
+    total: 2269
+    nulls: 0
+    distinct: 57
+    min: Alameda
+    max: Yuba
+  enroll12:
+    total: 2269
+    nulls: 0
+    distinct: 835
+    min: '0'
+    max: '43324'
+  numtsttakr:
+    total: 2269
+    nulls: 0
+    distinct: 547
+    min: '0'
+    max: '24305'
+  avgscrread:
+    total: 2269
+    nulls: 596
+    distinct: 269
+    min: '308'
+    max: '653'
+  avgscrmath:
+    total: 2269
+    nulls: 596
+    distinct: 295
+    min: '289'
+    max: '699'
+  avgscrwrite:
+    total: 2269
+    nulls: 596
+    distinct: 267
+    min: '312'
+    max: '671'
+  numge1500:
+    total: 2269
+    nulls: 596
+    distinct: 368
+    min: '0'
+    max: '5837'
+schools:
+  cdscode:
+    total: 17686
+    nulls: 0
+    distinct: 17686
+    min: '01100170000000'
+    max: '58727695838305'
+  ncesdist:
+    total: 17686
+    nulls: 1030
+    distinct: 1193
+    min: '0600001'
+    max: 0691137
+  ncesschool:
+    total: 17686
+    nulls: 5040
+    distinct: 12321
+    min: '00001'
+    max: '14003'
+  statustype:
+    total: 17686
     nulls: 0
     distinct: 4
-    min: '2012-08-23'
-    max: '2012-08-26'
-  time:
-    total: 1000
-    nulls: 0
-    distinct: 599
-    min: 00:07:00
-    max: '23:20:00'
-  customerid:
-    total: 1000
-    nulls: 0
-    distinct: 517
-    min: '96'
-    max: '49838'
-  cardid:
-    total: 1000
-    nulls: 0
-    distinct: 902
-    min: '26228'
-    max: '775970'
-  gasstationid:
-    total: 1000
-    nulls: 0
-    distinct: 437
-    min: '48'
-    max: '5481'
-  productid:
-    total: 1000
-    nulls: 0
-    distinct: 28
-    min: '2'
-    max: '352'
-  amount:
-    total: 1000
-    nulls: 0
-    distinct: 83
-    min: '0'
-    max: '264'
-  price:
-    total: 1000
-    nulls: 0
-    distinct: 930
-    min: '1.76'
-    max: '5762.49'
-yearmonth:
-  customerid:
-    total: 383282
-    nulls: 0
-    distinct: 30566
-    min: '5'
-    max: '52353'
-  date:
-    total: 383282
-    nulls: 0
-    distinct: 21
-    min: '201112'
-    max: '201311'
+    min: Active
+    max: Pending
     top_values:
-    - value: '201305'
-      count: 25506
-    - value: '201304'
-      count: 25487
-    - value: '201306'
-      count: 25378
-    - value: '201307'
-      count: 25239
-    - value: '201303'
-      count: 25054
-    - value: '201308'
-      count: 25052
-    - value: '201309'
-      count: 24985
-    - value: '201310'
-      count: 24488
-    - value: '201311'
-      count: 20723
-    - value: '201203'
-      count: 18866
-    - value: '201206'
-      count: 18588
-    - value: '201205'
-      count: 18347
-    - value: '201202'
-      count: 18324
-    - value: '201204'
-      count: 18253
-    - value: '201208'
-      count: 18048
-    - value: '201201'
-      count: 17848
-    - value: '201207'
-      count: 17640
-    - value: '201209'
-      count: 12894
-    - value: '201302'
-      count: 2415
-    - value: '201301'
-      count: 139
-    - value: '201112'
-      count: 8
-  consumption:
-    total: 383282
+    - value: Active
+      count: 11708
+    - value: Closed
+      count: 4518
+    - value: Merged
+      count: 1448
+    - value: Pending
+      count: 12
+  county:
+    total: 17686
     nulls: 0
-    distinct: 279091
-    min: '-582092.9'
-    max: '2.0521871e+06'
+    distinct: 58
+    min: Alameda
+    max: Yuba
+  district:
+    total: 17686
+    nulls: 0
+    distinct: 1411
+    min: ABC Unified
+    max: Yucaipa-Calimesa Joint Unified
+  school:
+    total: 17686
+    nulls: 1369
+    distinct: 13875
+    min: 100 Black Men of the Bay Area Community
+    max: Zupanic High
+  street:
+    total: 17686
+    nulls: 294
+    distinct: 13593
+    min: 10000 East Taron Drive
+    max: Zenia Lake Mountain Road & Burgess Ranch Road HC 62 Box 54
+  streetabr:
+    total: 17686
+    nulls: 294
+    distinct: 13633
+    min: 10000 East Taron Dr.
+    max: Zenia Lake Mountain Rd. & Burgess Ranch Rd. HC 62 Box 54
+  city:
+    total: 17686
+    nulls: 293
+    distinct: 1165
+    min: Acampo
+    max: Zenia
+  zip:
+    total: 17686
+    nulls: 293
+    distinct: 11184
+    min: 82025-1703
+    max: 97635-0084
+  state:
+    total: 17686
+    nulls: 293
+    distinct: 1
+    min: CA
+    max: CA
+    top_values:
+    - value: CA
+      count: 17393
+  mailstreet:
+    total: 17686
+    nulls: 292
+    distinct: 12395
+    min: 10000 East Taron Drive
+    max: Yard
+  mailstrabr:
+    total: 17686
+    nulls: 292
+    distinct: 12429
+    min: 10000 East Taron Dr.
+    max: Yard
+  mailcity:
+    total: 17686
+    nulls: 292
+    distinct: 1132
+    min: Acampo
+    max: Yucca Valley
+  mailzip:
+    total: 17686
+    nulls: 292
+    distinct: 10298
+    min: '65546'
+    max: 97635-0084
+  mailstate:
+    total: 17686
+    nulls: 292
+    distinct: 1
+    min: CA
+    max: CA
+    top_values:
+    - value: CA
+      count: 17394
+  phone:
+    total: 17686
+    nulls: 5969
+    distinct: 10632
+    min: (209) 223-1750
+    max: (970) 258-0518
+  ext:
+    total: 17686
+    nulls: 17146
+    distinct: 379
+    min: '0'
+    max: '9100'
+  website:
+    total: 17686
+    nulls: 10722
+    distinct: 4082
+    min: acornstooakscharter.org
+    max: www.yumingschool.org
+  opendate:
+    total: 17686
+    nulls: 1369
+    distinct: 1406
+    min: '1850-07-01'
+    max: '2017-09-22'
+  closeddate:
+    total: 17686
+    nulls: 11992
+    distinct: 899
+    min: '1980-07-01'
+    max: '2016-09-01'
+  charter:
+    total: 17686
+    nulls: 1369
+    distinct: 2
+    min: '0'
+    max: '1'
+  charternum:
+    total: 17686
+    nulls: 15885
+    distinct: 1763
+    min: '0000'
+    max: '1838'
+  fundingtype:
+    total: 17686
+    nulls: 16044
+    distinct: 3
+    min: Directly funded
+    max: Not in CS funding model
+    top_values:
+    - value: Directly funded
+      count: 1176
+    - value: Locally funded
+      count: 460
+    - value: Not in CS funding model
+      count: 6
+  doc:
+    total: 17686
+    nulls: 0
+    distinct: 12
+    min: '00'
+    max: '99'
+    top_values:
+    - value: '54'
+      count: 10190
+    - value: '52'
+      count: 4378
+    - value: '00'
+      count: 1703
+    - value: '56'
+      count: 1079
+    - value: '98'
+      count: 156
+    - value: '02'
+      count: 69
+    - value: '34'
+      count: 49
+    - value: '58'
+      count: 33
+    - value: '03'
+      count: 11
+    - value: '99'
+      count: 10
+    - value: '31'
+      count: 6
+    - value: '42'
+      count: 2
+  doctype:
+    total: 17686
+    nulls: 0
+    distinct: 12
+    min: Administration Only
+    max: Unified School District
+    top_values:
+    - value: Unified School District
+      count: 10190
+    - value: Elementary School District
+      count: 4378
+    - value: County Office of Education (COE)
+      count: 1703
+    - value: High School District
+      count: 1079
+    - value: Regional Occupation Center/Program (ROC/P)
+      count: 156
+    - value: State Board of Education
+      count: 69
+    - value: Non-School Locations
+      count: 49
+    - value: Community College District
+      count: 33
+    - value: Statewide Benefit Charter
+      count: 11
+    - value: Administration Only
+      count: 10
+    - value: State Special Schools
+      count: 6
+    - value: Joint Powers Authority (JPA)
+      count: 2
+  soc:
+    total: 17686
+    nulls: 1369
+    distinct: 20
+    min: 08
+    max: '98'
+    top_values:
+    - value: '60'
+      count: 7591
+    - value: '66'
+      count: 1776
+    - value: '62'
+      count: 1652
+    - value: '68'
+      count: 754
+    - value: 09
+      count: 750
+    - value: '69'
+      count: 615
+    - value: '70'
+      count: 551
+    - value: '10'
+      count: 500
+    - value: '63'
+      count: 500
+    - value: '65'
+      count: 438
+    - value: '61'
+      count: 273
+    - value: 08
+      count: 272
+    - value: '14'
+      count: 254
+    - value: '64'
+      count: 122
+    - value: '13'
+      count: 120
+    - value: '98'
+      count: 86
+    - value: '11'
+      count: 43
+    - value: '15'
+      count: 11
+    - value: '67'
+      count: 6
+    - value: '31'
+      count: 3
+  soctype:
+    total: 17686
+    nulls: 1369
+    distinct: 20
+    min: Adult Education Centers
+    max: Youth Authority Facilities
+    top_values:
+    - value: Elementary Schools (Public)
+      count: 7591
+    - value: High Schools (Public)
+      count: 1776
+    - value: Intermediate/Middle Schools (Public)
+      count: 1652
+    - value: Continuation High Schools
+      count: 754
+    - value: Special Education Schools (Public)
+      count: 750
+    - value: District Community Day Schools
+      count: 615
+    - value: Adult Education Centers
+      count: 551
+    - value: Alternative Schools of Choice
+      count: 500
+    - value: County Community
+      count: 500
+    - value: K-12 Schools (Public)
+      count: 438
+    - value: Elemen Schools In 1 School Dist. (Public)
+      count: 273
+    - value: Preschool
+      count: 272
+    - value: Juvenile Court Schools
+      count: 254
+    - value: Junior High Schools (Public)
+      count: 122
+    - value: Opportunity Schools
+      count: 120
+    - value: ROC/ROP
+      count: 86
+    - value: Youth Authority Facilities
+      count: 43
+    - value: Other County Or District Programs
+      count: 11
+    - value: High Schools In 1 School Dist. (Public)
+      count: 6
+    - value: State Special Schools
+      count: 3
+  edopscode:
+    total: 17686
+    nulls: 5711
+    distinct: 13
+    min: ALTSOC
+    max: YTH
+    top_values:
+    - value: TRAD
+      count: 10103
+    - value: CON
+      count: 539
+    - value: COMMDAY
+      count: 486
+    - value: ALTSOC
+      count: 320
+    - value: SPEC
+      count: 228
+    - value: COMM
+      count: 133
+    - value: JUV
+      count: 94
+    - value: OPP
+      count: 47
+    - value: ROP
+      count: 6
+    - value: YTH
+      count: 6
+    - value: HOMHOS
+      count: 5
+    - value: SPECON
+      count: 5
+    - value: SSS
+      count: 3
+  edopsname:
+    total: 17686
+    nulls: 5711
+    distinct: 13
+    min: Alternative School of Choice
+    max: Youth Authority School
+    top_values:
+    - value: Traditional
+      count: 10103
+    - value: Continuation School
+      count: 539
+    - value: Community Day School
+      count: 486
+    - value: Alternative School of Choice
+      count: 320
+    - value: Special Education School
+      count: 228
+    - value: County Community School
+      count: 133
+    - value: Juvenile Court School
+      count: 94
+    - value: Opportunity School
+      count: 47
+    - value: ROP
+      count: 6
+    - value: Youth Authority School
+      count: 6
+    - value: District Special Education Consortia School
+      count: 5
+    - value: Home and Hospital
+      count: 5
+    - value: State Special School
+      count: 3
+  eilcode:
+    total: 17686
+    nulls: 1369
+    distinct: 7
+    min: A
+    max: UG
+    top_values:
+    - value: ELEM
+      count: 7298
+    - value: HS
+      count: 3367
+    - value: UG
+      count: 2525
+    - value: INTMIDJR
+      count: 1845
+    - value: ELEMHIGH
+      count: 774
+    - value: A
+      count: 352
+    - value: PS
+      count: 156
+  eilname:
+    total: 17686
+    nulls: 1369
+    distinct: 7
+    min: Adult
+    max: Ungraded
+    top_values:
+    - value: Elementary
+      count: 7298
+    - value: High School
+      count: 3367
+    - value: Ungraded
+      count: 2525
+    - value: Intermediate/Middle/Junior High
+      count: 1845
+    - value: Elementary-High Combination
+      count: 774
+    - value: Adult
+      count: 352
+    - value: Preschool
+      count: 156
+  gsoffered:
+    total: 17686
+    nulls: 3882
+    distinct: 94
+    min: '1'
+    max: P-Post Secondary
+  gsserved:
+    total: 17686
+    nulls: 5743
+    distinct: 81
+    min: '1'
+    max: K-9
+  virtual:
+    total: 17686
+    nulls: 6868
+    distinct: 3
+    min: F
+    max: P
+    top_values:
+    - value: N
+      count: 9703
+    - value: P
+      count: 1046
+    - value: F
+      count: 69
+  magnet:
+    total: 17686
+    nulls: 7076
+    distinct: 2
+    min: '0'
+    max: '1'
+  latitude:
+    total: 17686
+    nulls: 4823
+    distinct: 11339
+    min: '32.547737'
+    max: '44.219303'
+  longitude:
+    total: 17686
+    nulls: 4823
+    distinct: 11278
+    min: '-124.28481'
+    max: '-83.781136'
+  admfname1:
+    total: 17686
+    nulls: 5986
+    distinct: 2327
+    min: Aaron
+    max: Ziggy
+  admlname1:
+    total: 17686
+    nulls: 5986
+    distinct: 6394
+    min: Aaberg
+    max: Zylla
+  admemail1:
+    total: 17686
+    nulls: 6012
+    distinct: 10492
+    min: a2fox@oxnardsd.org
+    max: zthurman@maxwell.k12.ca.us
+  admfname2:
+    total: 17686
+    nulls: 17255
+    distinct: 285
+    min: Adam
+    max: Zuzy
+  admlname2:
+    total: 17686
+    nulls: 17255
+    distinct: 363
+    min: Adams
+    max: Zamora-Day
+  admemail2:
+    total: 17686
+    nulls: 17262
+    distinct: 382
+    min: aadams@equitasacademy.org
+    max: wwilliams@aoaschools.org
+  admfname3:
+    total: 17686
+    nulls: 17644
+    distinct: 40
+    min: Alex
+    max: Vickie
+    top_values:
+    - value: Eric
+      count: 2
+    - value: Mark
+      count: 2
+    - value: Alex
+      count: 1
+    - value: Amos
+      count: 1
+    - value: Andrew
+      count: 1
+    - value: Barbara
+      count: 1
+    - value: Beth
+      count: 1
+    - value: Bianca
+      count: 1
+    - value: Bree
+      count: 1
+    - value: Bridget
+      count: 1
+    - value: Chris
+      count: 1
+    - value: Cindy
+      count: 1
+    - value: Danielle
+      count: 1
+    - value: Drew
+      count: 1
+    - value: Dustin
+      count: 1
+    - value: Erik
+      count: 1
+    - value: Gerardo
+      count: 1
+    - value: Horacio
+      count: 1
+    - value: Irma
+      count: 1
+    - value: Joseph
+      count: 1
+    - value: Joy
+      count: 1
+    - value: Kathy
+      count: 1
+    - value: Kelly
+      count: 1
+    - value: Lily
+      count: 1
+    - value: Lisa
+      count: 1
+    - value: Lydia
+      count: 1
+    - value: Mary
+      count: 1
+    - value: Melissa
+      count: 1
+    - value: Michelle
+      count: 1
+    - value: Patsy
+      count: 1
+    - value: Portia
+      count: 1
+    - value: Rachel
+      count: 1
+    - value: Renee
+      count: 1
+    - value: Robert
+      count: 1
+    - value: Rosemary
+      count: 1
+    - value: Sabrina
+      count: 1
+    - value: Sarah
+      count: 1
+    - value: Shawn
+      count: 1
+    - value: Tracie
+      count: 1
+    - value: Vickie
+      count: 1
+  admlname3:
+    total: 17686
+    nulls: 17644
+    distinct: 42
+    min: Andreasen
+    max: Zerpoli
+    top_values:
+    - value: Andreasen
+      count: 1
+    - value: Ayala
+      count: 1
+    - value: Bergmann
+      count: 1
+    - value: Bixby
+      count: 1
+    - value: Brown
+      count: 1
+    - value: Burgos
+      count: 1
+    - value: Chang
+      count: 1
+    - value: Crawford
+      count: 1
+    - value: DeBoer
+      count: 1
+    - value: Estrada
+      count: 1
+    - value: Farren
+      count: 1
+    - value: Fournier
+      count: 1
+    - value: Gomez
+      count: 1
+    - value: Gonzalez
+      count: 1
+    - value: Griffith
+      count: 1
+    - value: Kerns
+      count: 1
+    - value: Kriss
+      count: 1
+    - value: Lamb
+      count: 1
+    - value: Lemmon
+      count: 1
+    - value: Lopez
+      count: 1
+    - value: Mandelbaum
+      count: 1
+    - value: Martarano
+      count: 1
+    - value: Martinez
+      count: 1
+    - value: Motsinger
+      count: 1
+    - value: Munoz
+      count: 1
+    - value: Nugent
+      count: 1
+    - value: Oxford
+      count: 1
+    - value: Rivera
+      count: 1
+    - value: Rojas
+      count: 1
+    - value: Roner
+      count: 1
+    - value: Roulette
+      count: 1
+    - value: Saramago
+      count: 1
+    - value: Sarratore
+      count: 1
+    - value: Schmidt
+      count: 1
+    - value: Scott-Femenella
+      count: 1
+    - value: Shimer
+      count: 1
+    - value: Spotts
+      count: 1
+    - value: Wolk
+      count: 1
+    - value: Wood
+      count: 1
+    - value: Woodruff
+      count: 1
+    - value: Yount
+      count: 1
+    - value: Zerpoli
+      count: 1
+  admemail3:
+    total: 17686
+    nulls: 17644
+    distinct: 42
+    min: amos.nugent@gcccharters.org
+    max: vickiechang@acoe.org
+    top_values:
+    - value: amos.nugent@gcccharters.org
+      count: 1
+    - value: andrew.estrada@cvesd.org
+      count: 1
+    - value: arojas@lpvrop.org
+      count: 1
+    - value: bbrown@gerberschool.org
+      count: 1
+    - value: bfarren@harvestridgeschool.org
+      count: 1
+    - value: blopez@santapaulaunified.org
+      count: 1
+    - value: bmandelbaum@bcoe.org
+      count: 1
+    - value: bwolk@husd.com
+      count: 1
+    - value: cschmidt@mjusd.com
+      count: 1
+    - value: cwoodruff@temeculaprep.com
+      count: 1
+    - value: dsarratore@vincentacademy.org
+      count: 1
+    - value: dustin.kerns@imagineschools.com
+      count: 1
+    - value: dyount@roselandsd.org
+      count: 1
+    - value: ebergmann@smusd.us
+      count: 1
+    - value: ecrawford@scoe.net
+      count: 1
+    - value: fournier.michelle@tusd.org
+      count: 1
+    - value: gmartinez@galt.k12.ca.us
+      count: 1
+    - value: gmunoz@piedmont.k12.ca.us
+      count: 1
+    - value: hgomez@santapaulaunified.org
+      count: 1
+    - value: jdeboer@learn4life.org
+      count: 1
+    - value: jsaramago@ghsd.k12.ca.us
+      count: 1
+    - value: kkriss@pusdk12.org
+      count: 1
+    - value: kmartarano@scusd.net
+      count: 1
+    - value: llamb@lcer.org
+      count: 1
+    - value: lshimer@burtonschools.org
+      count: 1
+    - value: lydia.burgos@cvesd.org
+      count: 1
+    - value: mark_andreasen@riversideprep.net
+      count: 1
+    - value: mbixby@charterschool-sandiego.net
+      count: 1
+    - value: mgriffith@sbusd.org
+      count: 1
+    - value: poxford@puesd.org
+      count: 1
+    - value: renee.scott-femenella@twinriversusd.org
+      count: 1
+    - value: rgonzalez@pivotcharterschools.org
+      count: 1
+    - value: rivera.portia@tusd.org
+      count: 1
+    - value: rlemmon@ghsd.k12.ca.us
+      count: 1
+    - value: roulette.mark@tusd.org
+      count: 1
+    - value: rwood@rcsdk8.net
+      count: 1
+    - value: sarah.motsinger@cvesd.org
+      count: 1
+    - value: sayala@greendot.org
+      count: 1
+    - value: spotts.eric@tusd.org
+      count: 1
+    - value: sroner@echs.org
+      count: 1
+    - value: tzerpoli@tricitiesrop.org
+      count: 1
+    - value: vickiechang@acoe.org
+      count: 1
+  lastupdate:
+    total: 17686
+    nulls: 0
+    distinct: 757
+    min: '1999-06-24'
+    max: '2016-10-12'

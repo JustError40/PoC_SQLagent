@@ -1,0 +1,1 @@
+SELECT "schools"."city" AS "city", COUNT(*) AS "total_schools", COUNT(DISTINCT "schools"."fundingtype") AS "multiple_provision_types" FROM "schools" WHERE "schools"."magnet" = 1 AND "schools"."gsoffered" = 'K-8' GROUP BY "schools"."city" ORDER BY "multiple_provision_types" DESC LIMIT 10;

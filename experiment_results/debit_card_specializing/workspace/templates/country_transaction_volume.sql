@@ -1,1 +1,0 @@
-SELECT g.country, SUM(t.amount) as total_volume, COUNT(DISTINCT t.gasstationid) as unique_stations, COUNT(*) as transaction_count FROM transactions_1k t JOIN gasstations g ON t.gasstationid = g.gasstationid GROUP BY g.country ORDER BY total_volume DESC;

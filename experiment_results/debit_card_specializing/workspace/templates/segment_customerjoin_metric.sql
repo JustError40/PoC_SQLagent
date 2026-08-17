@@ -1,1 +1,0 @@
-SELECT c.segment, COUNT(DISTINCT cm.customerid) as active_customers, SUM(cm.consumption) as total_consumption, COUNT(cm.customerid) as month_count FROM customers c JOIN yearmonth cm ON c.customerid = cm.customerid GROUP BY c.segment;

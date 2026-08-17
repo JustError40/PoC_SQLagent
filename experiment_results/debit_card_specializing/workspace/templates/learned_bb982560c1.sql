@@ -1,1 +1,0 @@
-SELECT SUM(t1k.amount) AS total_spent FROM transactions_1k t1k JOIN gasstations g ON t1k.gasstationid = g.gasstationid WHERE t1k.customerid = '38508' AND t1k.date >= '2012-01-01' AND t1k.date < '2012-02-01';

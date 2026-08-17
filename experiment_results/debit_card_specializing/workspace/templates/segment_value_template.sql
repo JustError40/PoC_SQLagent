@@ -1,1 +1,0 @@
-SELECT c.segment, SUM(t.amount) as total_value, COUNT(DISTINCT t.customerid) as unique_customers, ROUND(AVG(t.amount), 2) as avg_value FROM transactions_1k t JOIN customers c ON t.customerid = c.customerid GROUP BY c.segment ORDER BY total_value DESC LIMIT 10;

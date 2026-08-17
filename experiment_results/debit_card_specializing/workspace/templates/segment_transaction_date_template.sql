@@ -1,1 +1,0 @@
-WITH date_distribution AS (SELECT c.segment, EXTRACT(year FROM t1.date) as year, COUNT(*) as transaction_count FROM transactions_1k t1 JOIN customers c ON t1.customerid = c.customerid GROUP BY c.segment, EXTRACT(year FROM t1.date) ORDER BY transaction_count DESC) SELECT * FROM date_distribution LIMIT 20;
