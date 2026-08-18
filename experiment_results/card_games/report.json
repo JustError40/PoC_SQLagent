@@ -3848,6 +3848,391 @@
         }
       ],
       "judge_on": false
+    },
+    {
+      "run": "iteration 10",
+      "elapsed_min": 1.5,
+      "stages": {
+        "explore": "failed",
+        "optimize": "failed",
+        "evolve": "failed",
+        "promote": "start_failed: HTTP Error 409: Conflict",
+        "verify": "failed"
+      },
+      "counts": {
+        "correct": 0,
+        "incorrect": 0,
+        "empty": 0,
+        "clarified": 0,
+        "pipeline_failed": 52
+      },
+      "details": [
+        {
+          "id": "card_games_340",
+          "question": "Which are the cards that have incredibly powerful foils.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_341",
+          "question": "What are the borderless cards available without powerful foils?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_344",
+          "question": "List all the mythic rarity print cards banned in gladiator format.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_345",
+          "question": "For artifact type of cards that do not have multiple faces on the same card, state its legalities status for vintage play format.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_346",
+          "question": "List all the card id and artist with unknown power which are legal for commander play format.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_347",
+          "question": "Find all cards illustrated by Stephen Daniel and describe the text of the ruling of these cards. State if these cards have missing or degraded properties and values.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_349",
+          "question": "Name the card and artist with the most ruling information. Also state if the card is a promotional printing.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_352",
+          "question": "Calculate the percentage of the cards availabe in Chinese Simplified.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_356",
+          "question": "How many cards have infinite power?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_358",
+          "question": "What is the border color of card \"Ancestor's Chosen\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_366",
+          "question": "What is the rule of playing card \"Benalish Knight\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_368",
+          "question": "What is the percentage of borderless cards?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_371",
+          "question": "What is the percentage of cards whose language is French among the Story Spotlight cards?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_377",
+          "question": "How many cards with original type of \"Summon - Angel\" have subtype other than \"Angel\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_379",
+          "question": "What are the cards belong to duel deck a? List the ID.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_383",
+          "question": "How many of the banned cards are white border?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_391",
+          "question": "Among the Artifact cards, which are black color and comes with foreign languague translation?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_397",
+          "question": "What is the mana cost of cards with a normal layout, a 2003 frame version, with a black border color, and available in paper and mtgo?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_402",
+          "question": "What is the percentage of Story Spotlight cards that do not have a text box? List them by their ID.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_405",
+          "question": "How many Brazilian Portuguese translated sets are inside the Commander block?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_407",
+          "question": "Lists all types of cards in German.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_408",
+          "question": "How many unknown power cards contain info about the triggered ability",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_409",
+          "question": "Indicates the number of cards with pre-modern format, ruling text \"This is a triggered mana ability.\" that do not have multiple faces.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_412",
+          "question": "What is the foreign name of the card in French of type Creature, normal layout and black border color, by artist Matthew D. Wilson?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_414",
+          "question": "What language is the set of 180 cards that belongs to the Ravnica block translated into?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_415",
+          "question": "What percentage of cards with format commander and legal status do not have a content warning?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_416",
+          "question": "What percentage of cards without power are in French?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_422",
+          "question": "What is the language of the card with the multiverse number 149934?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_424",
+          "question": "What proportion of cards do not have a text box with a normal layout?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_427",
+          "question": "What languages are available in the set known as Archenemy on the magic card market and having the code ARC?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_440",
+          "question": "Which foreign language used by \"A Pedra Fellwar\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_459",
+          "question": "Which card costs more converted mana, \"Serra Angel\" or \"Shrine Keeper\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_462",
+          "question": "What's the Italian name of the set of cards with \"Ancestor's Chosen\" is in?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_465",
+          "question": "For the set of cards with \"Ancestor's Chosen\" in it, is there a Korean version of it?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_466",
+          "question": "Among the cards in the set \"Hauptset Zehnte Edition\", how many of them are designed by Adam Rex?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_468",
+          "question": "What is the Simplified Chinese translation of the name of the set \"Eighth Edition\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_469",
+          "question": "Did the set of cards with \"Angel of Mercy\" appear on Magic: The Gathering Online?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_472",
+          "question": "Among the sets in the block \"Ice Age\", how many of them have an Italian translation?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_473",
+          "question": "Is the set of cards with Adarkar Valkyrie only available outside the United States?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_474",
+          "question": "Among the sets of cards that have an Italian translation, how many of them have a base set number of under 100?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_477",
+          "question": "Which of these artists have designed a card in the set Coldsnap, Jeremy Jarvis, Aaron Miller or Chippy?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_479",
+          "question": "Among the cards with converted mana cost higher than 5 in the set Coldsnap, how many of them have unknown power?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_480",
+          "question": "What is the Italian flavor text of the card \"Ancestor's Chosen\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_483",
+          "question": "Please list the Italian text ruling of all the cards in the set Coldsnap.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_484",
+          "question": "Please list the Italian names of the cards in the set Coldsnap with the highest converted mana cost.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_486",
+          "question": "What is the percentage of the cards with a converted mana cost of 7 in the set Coldsnap?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_487",
+          "question": "What is the percentage of incredibly powerful cards in the set Coldsnap?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_518",
+          "question": "Which of the play format has the highest number of banned status? Indicate the play format and the names of all the card meet the condition.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_522",
+          "question": "Which cards are ranked 1st on EDHRec? List all of the cards name and its banned play format.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_528",
+          "question": "List the names of all the cards in the set Hour of Devastation and find the formats in which these cards are legal.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_529",
+          "question": "Find and list the names of sets which doesn't have Japanese translation but have Korean translation.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "card_games_530",
+          "question": "List all the frame styles and cards Allen Williams worked on and find any banned cards if there are any.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        }
+      ],
+      "judge_on": false
     }
   ]
 }
