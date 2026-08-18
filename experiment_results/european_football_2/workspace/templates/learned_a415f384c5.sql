@@ -1,0 +1,1 @@
+SELECT CAST(COUNT(*) AS NUMERIC) / 12.0 AS monthly_average FROM "schools" WHERE "schools"."county" = 'Alameda County' AND "schools"."district" = 'Elementary School District' AND "schools"."opendate" >= '1980-01-01' AND "schools"."opendate" <= '1980-12-31';
