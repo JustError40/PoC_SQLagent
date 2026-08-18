@@ -1,0 +1,1 @@
+SELECT s.street, s.city, s.zip, s.state FROM schools s JOIN satscores sa ON s.cdscode = sa.cds WHERE sa.avgscrread + sa.avgscrmath + sa.avgscrwrite = (SELECT MIN(sa2.avgscrread + sa2.avgscrmath + sa2.avgscrwrite) FROM satscores sa2) ORDER BY (sa.avgscrread + sa.avgscrmath + sa.avgscrwrite) ASC;

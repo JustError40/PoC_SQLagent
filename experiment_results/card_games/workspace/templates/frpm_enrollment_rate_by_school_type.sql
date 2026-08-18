@@ -1,0 +1,1 @@
+SELECT s.fundingtype, s.cdscode, COUNT(f.cdscode) as school_count, AVG(f."Percent (%) Eligible FRPM (K-12)") as avg_frpm_rate FROM schools s LEFT JOIN frpm f ON s.cdscode = f.cdscode WHERE f.cdscode IS NOT NULL GROUP BY s.fundingtype, s.cdscode;

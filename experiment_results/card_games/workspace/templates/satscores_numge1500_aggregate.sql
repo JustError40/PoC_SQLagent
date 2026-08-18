@@ -1,0 +1,1 @@
+SELECT COUNT(*), AVG(numge1500) FROM satscores WHERE numge1500 IS NOT NULL;
