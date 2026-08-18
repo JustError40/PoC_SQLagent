@@ -1,0 +1,1 @@
+SELECT "schools"."cdscode" AS "cdscode", SUM("frpm"."Enrollment (K-12)") AS "total_enrollment" FROM "schools" JOIN "frpm" ON "schools"."cdscode" = "frpm"."cdscode" GROUP BY "schools"."cdscode" HAVING SUM("frpm"."Enrollment (K-12)") > 500;

@@ -1,0 +1,1 @@
+SELECT "schools"."charternum" AS "charternum", AVG("satscores"."avgscrwrite") AS "avg_writing_score" FROM "satscores" JOIN "schools" ON "satscores"."cds" = "schools"."cdscode" WHERE "satscores"."avgscrwrite" > 499 GROUP BY "schools"."charternum" ORDER BY "avg_writing_score" DESC LIMIT 10;
