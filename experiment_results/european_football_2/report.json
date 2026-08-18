@@ -369,6 +369,377 @@
         }
       ],
       "judge_on": false
+    },
+    {
+      "run": "iteration 1",
+      "elapsed_min": 61.5,
+      "stages": {
+        "explore": "failed",
+        "optimize": "failed",
+        "evolve": "failed",
+        "promote": "timeout",
+        "verify": "failed"
+      },
+      "counts": {
+        "correct": 0,
+        "incorrect": 0,
+        "empty": 0,
+        "clarified": 0,
+        "pipeline_failed": 50
+      },
+      "details": [
+        {
+          "id": "european_football_2_1025",
+          "question": "Give the name of the league had the most goals in the 2016 season?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1028",
+          "question": "In Scotland Premier League, which away team won the most during the 2010 season?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1029",
+          "question": "What are the speed in which attacks are put together of the top 4 teams with the highest build Up Play Speed?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1030",
+          "question": "Give the name of the league had the most matches end as draw in the 2016 season?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1031",
+          "question": "At present, calculate for the player's age who have a sprint speed of no less than 97 between 2013 to 2015.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1032",
+          "question": "Give the name of the league with the highest matches of all time and how many matches were played in the said league.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1035",
+          "question": "Give the team_fifa_api_id of teams with more than 50 but less than 60 build-up play speed.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1036",
+          "question": "List the long name of teams with above-average build-up play passing in 2012.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1037",
+          "question": "Calculate the percentage of players who prefer left foot, who were born between 1987 and 1992.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1039",
+          "question": "Find the average number of long-shot done by Ahmed Samir Farag.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1042",
+          "question": "List the name of leagues in which the average goals by the home team is higher than the away team in the 2009/2010 season.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1044",
+          "question": "List the football players with a birthyear of 1970 and a birthmonth of October.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1048",
+          "question": "What is the overall rating of the football player Gabriel Tamas in year 2011?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1057",
+          "question": "Calculate the average home team goal in the 2010/2011 season in the country of Poland.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1058",
+          "question": "Who has the highest average finishing rate between the highest and shortest football player?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1068",
+          "question": "From 2010 to 2015, what was the average overall rating of players who are higher than 170?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1076",
+          "question": "What is the difference of the average ball control score between Abdou Diallo and Aaron Appindangoye\n?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1078",
+          "question": "Which player is older, Aaron Lennon or Abdelaziz Barrada?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1079",
+          "question": "Which player is the tallest?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1080",
+          "question": "Among the players whose preferred foot was the left foot when attacking, how many of them would remain in his position when the team attacked?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1084",
+          "question": "Among the players born before the year 1986, how many of them would remain in his position and defense while the team attacked?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1088",
+          "question": "Please list the names of the players whose volley score and dribbling score are over 70.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1091",
+          "question": "How many matches were held in the Belgium Jupiler League in April, 2009?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1092",
+          "question": "Give the name of the league had the most matches in the 2008/2009 season?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1094",
+          "question": "How much higher in percentage is Ariel Borysiuk's overall rating than that of Paulin Puel?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1096",
+          "question": "Calculate the average overall rating of Pietro Marino.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1098",
+          "question": "What is Ajax's highest chance creation passing score and what is it classified as?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1102",
+          "question": "For the players who had a 77 points overall rating on 2016/6/23, who was the oldest? Give the name of the player.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1103",
+          "question": "What was the overall rating for Aaron Mooy on 2016/2/4?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1105",
+          "question": "How was Francesco Migliore's attacking work rate on 2015/5/1?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1107",
+          "question": "When was the first time did Kevin Constant have his highest crossing score? Give the date.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1110",
+          "question": "Tell the build Up play passing class for \"FC Lorient\" on 2010/2/22.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1113",
+          "question": "For the team \"Hannover 96\", what was its defence aggression class on 2015/9/10?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1114",
+          "question": "What was the average overall rating for Marko Arnautovic from 2007/2/22 to 2016/4/21?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1115",
+          "question": "What percentage is Landon Donovan's overall rating higher than Jordan Bowery on 2013/7/12?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1116",
+          "question": "List down most tallest players' name.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1122",
+          "question": "State the name of the most strongest player.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1124",
+          "question": "Who are the players that tend to be attacking when their mates were doing attack moves? List down their name.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1130",
+          "question": "What are the short name of team who played safe while creating chance of passing?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1133",
+          "question": "How many football players born after the 1990s have the first name \"Aaron\"?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1134",
+          "question": "What is the difference between players 6 and 23's jumping scores?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1135",
+          "question": "Please provide top four football players' IDs who are among the lowest potential players and prefer to use the right foot when attacking.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1136",
+          "question": "How many players had the highest potential score for crossing that preferred to use their left foots while attacking?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1139",
+          "question": "What was the final score for the match on September 24, 2008, in the Belgian Jupiler League between the home team and the away team?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1141",
+          "question": "Does the KSV Cercle Brugge team have a slow, balanced or fast speed class?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1144",
+          "question": "Please state the finishing rate and curve score of the player who has the heaviest weight.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1145",
+          "question": "Which top 4 leagues had the most games in the 2015-2016 season?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1146",
+          "question": "Please provide the full name of the away team that scored the most goals.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1147",
+          "question": "Please name one player whose overall strength is the greatest.",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        },
+        {
+          "id": "european_football_2_1148",
+          "question": "What is the percentage of players that are under 180 cm who have an overall strength of more than 70?",
+          "verdict": "pipeline_failed",
+          "error_type": "internal_error",
+          "sql": ""
+        }
+      ],
+      "judge_on": false
     }
   ]
 }
